@@ -3,6 +3,7 @@
  * Use and redistribute under the terms of the GNU General Public License
  */
 #include <iostream>
+#include <string>
 #include "../util.hpp"
 #include "adjacent-iterator.hpp"
 #include "index-octree.hpp"

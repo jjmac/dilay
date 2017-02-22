@@ -3,7 +3,7 @@
  * Use and redistribute under the terms of the GNU General Public License
  */
 #include <QOpenGLContext>
-#include <QOpenGLExtensions>
+#include "qopenglextensions.h"
 #include <QOpenGLFunctions_2_1>
 #include <glm/glm.hpp>
 #include <memory>

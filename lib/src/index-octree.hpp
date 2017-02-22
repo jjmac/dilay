@@ -5,6 +5,7 @@
 #ifndef DILAY_INDEX_OCTREE
 #define DILAY_INDEX_OCTREE
 
+#include <functional>
 #include <glm/fwd.hpp>
 #include <vector>
 #include "macro.hpp"

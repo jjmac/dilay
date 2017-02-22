@@ -4,6 +4,7 @@
  */
 #include <ctime>
 #include <iostream>
+#include <string>
 #include "time-delta.hpp"
 
 struct TimeDelta :: Impl {

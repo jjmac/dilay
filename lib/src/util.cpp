@@ -68,7 +68,7 @@ float Util :: smoothStep ( const glm::vec3& v, const glm::vec3& center
 {
   assert (innerRadius <= radius);
 
-  const float d = glm::distance <float> (v, center);
+  const float d = glm::distance <3, float> (v, center);
 
   if (radius - innerRadius < Util::epsilon ()) {
     return d > radius ? 0.0f : 1.0f;
@@ -84,7 +84,7 @@ float Util :: linearStep ( const glm::vec3& v, const glm::vec3& center
 {
   assert (innerRadius <= radius);
 
-  const float d = glm::distance <float> (v, center);
+  const float d = glm::distance <3, float> (v, center);
 
   if (radius - innerRadius < Util::epsilon ()) {
     return d > radius ? 0.0f : 1.0f;

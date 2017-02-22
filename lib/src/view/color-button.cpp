@@ -5,6 +5,7 @@
 #include <QColorDialog>
 #include <QPainter>
 #include "color.hpp"
+#include "helper.hpp"
 #include "view/color-button.hpp"
 #include "view/util.hpp"
 
@@ -17,9 +18,9 @@ struct ViewColorButton::Impl {
     , color (c)
   {
     ViewUtil::connect (*this->self, [this] () {
-      QColorDialog dialog (this->color.qColor (), this->self->parentWidget ());
+      QColorDialog dialog (toQt(this->color), this->self->parentWidget ());
       if (dialog.exec () == QDialog::Accepted) {
-        this->color = Color (dialog.selectedColor ());
+        this->color = toGL(dialog.selectedColor ());
         this->self->update ();
         emit this->self->colorChanged (this->color);
       }
@@ -40,7 +41,7 @@ struct ViewColorButton::Impl {
     rect.setTop    (rect.top    () + dh);
     rect.setBottom (rect.bottom () - dh);
 
-    painter.fillRect (rect, this->color.qColor ());
+    painter.fillRect (rect, toQt(this->color));
   }
 };
 

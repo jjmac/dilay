@@ -8,7 +8,7 @@
 #include <glm/fwd.hpp>
 #include <iosfwd>
 
-class QColor;
+//class QColor;
 
 class Color {
   public: 
@@ -18,7 +18,6 @@ class Color {
              Color (float,float,float,float);
     explicit Color (const glm::vec3&);
     explicit Color (const glm::vec4&);
-    explicit Color (const QColor&);
 
     // copies and scales a color using `scale`
     Color (const Color&, float);
@@ -44,7 +43,6 @@ class Color {
 
     glm::vec3 vec3   () const;
     glm::vec4 vec4   () const;
-    QColor    qColor () const;
 
   private:
     float _r;

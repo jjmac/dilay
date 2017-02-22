@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QColor>
 #include <glm/glm.hpp>
 #include <iostream>
 #include "color.hpp"
@@ -19,7 +18,6 @@ Color :: Color (float v)                   : Color (v, v, v, 1.0f) {}
 Color :: Color (float r, float g, float b) : Color (r, g, b, 1.0f) {}
 Color :: Color (const glm::vec3& v)        : Color (v.x, v.y, v.z) {}
 Color :: Color (const glm::vec4& v)        : Color (v.x, v.y, v.z, v.w) {}
-Color :: Color (const QColor& c)           : Color (c.redF (), c.greenF (), c.blueF ()) {}
 Color :: Color (const Color& c, float f)   : Color (c) {
   this->scale (f);
 }
@@ -52,14 +50,6 @@ glm::vec3 Color :: vec3 () const {
 
 glm::vec4 Color :: vec4 () const {
   return glm::vec4 (this->_r, this->_g, this->_b, this->_opacity);
-}
-
-QColor Color :: qColor () const {
-  return QColor ( glm::min (255, int (255.0f * this->_r))
-                , glm::min (255, int (255.0f * this->_g))
-                , glm::min (255, int (255.0f * this->_b))
-                , glm::min (255, int (255.0f * this->_opacity))
-                );
 }
 
 std::ostream& operator<<(std::ostream& os, const Color& c) {

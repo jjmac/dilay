@@ -9,6 +9,7 @@
 #include "color.hpp"
 #include "config.hpp"
 #include "dimension.hpp"
+#include "helper.hpp"
 #include "mesh.hpp"
 #include "mesh-util.hpp"
 #include "opengl.hpp"
@@ -154,7 +155,7 @@ struct ViewAxis::Impl {
       painter.drawText (rect, Qt::AlignCenter, l);
     };
 
-    painter.setPen  (this->axisLabelColor.qColor ());
+    painter.setPen  (toQt(axisColor));
     painter.setFont (font);
 
     const float labelPosition = this->axisScaling.y + (this->axisArrowScaling.y * 0.5f);

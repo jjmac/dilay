@@ -87,7 +87,7 @@ struct ViewGlWidget::Impl {
   void initializeGL () {
     OpenGL::initializeFunctions ();
 
-    this->_state     .reset (new State (this->mainWindow, this->config, this->cache));
+    this->_state     .reset (new State (&(this->mainWindow), this->config, this->cache));
     this-> axis      .reset (new ViewAxis (this->config));
     this->_floorPlane.reset (new ViewFloorPlane (this->config, this->state ().camera ()));
 

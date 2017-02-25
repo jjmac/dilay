@@ -76,14 +76,18 @@ struct ToolMoveCamera::Impl {
         snapTo (cam.primaryDimension (), false);
       }
     }
-    state.mainWindow ().mainWidget ().glWidget ().update ();
+    if (state.hasMainWindow()) {
+        state.mainWindow ().mainWidget ().glWidget ().update ();
+    }
   }
 
   void resetGazePoint (State& state) {
     Camera& cam = state.camera ();
 
     cam.set (glm::vec3 (0.0f), cam.position (), glm::vec3 (0.0f, 1.0f, 0.0f));
-    state.mainWindow ().mainWidget ().glWidget ().update ();
+    if (state.hasMainWindow()) {
+        state.mainWindow ().mainWidget ().glWidget ().update ();
+    }
   }
 
   void moveEvent (State& state, const ViewPointingEvent& event) {
@@ -112,7 +116,9 @@ struct ToolMoveCamera::Impl {
                     );
       }
       this->oldPos = newPos;
-      state.mainWindow ().mainWidget ().glWidget ().update ();
+      if (state.hasMainWindow()) {
+          state.mainWindow ().mainWidget ().glWidget ().update ();
+      }
     }
   }
 
@@ -127,7 +133,9 @@ struct ToolMoveCamera::Impl {
           cam.set ( intersection.position ()
                   , cam.position () - intersection.position ()
                   , cam.up () );
-          state.mainWindow ().mainWidget ().glWidget ().update ();
+          if (state.hasMainWindow()) {
+              state.mainWindow ().mainWidget ().glWidget ().update ();
+          }
         }
       }
     }
@@ -141,7 +149,9 @@ struct ToolMoveCamera::Impl {
       else if (event.delta () < 0) {
         state.camera ().stepAlongGaze (1.0f / this->zoomInFactor);
       }
-      state.mainWindow ().mainWidget ().glWidget ().update ();
+      if (state.hasMainWindow()) {
+          state.mainWindow ().mainWidget ().glWidget ().update ();
+      }
     }
   }
 

@@ -19,7 +19,7 @@
 
 struct State::Impl {
   State*                 self;
-  ViewMainWindow&        mainWindow;
+  ViewMainWindow*        mainWindow;
   Config&                config;
   Cache&                 cache;
   Camera                 camera;
@@ -27,9 +27,9 @@ struct State::Impl {
   Scene                  scene;
   std::unique_ptr <Tool> toolPtr;
 
-  Impl (State* s, ViewMainWindow& mW, Config& cfg, Cache& cch) 
+  Impl (State* s, ViewMainWindow* mW, Config& cfg, Cache& cch)
     : self       (s)
-    , mainWindow (mW) 
+    , mainWindow (mW)
     , config     (cfg)
     , cache      (cch)
     , camera     (this->config)
@@ -73,13 +73,16 @@ struct State::Impl {
       this->toolPtr->close ();
 
       this->toolPtr.reset (); 
-      this->mainWindow.showDefaultToolTip ();
-      this->mainWindow.mainWidget ().properties ().reset ();
-
-      if (deselect) {
-        this->mainWindow.mainWidget ().deselectTool ();
+      if (mainWindow) {
+          this->mainWindow->showDefaultToolTip ();
+          this->mainWindow->mainWidget ().properties ().reset ();
       }
-      this->mainWindow.update ();
+      if (mainWindow) {
+          if (deselect) {
+            this->mainWindow->mainWidget ().deselectTool ();
+          }
+          this->mainWindow->update ();
+      }
     }
   }
 
@@ -95,12 +98,16 @@ struct State::Impl {
 
   void undo () {
     this->history.undo (*this->self);
-    this->mainWindow.update ();
+      if (this->mainWindow) {
+          this->mainWindow->update ();
+      }
   }
 
   void redo () {
     this->history.redo (*this->self);
-    this->mainWindow.update ();
+      if (this->mainWindow) {
+          this->mainWindow->update ();
+      }
   }
 
   void handleToolResponse (ToolResponse response) {
@@ -109,7 +116,9 @@ struct State::Impl {
       case ToolResponse::None:
         break;
       case ToolResponse::Redraw:
-        this->mainWindow.update ();
+        if (this->mainWindow) {
+            this->mainWindow->update ();
+        }
         break;
       case ToolResponse::Terminate:
         this->resetTool (true);
@@ -118,9 +127,13 @@ struct State::Impl {
   }
 };
 
-DELEGATE3_BIG2_SELF (State, ViewMainWindow&, Config&, Cache&)
+DELEGATE3_BIG2_SELF (State, ViewMainWindow*, Config&, Cache&)
+State::State(Config& cfg, Cache& cache)
+    : impl(new Impl(this, nullptr, cfg, cache))
+{}
 
-GETTER    (ViewMainWindow&   , State, mainWindow)
+bool State::hasMainWindow () const { return this->impl->mainWindow != nullptr; }
+ViewMainWindow& State::mainWindow() { return * (this->impl->mainWindow); }
 GETTER    (Config&           , State, config)
 GETTER    (Cache&            , State, cache)
 GETTER    (Camera&           , State, camera)

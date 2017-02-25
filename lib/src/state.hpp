@@ -21,8 +21,10 @@ class WingedMesh;
 
 class State {
   public:                                   
-    DECLARE_BIG2 (State, ViewMainWindow&, Config&, Cache&)
+    DECLARE_BIG2 (State, ViewMainWindow*, Config&, Cache&)
+    State (Config&, Cache&);
 
+    bool hasMainWindow                () const;
     ViewMainWindow& mainWindow         ();
     Config&         config             ();
     Cache&          cache              ();

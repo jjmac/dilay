@@ -8,7 +8,7 @@
 #include "cache.hpp"
 #include "config.hpp"
 #include "opengl.hpp"
-#include "view/main-window.hpp"
+#include "main-window.hpp"
 
 int main (int argv, char **args) {
   QCoreApplication::setAttribute (Qt::AA_UseDesktopOpenGL);

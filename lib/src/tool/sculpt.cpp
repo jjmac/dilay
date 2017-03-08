@@ -98,9 +98,9 @@ struct ToolSculpt::Impl {
     });
     properties.addStacked (QObject::tr ("Radius"), this->radiusEdit);
 
-    QCheckBox& absRadiusEdit = ViewUtil::checkBox ( QObject::tr ("Absolute radius")
+    QAbstractButton& absRadiusEdit = ViewUtil::checkBox ( "tool_sculpt_property_absradius", QObject::tr ("Absolute radius")
                                                   , this->absoluteRadius );
-    ViewUtil::connect (absRadiusEdit, [this] (bool a) {
+    ViewUtil::connectCheck (absRadiusEdit, [this] (bool a) {
       if (a) {
         this->setAbsoluteRadius ();
       }
@@ -112,24 +112,24 @@ struct ToolSculpt::Impl {
     });
     properties.add (absRadiusEdit);
 
-    QCheckBox& subdivEdit = ViewUtil::checkBox ( QObject::tr ("Subdivide")
+    QAbstractButton& subdivEdit = ViewUtil::checkBox ( "tool_sculpt_property_subdivide", QObject::tr ("Subdivide")
                                                , this->brush.subdivide () );
-    ViewUtil::connect (subdivEdit, [this] (bool s) {
+    ViewUtil::connectCheck (subdivEdit, [this] (bool s) {
       this->brush.subdivide (s);
       this->commonCache.set ("subdivide", s);
     });
     properties.add (subdivEdit);
 
-    QPushButton& syncButton = ViewUtil::pushButton (QObject::tr ("Sync"));
+    QPushButton& syncButton = ViewUtil::pushButton ("tool_sculpt_property_syncmirror", QObject::tr ("Sync"));
     ViewUtil::connect (syncButton, [this] () {
       this->self->mirrorWingedMeshes ();
       this->self->updateGlWidget ();
     });
     syncButton.setEnabled (this->self->hasMirror ());
 
-    QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
+    QAbstractButton& mirrorEdit = ViewUtil::checkBox ( "tool_sculpt_property_mirror", QObject::tr ("Mirror")
                                                , this->self->hasMirror () );
-    ViewUtil::connect (mirrorEdit, [this,&syncButton] (bool m) {
+    ViewUtil::connectCheck (mirrorEdit, [this,&syncButton] (bool m) {
       this->self->mirror (m);
       syncButton.setEnabled (m);
     });

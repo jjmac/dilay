@@ -12,6 +12,7 @@ class ViewDoubleSlider;
 class QAbstractSpinBox;
 class QButtonGroup;
 class QCheckBox;
+class QAbstractButton;
 class QDoubleSpinBox;
 class QFrame;
 class QLineEdit;
@@ -26,10 +27,11 @@ class QToolButton;
 namespace ViewUtil {
   QSpinBox&         spinBox        (int, int, int, int = 1);
   QDoubleSpinBox&   spinBox        (float, float, float, float);
-  QPushButton&      pushButton     (const QString&, bool = false);
+  QPushButton&      pushButton     (const QString&, const QString&, bool = false);
   QToolButton&      toolButton     (const QString&);
   QRadioButton&     radioButton    (const QString&, bool = false);
   QCheckBox&        checkBox       (const QString&, bool = false);
+  QCheckBox&        checkBox       (const QString& name, const QString&, bool = false);
   QSlider&          slider         (int, int, int);
   ViewDoubleSlider& slider         (unsigned short, float, float, float, unsigned short = 1);
   QFrame&           horizontalLine ();
@@ -43,6 +45,7 @@ namespace ViewUtil {
   void              connect        (const QSpinBox&, const std::function <void (int)>&);
   void              connect        (const QDoubleSpinBox&, const std::function <void (double)>&);
   void              connect        (const QPushButton&, const std::function <void ()>&);
+  void              connect        (const QToolButton&, const std::function <void ()>&);
   void              connect        (const QButtonGroup&, const std::function <void (int)>&);
   void              connect        (const QCheckBox&, const std::function <void (bool)>&);
   void              connect        (const QRadioButton&, const std::function <void (bool)>&);
@@ -50,6 +53,9 @@ namespace ViewUtil {
   void              connect        (const ViewDoubleSlider&, const std::function <void (float)>&);
   void              connectFloat   (const QLineEdit&, const std::function <void (float)>&);
   void              connectInt     (const QLineEdit&, const std::function <void (int)>&);
+
+  void              connectCheck   (const QAbstractButton&, const std::function <void (bool)>&);
+  void              connectRelease   (const QAbstractButton&, const std::function <void ()>&);
   QWidget&          stretcher      (bool, bool);
   void              deselect       (QAbstractSpinBox&);
   bool              question       (QWidget&, const QString&);

@@ -12,14 +12,11 @@
 #include "scene.hpp"
 #include "state.hpp"
 #include "tool.hpp"
-#include "view/gl-widget.hpp"
-#include "view/main-widget.hpp"
-#include "view/main-window.hpp"
-#include "view/properties.hpp"
+#include "controller.h"
 
 struct State::Impl {
   State*                 self;
-  ViewMainWindow*        mainWindow;
+  Controller*            mainWindow;
   Config&                config;
   Cache&                 cache;
   Camera                 camera;
@@ -27,7 +24,7 @@ struct State::Impl {
   Scene                  scene;
   std::unique_ptr <Tool> toolPtr;
 
-  Impl (State* s, ViewMainWindow* mW, Config& cfg, Cache& cch)
+  Impl (State* s, Controller* mW, Config& cfg, Cache& cch)
     : self       (s)
     , mainWindow (mW)
     , config     (cfg)
@@ -75,11 +72,11 @@ struct State::Impl {
       this->toolPtr.reset (); 
       if (mainWindow) {
           this->mainWindow->showDefaultToolTip ();
-          this->mainWindow->mainWidget ().properties ().reset ();
+          this->mainWindow->resetProperties ();
       }
       if (mainWindow) {
           if (deselect) {
-            this->mainWindow->mainWidget ().deselectTool ();
+            this->mainWindow->deselectTool ();
           }
           this->mainWindow->update ();
       }
@@ -127,13 +124,12 @@ struct State::Impl {
   }
 };
 
-DELEGATE3_BIG2_SELF (State, ViewMainWindow*, Config&, Cache&)
+DELEGATE3_BIG2_SELF (State, Controller*, Config&, Cache&)
 State::State(Config& cfg, Cache& cache)
     : impl(new Impl(this, nullptr, cfg, cache))
 {}
 
-bool State::hasMainWindow () const { return this->impl->mainWindow != nullptr; }
-ViewMainWindow& State::mainWindow() { return * (this->impl->mainWindow); }
+Controller& State::mainWindow() { return * (this->impl->mainWindow); }
 GETTER    (Config&           , State, config)
 GETTER    (Cache&            , State, cache)
 GETTER    (Camera&           , State, camera)

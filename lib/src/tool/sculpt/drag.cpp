@@ -47,7 +47,7 @@ struct ToolSculptDrag::Impl {
     properties.addStacked (QObject::tr ("Smoothness"), smoothnessEdit);
     this->self->registerSecondarySlider (smoothnessEdit);
 
-    QCheckBox& primPlaneEdit = ViewUtil::checkBox 
+    QCheckBox& primPlaneEdit = ViewUtil::checkBox
       ( QObject::tr ("Along primary plane")
       , this->movement.constraint () == MovementConstraint::PrimaryPlane
       );

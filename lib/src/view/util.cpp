@@ -13,9 +13,11 @@
 #include <QRadioButton>
 #include <QSlider>
 #include <QToolButton>
+#include <QTimer>
 #include <glm/glm.hpp>
 #include "view/double-slider.hpp"
 #include "view/util.hpp"
+
 
 QSpinBox& ViewUtil :: spinBox (int min, int value, int max, int stepSize) {
   QSpinBox& spinBox = *new QSpinBox;
@@ -34,10 +36,14 @@ QDoubleSpinBox& ViewUtil :: spinBox (float min, float value, float max, float st
   return spinBox;
 }
 
-QPushButton& ViewUtil :: pushButton (const QString& label, bool isDefaultButton) {
-  QPushButton& button = *new QPushButton (label);
-  button.setDefault (isDefaultButton);
-  return button;
+QPushButton& ViewUtil :: pushButton (const QString& name, const QString& label, bool isDefaultButton) {
+
+    QPushButton& button = *new QPushButton (label);
+    button.setObjectName(name);
+    button.setFlat(true);
+    button.setDefault (isDefaultButton);
+    button.setIcon(QIcon(QString("://resources/icons/%1.png").arg(name)));
+    return button;
 }
 
 QToolButton& ViewUtil :: toolButton (const QString& label) {
@@ -54,6 +60,12 @@ QRadioButton& ViewUtil :: radioButton (const QString& label, bool isChecked) {
 
 QCheckBox& ViewUtil :: checkBox (const QString& label, bool isChecked) {
   QCheckBox& box = *new QCheckBox (label);
+  box.setChecked (isChecked);
+  return box;
+}
+QCheckBox& ViewUtil :: checkBox (const QString& name, const QString& label, bool isChecked) {
+  QCheckBox& box = *new QCheckBox (label);
+  box.setObjectName(name);
   box.setChecked (isChecked);
   return box;
 }
@@ -152,6 +164,10 @@ void ViewUtil :: connect (const QPushButton& b, const std::function <void ()>& f
   QObject::connect (&b, &QPushButton::released, f);
 }
 
+void ViewUtil :: connect (const QToolButton& b, const std::function <void ()>& f) {
+  QObject::connect (&b, &QToolButton::released, f);
+}
+
 void ViewUtil :: connect (const QButtonGroup& g, const std::function <void (int)>& f) {
   void (QButtonGroup::* ptr)(int) = &QButtonGroup::buttonReleased;
   QObject::connect (&g, ptr, f);
@@ -201,6 +217,16 @@ void ViewUtil :: connectInt (const QLineEdit& e, const std::function <void (int)
     }
   });
 }
+
+void ViewUtil :: connectCheck   (const QAbstractButton& b, const std::function <void (bool)>& f) {
+    QObject::connect (&b, &QAbstractButton::toggled, [f] (bool state) {
+      f(state);
+    });
+}
+void ViewUtil :: connectRelease   (const QAbstractButton& b, const std::function <void ()>& f) {
+    QObject::connect (&b, &QAbstractButton::released, f);
+}
+
 
 QWidget& ViewUtil :: stretcher (bool horizontal, bool vertical) {
   assert (horizontal || vertical);

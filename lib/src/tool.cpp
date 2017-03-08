@@ -16,11 +16,8 @@
 #include "sketch/mesh.hpp"
 #include "state.hpp"
 #include "tool.hpp"
-#include "view/gl-widget.hpp"
-#include "view/main-widget.hpp"
-#include "view/main-window.hpp"
+#include "controller.h"
 #include "view/pointing-event.hpp"
-#include "view/properties.hpp"
 #include "view/tool-tip.hpp"
 #include "winged/mesh.hpp"
 
@@ -37,9 +34,7 @@ struct Tool::Impl {
     ,_cache        (this->cache (key))
     , renderMirror (true)
   {
-      if (state.hasMainWindow()) {
-          this->state.mainWindow ().showToolTip (ViewToolTip ());
-      }
+    this->state.mainWindow ().showToolTip (ViewToolTip ());
     this->mirror (this->hasMirror ());
   }
 
@@ -84,22 +79,15 @@ struct Tool::Impl {
   }
 
   void updateGlWidget () {
-      if (state.hasMainWindow()) {
-        this->state.mainWindow ().mainWidget ().glWidget ().update ();
-      }
+    this->state.mainWindow ().updateGl ();
   }
 
   ViewProperties& properties () const {
-      if (state.hasMainWindow()) {
-        return this->state.mainWindow ().mainWidget ().properties ();
-      }
-      return ViewProperties();
+    return this->state.mainWindow ().viewProperties ();
   }
 
   void showToolTip (const ViewToolTip& toolTip) {
-      if (state.hasMainWindow()) {
-        this->state.mainWindow ().showToolTip (toolTip);
-      }
+    this->state.mainWindow ().showToolTip (toolTip);
   }
 
   Config& config () const {
@@ -115,10 +103,7 @@ struct Tool::Impl {
   }
 
   glm::ivec2 cursorPosition () {
-      if (state.hasMainWindow()) {
-        return this->state.mainWindow ().mainWidget ().glWidget ().cursorPosition ();
-      }
-      return glm::ivec2();
+      return this->state.mainWindow ().cursorPosition ();
   }
 
   void snapshotAll () {

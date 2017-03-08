@@ -13,9 +13,7 @@
 #include "state.hpp"
 #include "tool/move-camera.hpp"
 #include "util.hpp"
-#include "view/gl-widget.hpp"
-#include "view/main-widget.hpp"
-#include "view/main-window.hpp"
+#include "controller.h"
 #include "view/pointing-event.hpp"
 
 struct ToolMoveCamera::Impl {
@@ -76,18 +74,14 @@ struct ToolMoveCamera::Impl {
         snapTo (cam.primaryDimension (), false);
       }
     }
-    if (state.hasMainWindow()) {
-        state.mainWindow ().mainWidget ().glWidget ().update ();
-    }
+    state.mainWindow ().updateGl();
   }
 
   void resetGazePoint (State& state) {
     Camera& cam = state.camera ();
 
     cam.set (glm::vec3 (0.0f), cam.position (), glm::vec3 (0.0f, 1.0f, 0.0f));
-    if (state.hasMainWindow()) {
-        state.mainWindow ().mainWidget ().glWidget ().update ();
-    }
+    state.mainWindow ().updateGl();
   }
 
   void moveEvent (State& state, const ViewPointingEvent& event) {
@@ -116,9 +110,7 @@ struct ToolMoveCamera::Impl {
                     );
       }
       this->oldPos = newPos;
-      if (state.hasMainWindow()) {
-          state.mainWindow ().mainWidget ().glWidget ().update ();
-      }
+      state.mainWindow ().updateGl();
     }
   }
 
@@ -133,9 +125,7 @@ struct ToolMoveCamera::Impl {
           cam.set ( intersection.position ()
                   , cam.position () - intersection.position ()
                   , cam.up () );
-          if (state.hasMainWindow()) {
-              state.mainWindow ().mainWidget ().glWidget ().update ();
-          }
+          state.mainWindow ().updateGl();
         }
       }
     }
@@ -149,9 +139,7 @@ struct ToolMoveCamera::Impl {
       else if (event.delta () < 0) {
         state.camera ().stepAlongGaze (1.0f / this->zoomInFactor);
       }
-      if (state.hasMainWindow()) {
-          state.mainWindow ().mainWidget ().glWidget ().update ();
-      }
+      state.mainWindow ().updateGl();
     }
   }
 

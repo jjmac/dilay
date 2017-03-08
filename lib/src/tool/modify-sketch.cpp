@@ -61,7 +61,7 @@ struct ToolModifySketch::Impl {
     });
     properties.add (ViewUtil::horizontalLine ());
 
-    QPushButton& syncButton = ViewUtil::pushButton (QObject::tr ("Sync"));
+    QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
     ViewUtil::connect (syncButton, [this] () {
       this->self->mirrorSketchMeshes ();
       this->self->updateGlWidget ();

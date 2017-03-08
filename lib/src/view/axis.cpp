@@ -4,12 +4,10 @@
  */
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
-#include <QPainter>
 #include "camera.hpp"
 #include "color.hpp"
 #include "config.hpp"
 #include "dimension.hpp"
-#include "helper.hpp"
 #include "mesh.hpp"
 #include "mesh-util.hpp"
 #include "opengl.hpp"
@@ -129,43 +127,43 @@ struct ViewAxis::Impl {
     this->gridMesh.renderLines (camera);
   }
 
-  void render (Camera& camera, QPainter& painter) {
-    this->coneMesh.rotationMatrix (glm::mat4x4 (1.0f));
+//  void render (Camera& camera, QPainter& painter) {
+//    this->coneMesh.rotationMatrix (glm::mat4x4 (1.0f));
 
-    QFont font;
-    font.setWeight (QFont::Bold);
+//    QFont font;
+//    font.setWeight (QFont::Bold);
 
-    QFontMetrics metrics (font); 
-    int          w          = glm::max (metrics.maxWidth (), metrics.height ());
-    glm::uvec2   resolution = camera.resolution ();
-    camera.updateResolution (this->axisResolution);
+//    QFontMetrics metrics (font);
+//    int          w          = glm::max (metrics.maxWidth (), metrics.height ());
+//    glm::uvec2   resolution = camera.resolution ();
+//    camera.updateResolution (this->axisResolution);
 
-    auto renderLabel = [this, &resolution, &painter, w, &camera] 
-                       (const glm::vec3& p, const QString& l) 
-    {
-      this->coneMesh.position (p);
+//    auto renderLabel = [this, &resolution, &painter, w, &camera]
+//                       (const glm::vec3& p, const QString& l)
+//    {
+//      this->coneMesh.position (p);
 
-      glm::ivec2 pos = camera.fromWorld ( glm::vec3 (0.0f)
-                                        , this->coneMesh.modelMatrix ()
-                                        , true);
-      QRect rect ( pos.x - (w / 2)
-                 , resolution.y - this->axisResolution.y + pos.y - (w / 2)
-                 , w, w );
+//      glm::ivec2 pos = camera.fromWorld ( glm::vec3 (0.0f)
+//                                        , this->coneMesh.modelMatrix ()
+//                                        , true);
+//      QRect rect ( pos.x - (w / 2)
+//                 , resolution.y - this->axisResolution.y + pos.y - (w / 2)
+//                 , w, w );
 
-      painter.drawText (rect, Qt::AlignCenter, l);
-    };
+//      painter.drawText (rect, Qt::AlignCenter, l);
+//    };
 
-    painter.setPen  (toQt(axisColor));
-    painter.setFont (font);
+//    painter.setPen  (this->axisLabelColor.qColor ());
+//    painter.setFont (font);
 
-    const float labelPosition = this->axisScaling.y + (this->axisArrowScaling.y * 0.5f);
+//    const float labelPosition = this->axisScaling.y + (this->axisArrowScaling.y * 0.5f);
 
-    renderLabel (glm::vec3 (labelPosition, 0.0f , 0.0f ), "X");
-    renderLabel (glm::vec3 (0.0f , labelPosition, 0.0f ), "Y");
-    renderLabel (glm::vec3 (0.0f , 0.0f , labelPosition), "Z");
+//    renderLabel (glm::vec3 (labelPosition, 0.0f , 0.0f ), "X");
+//    renderLabel (glm::vec3 (0.0f , labelPosition, 0.0f ), "Y");
+//    renderLabel (glm::vec3 (0.0f , 0.0f , labelPosition), "Z");
 
-    camera.updateResolution (resolution);
-  }
+//    camera.updateResolution (resolution);
+//  }
 
   void runFromConfig (const Config& config) {
     this->axisLabelColor   = config.get <Color>     ("editor/axis/color/label");
@@ -177,5 +175,5 @@ struct ViewAxis::Impl {
 
 DELEGATE1_BIG3 (ViewAxis, const Config&)
 DELEGATE1 (void, ViewAxis, render, Camera&)
-DELEGATE2 (void, ViewAxis, render, Camera&, QPainter&)
+//DELEGATE2 (void, ViewAxis, render, Camera&, QPainter&)
 DELEGATE1 (void, ViewAxis, runFromConfig, const Config&)

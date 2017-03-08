@@ -76,7 +76,7 @@ struct ToolSketchSpheres::Impl {
   void setupProperties () {
     ViewTwoColumnGrid& properties = this->self->properties ().body ();
 
-    QPushButton& syncButton = ViewUtil::pushButton (QObject::tr ("Sync"));
+    QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
     ViewUtil::connect (syncButton, [this] () {
       this->self->mirrorSketchMeshes ();
       this->self->updateGlWidget ();

@@ -16,16 +16,15 @@ class Mesh;
 class Scene;
 class Tool;
 enum class ToolResponse;
-class ViewMainWindow;
+class Controller;
 class WingedMesh;
 
 class State {
   public:                                   
-    DECLARE_BIG2 (State, ViewMainWindow*, Config&, Cache&)
+    DECLARE_BIG2 (State, Controller*, Config&, Cache&)
     State (Config&, Cache&);
 
-    bool hasMainWindow                () const;
-    ViewMainWindow& mainWindow         ();
+    Controller& mainWindow         ();
     Config&         config             ();
     Cache&          cache              ();
     Camera&         camera             ();

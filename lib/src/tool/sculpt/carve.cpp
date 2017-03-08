@@ -36,15 +36,15 @@ struct ToolSculptCarve::Impl {
     properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
     this->self->registerSecondarySlider (intensityEdit);
 
-    QCheckBox& invertEdit = ViewUtil::checkBox (QObject::tr ("Invert"), params.invert ());
-    ViewUtil::connect (invertEdit, [this,&params] (bool i) {
+    QAbstractButton& invertEdit = ViewUtil::checkBox ("tool_sculpt_property_invert", QObject::tr ("Invert"), params.invert ());
+    ViewUtil::connectCheck (invertEdit, [this,&params] (bool i) {
       params.invert (i);
       this->self->cache ().set ("invert", i);
     });
     properties.add (invertEdit);
 
-    QCheckBox& inflateEdit = ViewUtil::checkBox (QObject::tr ("Inflate"), params.inflate ());
-    ViewUtil::connect (inflateEdit, [this,&params] (bool i) {
+    QAbstractButton& inflateEdit = ViewUtil::checkBox ("tool_sculpt_property_inflate", QObject::tr ("Inflate"), params.inflate ());
+    ViewUtil::connectCheck (inflateEdit, [this,&params] (bool i) {
       params.inflate (i);
       this->self->cache ().set ("inflate", i);
     });

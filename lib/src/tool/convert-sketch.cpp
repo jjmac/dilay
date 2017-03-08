@@ -14,7 +14,6 @@
 #include "tools.hpp"
 #include "view/double-slider.hpp"
 #include "view/pointing-event.hpp"
-#include "view/properties.hpp"
 #include "view/tool-tip.hpp"
 #include "view/util.hpp"
 #include "winged/mesh.hpp"

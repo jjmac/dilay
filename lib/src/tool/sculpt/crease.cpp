@@ -58,3 +58,6 @@ struct ToolSculptCrease::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptCrease)
+
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptCrease, float, intensity, SBCreaseParameters)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptCrease, bool , invert, SBCreaseParameters)

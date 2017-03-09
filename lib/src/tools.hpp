@@ -27,12 +27,27 @@ DECLARE_TOOL_SCULPT (ToolSculptDrag   , "sculpt/drag",
                      DECLARE_TOOL_SCULPT_PARAM(bool, discardBackfaces)
                      DECLARE_TOOL_SCULPT_PARAM(MovementConstraint, constraint)
                      )
-DECLARE_TOOL_SCULPT (ToolSculptGrab   , "sculpt/grab",)
-DECLARE_TOOL_SCULPT (ToolSculptSmooth , "sculpt/smooth",)
-DECLARE_TOOL_SCULPT (ToolSculptFlatten, "sculpt/flatten",)
-DECLARE_TOOL_SCULPT (ToolSculptCrease , "sculpt/crease",)
-DECLARE_TOOL_SCULPT (ToolSculptPinch  , "sculpt/pinch",)
-DECLARE_TOOL_SCULPT (ToolSculptReduce , "sculpt/reduce",)
+DECLARE_TOOL_SCULPT (ToolSculptGrab   , "sculpt/grab",
+					 DECLARE_TOOL_SCULPT_PARAM(bool, discardBackfaces)
+					 DECLARE_TOOL_SCULPT_PARAM(MovementConstraint, constraint)
+					 )
+DECLARE_TOOL_SCULPT (ToolSculptSmooth , "sculpt/smooth",
+					 DECLARE_TOOL_SCULPT_PARAM(float, intensity)
+					 DECLARE_TOOL_SCULPT_PARAM(bool, relaxOnly)
+					 )
+DECLARE_TOOL_SCULPT (ToolSculptFlatten, "sculpt/flatten",
+					 DECLARE_TOOL_SCULPT_PARAM(float, intensity)
+					 )
+DECLARE_TOOL_SCULPT (ToolSculptCrease , "sculpt/crease",
+					 DECLARE_TOOL_SCULPT_PARAM(float, intensity)
+					 DECLARE_TOOL_SCULPT_PARAM(bool , invert)
+					 )
+DECLARE_TOOL_SCULPT (ToolSculptPinch  , "sculpt/pinch",
+					 DECLARE_TOOL_SCULPT_PARAM(bool , invert)
+					 )
+DECLARE_TOOL_SCULPT (ToolSculptReduce , "sculpt/reduce",
+					 DECLARE_TOOL_SCULPT_PARAM(float, intensity)
+					 )
 
 DECLARE_TOOL (ToolNewSketch, "new-sketch", DECLARE_TOOL_RUN_INITIALIZE)
 

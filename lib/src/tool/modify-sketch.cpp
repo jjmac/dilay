@@ -44,11 +44,11 @@ struct ToolModifySketch::Impl {
     , scaling           (s->state ().camera ())
     , transformChildren (s->cache ().get <bool> ("transform-children", false))
     , snap              (s->cache ().get <bool> ("snap", true))
-    , snapWidthEdit     (ViewUtil::slider (1, s->cache ().get <int> ("snap-width", 5), 10))
+	, snapWidthEdit     (ViewUtil::slider (1, s->cache ().get <int> ("snapWidth", 5), 10))
   {
     this->self->renderMirror (false);
 
-    this->setupProperties ();
+    // this->setupProperties ();
     this->setupToolTip    ();
   }
 
@@ -94,7 +94,7 @@ struct ToolModifySketch::Impl {
 
       this->snapWidthEdit.setEnabled (this->snap);
       ViewUtil::connect (this->snapWidthEdit, [this] (int w) {
-        this->self->cache ().set ("snap-width", w);
+		this->self->cache ().set ("snapWidth", w);
       });
       properties.addStacked (QObject::tr ("Snap width"), this->snapWidthEdit);
     }

@@ -74,7 +74,7 @@ namespace {
     addColorButton (glWidget, *grid, "editor/background"          , QObject::tr ("Background"));
     addColorButton (glWidget, *grid, "editor/axis/color/normal"   , QObject::tr ("Axis"));
     addColorButton (glWidget, *grid, "editor/axis/color/label"    , QObject::tr ("Axis label"));
-    addColorButton (glWidget, *grid, "editor/floor-plane/color"   , QObject::tr ("Floor-plane"));
+	addColorButton (glWidget, *grid, "editor/floorPlane/color"   , QObject::tr ("Floor-plane"));
     addColorButton (glWidget, *grid, "editor/mesh/color/normal"   , QObject::tr ("Mesh"));
     addColorButton (glWidget, *grid, "editor/mesh/color/wireframe", QObject::tr ("Wireframe"));
     addColorButton (glWidget, *grid, "editor/sketch/bubble/color" , QObject::tr ("Sketch"));
@@ -113,17 +113,17 @@ namespace {
   QWidget* makeCameraPage (ViewGlWidget& glWidget) {
     ViewTwoColumnGrid* grid = new ViewTwoColumnGrid;
 
-    addFloatEdit ( glWidget, *grid, "editor/camera/near-clipping", QObject::tr ("Near clipping plane")
+	addFloatEdit ( glWidget, *grid, "editor/camera/nearClipping", QObject::tr ("Near clipping plane")
                  , Util::epsilon (), 1.0f );
-    addFloatEdit ( glWidget, *grid, "editor/camera/far-clipping", QObject::tr ("Far clipping plane")
+	addFloatEdit ( glWidget, *grid, "editor/camera/farClipping", QObject::tr ("Far clipping plane")
                  , 100.0f, std::numeric_limits <float>::max () );
-    addFloatEdit ( glWidget, *grid, "editor/camera/rotation-factor", QObject::tr ("Rotation factor")
+	addFloatEdit ( glWidget, *grid, "editor/camera/rotationFactor", QObject::tr ("Rotation factor")
                  , Util::epsilon (), 100.f );
-    addFloatEdit ( glWidget, *grid, "editor/camera/movement-factor", QObject::tr ("Movement factor")
+	addFloatEdit ( glWidget, *grid, "editor/camera/movementFactor", QObject::tr ("Movement factor")
                  , Util::epsilon (), 100.f );
-    addFloatEdit ( glWidget, *grid, "editor/camera/zoom-in-factor", QObject::tr ("Zoom factor")
+	addFloatEdit ( glWidget, *grid, "editor/camera/zoomInFactor", QObject::tr ("Zoom factor")
                  , Util::epsilon (), 100.f );
-    addFloatEdit ( glWidget, *grid, "editor/camera/field-of-view", QObject::tr ("Field of view")
+	addFloatEdit ( glWidget, *grid, "editor/camera/fieldOfView", QObject::tr ("Field of view")
                  , Util::epsilon (), 120.f );
 
     grid->addStretcher ();
@@ -139,13 +139,13 @@ namespace {
 
     ViewTwoColumnGrid* gridSculpt = new ViewTwoColumnGrid;
     gridSculpt->addLeft (QObject::tr ("Sculpt"));
-    addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/detail-factor"
+	addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/detailFactor"
                    , QObject::tr ("Detail factor"), Util::epsilon (), 1.0f );
-    addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/step-width-factor"
+	addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/stepWidthFactor"
                    , QObject::tr ("Step width factor"), Util::epsilon (), 1.0f );
-    addColorButton ( glWidget, *gridSculpt, "editor/tool/sculpt/cursor-color"
+	addColorButton ( glWidget, *gridSculpt, "editor/tool/sculpt/cursorColor"
                    , QObject::tr ("Cursor color") );
-    addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/max-absolute-radius"
+	addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/maxAbsoluteRadius"
                    , QObject::tr ("Maximum absolute radius"), Util::epsilon (), 100.0f );
     addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/mirror/width"
                    , QObject::tr ("Mirror width"), Util::epsilon (), 1.0f );
@@ -155,9 +155,9 @@ namespace {
 
     ViewTwoColumnGrid* gridSketch = new ViewTwoColumnGrid;
     gridSketch->addLeft (QObject::tr ("Sketch"));
-    addFloatEdit   ( glWidget, *gridSketch, "editor/tool/sketch-spheres/step-width-factor"
+	addFloatEdit   ( glWidget, *gridSketch, "editor/tool/sketchSpheres/stepWidthFactor"
                    , QObject::tr ("Step width factor"), Util::epsilon (), 1.0f );
-    addColorButton ( glWidget, *gridSketch, "editor/tool/sketch-spheres/cursor-color"
+	addColorButton ( glWidget, *gridSketch, "editor/tool/sketchSpheres/cursorColor"
                    , QObject::tr ("Cursor color") );
     gridSketch->addStretcher ();
 
@@ -170,17 +170,17 @@ namespace {
   QWidget* makeMiscPage (ViewGlWidget& glWidget) {
     ViewTwoColumnGrid* grid = new ViewTwoColumnGrid;
 
-    addIntEdit ( glWidget, *grid, "editor/undo-depth", QObject::tr ("Undo depth")
+	addIntEdit ( glWidget, *grid, "editor/undoDepth", QObject::tr ("Undo depth")
                , 1, std::numeric_limits <int>::max () );
-    addIntEdit ( glWidget, *grid, "window/initial-width", QObject::tr ("Initial window width")
+	addIntEdit ( glWidget, *grid, "window/initialWidth", QObject::tr ("Initial window width")
                , 1, std::numeric_limits <int>::max () );
-    addIntEdit ( glWidget, *grid, "window/initial-height", QObject::tr ("Initial window height")
+	addIntEdit ( glWidget, *grid, "window/initialHeight", QObject::tr ("Initial window height")
                , 1, std::numeric_limits <int>::max () );
 
     addVectorEdit (glWidget, *grid, "editor/axis/scaling", QObject::tr ("Axis scaling"));
-    addVectorEdit (glWidget, *grid, "editor/axis/arrow-scaling", QObject::tr ("Axis-arrow scaling"));
+	addVectorEdit (glWidget, *grid, "editor/axis/arrowScaling", QObject::tr ("Axis-arrow scaling"));
 
-    addFloatEdit ( glWidget, *grid, "editor/floor-plane/tile-width"
+	addFloatEdit ( glWidget, *grid, "editor/floorPlane/tileWidth"
                  , QObject::tr ("Floor-plane tile-width"), Util::epsilon (), 10.0f );
 
     grid->addStretcher ();

@@ -37,6 +37,8 @@ class Tool {
     void             close                  ();
     void             fromConfig             ();
 
+	bool             hasMirror              () const;
+	void             mirror                 (bool);
   protected:
     State&           state                  () const;
     void             updateGlWidget         ();
@@ -50,9 +52,7 @@ class Tool {
     void             snapshotWingedMeshes   ();
     void             snapshotSketchMeshes   ();
     bool             intersectsRecentOctree (const glm::ivec2&, Intersection&) const;
-    bool             hasMirror              () const;
     const Mirror&    mirror                 () const;
-    void             mirror                 (bool);
     void             renderMirror           (bool);
     const Dimension* mirrorDimension        () const;
     void             mirrorWingedMeshes     ();

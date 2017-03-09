@@ -20,7 +20,7 @@ struct ToolSculptGrab::Impl {
     : self (s)
     , movement (this->self->state ().camera (), MovementConstraint::CameraPlane)
   {
-    if (this->self->cache ().get <bool> ("along-primary-plane", false)) {
+	if (this->self->cache ().get <bool> ("alongPrimaryPlane", false)) {
       this->movement.constraint (MovementConstraint::PrimaryPlane);
     }
   }
@@ -30,7 +30,7 @@ struct ToolSculptGrab::Impl {
 
     params.smoothness       (1.0f);
     params.linearStep       (true);
-    params.discardBackfaces (this->self->cache ().get <bool>  ("discard-backfaces", false));
+	params.discardBackfaces (this->self->cache ().get <bool>  ("discardBackfaces", false));
   }
 
   void runSetupCursor (ViewCursor&) {}
@@ -45,7 +45,7 @@ struct ToolSculptGrab::Impl {
     ViewUtil::connect (primPlaneEdit, [this] (bool p) {
       this->movement.constraint ( p ? MovementConstraint::PrimaryPlane
                                     : MovementConstraint::CameraPlane );
-      this->self->cache ().set ("along-primary-plane", p);
+	  this->self->cache ().set ("alongPrimaryPlane", p);
     });
     properties.add (primPlaneEdit);
 
@@ -53,7 +53,7 @@ struct ToolSculptGrab::Impl {
                                                 , params.discardBackfaces () );
     ViewUtil::connect (discardEdit, [this,&params] (bool d) {
       params.discardBackfaces (d);
-      this->self->cache ().set ("discard-backfaces", d);
+	  this->self->cache ().set ("discardBackfaces", d);
     });
     properties.add (discardEdit);
   }
@@ -69,3 +69,14 @@ struct ToolSculptGrab::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptGrab)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptGrab, bool, discardBackfaces, SBDraglikeParameters)
+MovementConstraint ToolSculptGrab::constraint()
+{
+	return impl->movement.constraint();
+}
+void ToolSculptGrab::constraint(MovementConstraint c)
+{
+	impl->movement.constraint(c);
+	cache ().set ("alongPrimaryPlane", c);
+}
+

@@ -67,9 +67,9 @@ struct ViewFloorPlane::Impl {
   }
 
   void runFromConfig (const Config& config) {
-    this->mesh.color (config.get <Color> ("editor/floor-plane/color"));
+	this->mesh.color (config.get <Color> ("editor/floorPlane/color"));
 
-    this->tileWidth = config.get <float> ("editor/floor-plane/tile-width");
+    this->tileWidth = config.get <float> ("editor/floorPlane/tileWidth");
   }
 };
 

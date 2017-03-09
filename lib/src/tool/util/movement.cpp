@@ -162,7 +162,7 @@ struct ToolUtilMovement::Impl {
   }
 
   void addProperties (ViewTwoColumnGrid& properties, const std::function <void ()>& onClick) {
-    QButtonGroup& constraintEdit = *new QButtonGroup;
+	QButtonGroup& constraintEdit = *new QButtonGroup;
     properties.add ( constraintEdit , { QObject::tr ("X-axis")
                                       , QObject::tr ("Y-axis")
                                       , QObject::tr ("Z-axis")
@@ -176,7 +176,8 @@ struct ToolUtilMovement::Impl {
       this->constraint = constraintFromInt (id);
       onClick ();
     });
-    constraintEdit.button (constraintToInt (this->constraint))->click ();
+//	constraintEdit.button(this->constraint)->setChecked(true);
+	constraintEdit.button (constraintToInt (this->constraint))->click ();
   }
 };
 

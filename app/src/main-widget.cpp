@@ -22,6 +22,7 @@
 #include "view/properties.hpp"
 #include "view/util.hpp"
 #include "properties-widget.hpp"
+#include <QFrame>
 
 ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config, Cache& cache)
     : m_glWidget   (new ViewGlWidget (mW, config, cache))
@@ -41,7 +42,12 @@ ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config, Cache& cache
 
 QWidget* ViewMainWidget::initalizeToolPane ()
 {
-    QWidget* newToolPane = new QWidget();
+	QWidget* newToolPane = new QWidget();
+
+	QPalette pal = palette();
+	pal.setColor(QPalette::Background, QColor(128, 128, 128));
+	newToolPane->setAutoFillBackground(true);
+	newToolPane->setPalette(pal);
     QVBoxLayout* layout = new QVBoxLayout(newToolPane);
     QHBoxLayout* menuLayout = new QHBoxLayout();
     QAbstractButton& sculptButton = ViewUtil::pushButton ("sculpt_mode", "Sculpt");
@@ -160,11 +166,15 @@ void ViewMainWidget::addToolButton (QLayout* layout, const QString& name, const 
         selectOnly (button);
 
         State& s = m_glWidget->state ();
+		m_properties->reset();
         s.resetTool (false);
-        s.setTool   (std::move (*new T (s)));
-        m_properties->update(dynamic_cast<T&>(s.tool()));
+		T* t = new T (s);
+		s.setTool   (std::move (*t));
+		m_properties->update(*t);
+
+		this->m_glWidget->layout()->update();
     });
-    layout->addWidget           (&button);
+	layout->addWidget(&button);
     m_toolButtons.push_back (&button);
 }
 

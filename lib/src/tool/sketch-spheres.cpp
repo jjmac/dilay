@@ -68,7 +68,7 @@ struct ToolSketchSpheres::Impl {
     , heightEdit      (ViewUtil::slider ( 2, 0.01f, s->cache ().get <float> ("height", 0.2f)
                                         , 0.45f ))
     , smoothEffect    (toSmoothEffect (s->cache ().get <int> 
-                        ("smooth-effect", toInt (SketchPathSmoothEffect::Embed))))
+						("smoothEffect", toInt (SketchPathSmoothEffect::Embed))))
     , stepWidthFactor (0.0f)
     , mesh            (nullptr)
   {}
@@ -110,7 +110,7 @@ struct ToolSketchSpheres::Impl {
                                         } );
     ViewUtil::connect (smoothEffectEdit, [this] (int id) {
       this->smoothEffect = toSmoothEffect (id);
-      this->self->cache ().set ("smooth-effect", id);
+	  this->self->cache ().set ("smoothEffect", id);
     });
     smoothEffectEdit.button (toInt (this->smoothEffect))->click ();
   }
@@ -133,7 +133,7 @@ struct ToolSketchSpheres::Impl {
   ToolResponse runInitialize () {
     this->self->renderMirror (false);
 
-    this->setupProperties ();
+    // this->setupProperties ();
     this->setupToolTip    ();
     this->setupCursor     ();
 
@@ -301,8 +301,8 @@ struct ToolSketchSpheres::Impl {
   void runFromConfig () {
     const Config& config = this->self->config ();
 
-    this->cursor.color (config.get <Color> ("editor/tool/sketch-spheres/cursor-color"));
-    this->stepWidthFactor = config.get <float> ("editor/tool/sketch-spheres/step-width-factor");
+    this->cursor.color (config.get <Color> ("editor/tool/sketchSpheres/cursorColor"));
+    this->stepWidthFactor = config.get <float> ("editor/tool/sketchSpheres/stepWidthFactor");
   }
 };
 

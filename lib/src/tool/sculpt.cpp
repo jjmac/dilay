@@ -35,6 +35,8 @@ struct ToolSculpt::Impl {
   bool              absoluteRadius;
   bool              sculpted;
 
+  float radius;
+
   Impl (ToolSculpt* s) 
     : self            (s)
     , commonCache     (this->self->cache ("sculpt"))
@@ -42,14 +44,15 @@ struct ToolSculpt::Impl {
                                            , this->commonCache.get <float> ("radius", 0.1f)
                                            , 1.0f, 3))
     , secondarySlider (nullptr)
-    , absoluteRadius  (this->commonCache.get <bool> ("absolute-radius", true))
+	, absoluteRadius  (this->commonCache.get <bool> ("absoluteRadius", true))
     , sculpted        (false)
+	, radius          (this->commonCache.get <float> ("radius", 0.1f))
   {}
 
   ToolResponse runInitialize () {
     this->setupBrush      ();
     this->setupCursor     ();
-    this->setupProperties ();
+    // this->setupProperties ();
     this->setupToolTip    ();
 
     return ToolResponse::Redraw;
@@ -87,7 +90,8 @@ struct ToolSculpt::Impl {
     ViewTwoColumnGrid& properties = this->self->properties ().body ();
 
     ViewUtil::connect (this->radiusEdit, [this] (float r) {
-      if (this->absoluteRadius) {
+		this->radius  = this->radiusEdit.doubleValue();
+	  if (this->absoluteRadius) {
         this->setAbsoluteRadius ();
       }
       else {
@@ -107,7 +111,7 @@ struct ToolSculpt::Impl {
       else {
         this->setRelativeRadius ();
       }
-      this->commonCache.set ("absolute-radius", a);
+	  this->commonCache.set ("absoluteRadius", a);
       this->self->updateGlWidget ();
     });
     properties.add (absRadiusEdit);
@@ -213,10 +217,10 @@ struct ToolSculpt::Impl {
   void runFromConfig () {
     const Config& config = this->self->config ();
 
-    this->brush.detailFactor    (config.get <float> ("editor/tool/sculpt/detail-factor"));
-    this->brush.stepWidthFactor (config.get <float> ("editor/tool/sculpt/step-width-factor"));
+	this->brush.detailFactor    (config.get <float> ("editor/tool/sculpt/detailFactor"));
+	this->brush.stepWidthFactor (config.get <float> ("editor/tool/sculpt/stepWidthFactor"));
 
-    this->cursor.color  (this->self->config ().get <Color> ("editor/tool/sculpt/cursor-color"));
+	this->cursor.color  (this->self->config ().get <Color> ("editor/tool/sculpt/cursorColor"));
   }
 
   void addDefaultToolTip (ViewToolTip& toolTip, bool hasInvertedMode) {
@@ -365,14 +369,13 @@ struct ToolSculpt::Impl {
     this->secondarySlider = &slider;
   }
 
-  void setRelativeRadius (float distance) {
-    const Camera& cam    = this->self->state ().camera ();
-    const float   factor = this->radiusEdit.doubleValue ();
-    const float   radius = cam.toWorld (float (cam.resolution ().x) * factor, distance);
+  void setRelativeRadius ( float distance) {
+	const Camera& cam    = this->self->state ().camera ();
+	const float   factor = cam.toWorld (float (cam.resolution ().x) * this->radius, distance);
 
     this->absoluteRadius = false;
-    this->cursor.radius (radius);
-    this->brush.radius (radius);
+	this->cursor.radius (factor);
+	this->brush.radius (factor);
   }
 
   void setRelativeRadius () {
@@ -381,12 +384,11 @@ struct ToolSculpt::Impl {
   }
 
   void setAbsoluteRadius () {
-    const float max    = this->self->config ().get <float> ("editor/tool/sculpt/max-absolute-radius");
-    const float factor = this->radiusEdit.doubleValue ();
+	const float max    = this->self->config ().get <float> ("editor/tool/sculpt/maxAbsoluteRadius");
 
     this->absoluteRadius = true;
-    this->brush.radius (factor * max);
-    this->cursor.radius (factor * max);
+	this->brush.radius (this->radius * max);
+	this->cursor.radius (this->radius * max);
   }
 };
 
@@ -406,3 +408,54 @@ DELEGATE1       (ToolResponse, ToolSculpt, runPointingEvent, const ViewPointingE
 DELEGATE1       (ToolResponse, ToolSculpt, runWheelEvent, const QWheelEvent&)
 DELEGATE1       (ToolResponse, ToolSculpt, runCursorUpdate, const glm::ivec2&)
 DELEGATE        (void        , ToolSculpt, runFromConfig)
+
+
+float ToolSculpt::radius() const
+{
+	return impl->radius;
+}
+void  ToolSculpt::radius(float r)
+{
+	impl->radius = r;
+	if (impl->absoluteRadius) {
+		impl->setAbsoluteRadius ();
+	  }
+	  else {
+		impl->setRelativeRadius ();
+	  }
+	impl->commonCache.set ("radius", r);
+	updateGlWidget ();
+}
+
+bool ToolSculpt::absoluteRadius() const
+{
+	return impl->absoluteRadius;
+}
+void ToolSculpt::absoluteRadius(bool b)
+{
+	if (b) {
+	  impl->setAbsoluteRadius ();
+	}
+	else {
+	  impl->setRelativeRadius ();
+	}
+	impl->commonCache.set ("absoluteRadius", b);
+	updateGlWidget ();
+
+}
+
+bool ToolSculpt::subdivide() const
+{
+	return impl->brush.subdivide ();
+}
+void ToolSculpt::subdivide(bool b)
+{
+	impl->brush.subdivide (b);
+	impl->commonCache.set ("subdivide", b);
+}
+
+void ToolSculpt::syncMirror()
+{
+	mirrorWingedMeshes ();
+	updateGlWidget ();
+}

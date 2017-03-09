@@ -25,7 +25,7 @@ struct ToolMoveMesh::Impl {
                , s->cache ().getFrom <MovementConstraint> ( "constraint"
                                                           , MovementConstraint::CameraPlane ))
   {
-    this->setupProperties ();
+    // this->setupProperties ();
     this->setupToolTip    ();
   }
 

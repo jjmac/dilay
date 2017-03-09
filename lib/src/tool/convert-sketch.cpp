@@ -45,12 +45,12 @@ struct ToolConvertSketch::Impl {
     , minResolution (0.01f)
     , maxResolution (0.1f)
     , resolution    (s->cache ().get <float> ("resolution", 0.06))
-    , moveToCenter  (s->cache ().get <bool>  ("move-to-center", true))
-    , smoothMesh    (s->cache ().get <bool>  ("smooth-mesh", true))
+	, moveToCenter  (s->cache ().get <bool>  ("moveToCenter", true))
+	, smoothMesh    (s->cache ().get <bool>  ("smoothMesh", true))
   {
     this->self->renderMirror (false);
 
-    this->setupProperties ();
+	// this->setupProperties ();
     this->setupToolTip    ();
   }
 
@@ -70,7 +70,7 @@ struct ToolConvertSketch::Impl {
                                                      , this->moveToCenter );
     ViewUtil::connect (moveToCenterEdit, [this] (bool m) {
       this->moveToCenter = m;
-      this->self->cache ().set ("move-to-center", m);
+	  this->self->cache ().set ("moveToCenter", m);
     });
     properties.add (moveToCenterEdit);
 
@@ -78,7 +78,7 @@ struct ToolConvertSketch::Impl {
                                                    , this->smoothMesh );
     ViewUtil::connect (smoothMeshEdit, [this] (bool s) {
       this->smoothMesh = s;
-      this->self->cache ().set ("smooth-mesh", s);
+	  this->self->cache ().set ("smoothMesh", s);
     });
     properties.add (smoothMeshEdit);
   }
@@ -150,7 +150,7 @@ bool ToolConvertSketch::getMoveToCenter() const
 void ToolConvertSketch::setMoveToCenter(bool b)
 {
     impl->moveToCenter = b;
-    cache ().set ("move-to-center", b);
+	cache ().set ("moveToCenter", b);
 }
 
 bool ToolConvertSketch::getSmoothMesh() const
@@ -160,6 +160,6 @@ bool ToolConvertSketch::getSmoothMesh() const
 void ToolConvertSketch::setSmoothMesh(bool b)
 {
     impl->smoothMesh = b;
-    cache ().set ("smooth-mesh", b);
+	cache ().set ("smoothMesh", b);
 }
 

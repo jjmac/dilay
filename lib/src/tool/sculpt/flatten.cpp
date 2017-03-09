@@ -46,3 +46,4 @@ struct ToolSculptFlatten::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptFlatten)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptFlatten, float, intensity, SBFlattenParameters)

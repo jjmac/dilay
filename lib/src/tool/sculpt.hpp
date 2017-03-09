@@ -18,8 +18,19 @@ class ToolSculpt : public Tool {
   public:
     DECLARE_BIG2 (ToolSculpt, State&, const char*)
 
+	float radius() const;
+	void  radius(float r);
+
+	bool absoluteRadius() const;
+	void absoluteRadius(bool b);
+
+	bool subdivide() const;
+	void subdivide(bool b);
+
+	void syncMirror();
+
   protected:
-        SculptBrush& brush                    ();
+	SculptBrush& brush                    ();
     ViewCursor&  cursor                   ();
     void         addDefaultToolTip        (ViewToolTip&, bool) const;
     void         addSecSliderWheelToolTip (ViewToolTip&, const QString&) const;

@@ -144,9 +144,9 @@ struct ToolMoveCamera::Impl {
   }
 
   void runFromConfig (const Config& config) {
-    this->rotationFactor = config.get <float> ("editor/camera/rotation-factor");
-    this->movementFactor = config.get <float> ("editor/camera/movement-factor");
-    this->zoomInFactor   = config.get <float> ("editor/camera/zoom-in-factor");
+    this->rotationFactor = config.get <float> ("editor/camera/rotationFactor");
+    this->movementFactor = config.get <float> ("editor/camera/movementFactor");
+    this->zoomInFactor   = config.get <float> ("editor/camera/zoomInFactor");
   }
 };
 

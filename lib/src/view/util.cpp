@@ -95,6 +95,32 @@ ViewDoubleSlider& ViewUtil :: slider ( unsigned short numDecimals
   return slider;
 }
 
+QGroupButton&     ViewUtil::contraint      (int selected)
+{
+	QButtonGroup& constraintEdit = new QButtonGroup();
+	int id = 0;
+	for (const QString& label : { QObject::tr ("X-axis")
+		 , QObject::tr ("Y-axis")
+		 , QObject::tr ("Z-axis")
+		 , QObject::tr ("XY-plane")
+		 , QObject::tr ("XZ-plane")
+		 , QObject::tr ("YZ-plane")
+		 , QObject::tr ("Camera-plane")
+		 , QObject::tr ("Primary plane")
+		 }) {
+	  QRadioButton& button = radioButton (label);
+	  if (id == selected)
+	  {
+		  button.setChecked(true);
+	  }
+
+	  constraintEdit.addButton (&button, id);
+	  id++;
+	}
+
+	return constraintEdit;
+}
+
 QFrame& ViewUtil :: horizontalLine () {
   QFrame& frame = *new QFrame;
   frame.setFrameShape  (QFrame::HLine);

@@ -169,7 +169,7 @@ struct ViewAxis::Impl {
     this->axisLabelColor   = config.get <Color>     ("editor/axis/color/label");
     this->axisColor        = config.get <Color>     ("editor/axis/color/normal");
     this->axisScaling      = config.get <glm::vec3> ("editor/axis/scaling");
-    this->axisArrowScaling = config.get <glm::vec3> ("editor/axis/arrow-scaling");
+	this->axisArrowScaling = config.get <glm::vec3> ("editor/axis/arrowScaling");
   }
 };
 

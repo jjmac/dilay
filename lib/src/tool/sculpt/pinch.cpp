@@ -46,3 +46,4 @@ struct ToolSculptPinch::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptPinch)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptPinch, bool , invert, SBPinchParameters)

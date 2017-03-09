@@ -26,8 +26,8 @@ int main (int argv, char **args) {
   }
 
   ViewMainWindow mainWindow (config, cache);
-  mainWindow.resize ( config.get <int> ("window/initial-width")
-                    , config.get <int> ("window/initial-height") );
+  mainWindow.resize ( config.get <int> ("window/initialWidth")
+					, config.get <int> ("window/initialHeight") );
   mainWindow.show   ();
 
   QObject::connect (&app, &QApplication::aboutToQuit, [&config] () {

@@ -10,6 +10,8 @@ class PropertiesWidget : public QWidget
 public:
     PropertiesWidget();
 
+	void reset();
+
     template<class T>
     void update(T& tool)
     {
@@ -21,10 +23,11 @@ public:
 private:
     void setView(ViewProperties* properties);
 
-    void updateImpl(ToolMoveMesh& tool, ViewProperties& propertiesView) ;
+	void updateImpl(ToolMoveMesh& tool, ViewProperties& propertiesView) ;
     void updateImpl(ToolDeleteMesh& tool, ViewProperties& propertiesView) ;
     void updateImpl(ToolNewMesh& tool, ViewProperties& propertiesView) ;
-    void updateImpl(ToolSculptCarve  & tool, ViewProperties& propertiesView) ;
+	void updateImpl(ToolSculpt& tool, ViewProperties& propertiesView);
+	void updateImpl(ToolSculptCarve  & tool, ViewProperties& propertiesView) ;
     void updateImpl(ToolSculptDrag   & tool, ViewProperties& propertiesView) ;
     void updateImpl(ToolSculptGrab   & tool, ViewProperties& propertiesView) ;
     void updateImpl(ToolSculptSmooth & tool, ViewProperties& propertiesView) ;

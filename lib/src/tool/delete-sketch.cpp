@@ -49,11 +49,11 @@ struct ToolDeleteSketch::Impl {
   Impl (ToolDeleteSketch* s) 
     : self           (s)
     , mode           (toMode (s->cache ().get <int> ("mode", fromMode (Mode::DeleteNode))))
-    , deleteChildren (s->cache ().get <bool> ("delete-children", false))
+	, deleteChildren (s->cache ().get <bool> ("deleteChildren", false))
   {
     this->self->renderMirror (false);
 
-    this->setupProperties ();
+//    // this->setupProperties ();
     this->setupToolTip    ();
   }
 
@@ -64,7 +64,7 @@ struct ToolDeleteSketch::Impl {
                                                        , this->deleteChildren );
     ViewUtil::connect (deleteChildrenEdit, [this] (bool m) {
       this->deleteChildren = m;
-      this->self->cache ().set ("delete-children", m);
+	  this->self->cache ().set ("deleteChildren", m);
     });
     deleteChildrenEdit.setEnabled (this->mode == Mode::DeleteNode);
 

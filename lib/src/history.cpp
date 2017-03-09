@@ -200,7 +200,7 @@ struct History::Impl {
   }
 
   void runFromConfig (const Config& config) {
-    this->undoDepth = config.get <int> ("editor/undo-depth");
+    this->undoDepth = config.get <int> ("editor/undoDepth");
   }
 };
 

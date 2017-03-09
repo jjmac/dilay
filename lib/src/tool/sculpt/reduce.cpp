@@ -49,3 +49,4 @@ struct ToolSculptReduce::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptReduce)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptReduce, float , intensity, SBReduceParameters)

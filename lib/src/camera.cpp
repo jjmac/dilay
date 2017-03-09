@@ -31,8 +31,8 @@ struct Camera::Impl {
   Impl (Camera* s, const Config& config) 
     : self         (s)
     , renderer     (config)
-    , resolution   ( config.get <int> ("window/initial-width")
-                   , config.get <int> ("window/initial-height") )
+    , resolution   ( config.get <int> ("window/initialWidth")
+                   , config.get <int> ("window/initialHeight") )
   {
     this->set ( glm::vec3 (0.0f, 0.0f, 0.0f)
               , glm::vec3 (0.0f, 0.0f, 6.0f)
@@ -171,9 +171,9 @@ struct Camera::Impl {
   void runFromConfig (const Config& config) {
     this->renderer.fromConfig (config);
 
-    this->nearClipping = config.get <float> ("editor/camera/near-clipping");
-    this->farClipping  = config.get <float> ("editor/camera/far-clipping");
-    this->fieldOfView  = glm::radians (config.get <float> ("editor/camera/field-of-view"));
+    this->nearClipping = config.get <float> ("editor/camera/nearClipping");
+    this->farClipping  = config.get <float> ("editor/camera/farClipping");
+    this->fieldOfView  = glm::radians (config.get <float> ("editor/camera/fieldOfView"));
 
     this->updateProjection ();
   }

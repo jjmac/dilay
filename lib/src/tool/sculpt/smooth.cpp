@@ -21,7 +21,7 @@ struct ToolSculptSmooth::Impl {
     auto& params = brush.parameters <SBSmoothParameters> ();
 
     params.intensity (this->self->cache ().get <float> ("intensity", 0.5f));
-    params.relaxOnly (this->self->cache ().get <bool>  ("relax-only", false));
+	params.relaxOnly (this->self->cache ().get <bool>  ("relaxOnly", false));
   }
 
   void runSetupCursor (ViewCursor&) {}
@@ -42,7 +42,7 @@ struct ToolSculptSmooth::Impl {
     ViewUtil::connect (relaxEdit, [this,&params,&intensityEdit] (bool r) {
       params.relaxOnly (r);
       intensityEdit.setEnabled (!r);
-      this->self->cache ().set ("relax-only", r);
+	  this->self->cache ().set ("relaxOnly", r);
     });
     properties.add (relaxEdit);
   }
@@ -58,3 +58,7 @@ struct ToolSculptSmooth::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptSmooth)
+
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptSmooth, float, intensity, SBSmoothParameters)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptSmooth, bool, relaxOnly, SBSmoothParameters)
+

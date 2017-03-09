@@ -2,6 +2,7 @@
 #include "view/util.hpp"
 #include <QCheckBox>
 #include <QAbstractButton>
+#include <QButtonGroup>
 #include "view/double-slider.hpp"
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
@@ -41,6 +42,14 @@ void PropertiesWidget::setView(ViewProperties* properties)
 
 void PropertiesWidget::updateImpl(ToolMoveMesh& tool, ViewProperties& propertiesView)
 {
+	ViewTwoColumnGrid& properties = propertiesView.body ();
+	QButtonGroup& constraint = ViewUtil::contraint();
+	for (auto button: constraint.buttons())
+	{
+		properties.add(*button);
+	}
+	ViewUtil::connect(constraint, [&tool] (int r) {
+	});
 }
 
 void PropertiesWidget::updateImpl(ToolDeleteMesh& tool, ViewProperties& propertiesView)

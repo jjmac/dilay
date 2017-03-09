@@ -95,9 +95,9 @@ ViewDoubleSlider& ViewUtil :: slider ( unsigned short numDecimals
   return slider;
 }
 
-QGroupButton&     ViewUtil::contraint      (int selected)
+QButtonGroup& ViewUtil :: contraint(int selected)
 {
-	QButtonGroup& constraintEdit = new QButtonGroup();
+	QButtonGroup& constraintEdit = *new QButtonGroup();
 	int id = 0;
 	for (const QString& label : { QObject::tr ("X-axis")
 		 , QObject::tr ("Y-axis")
@@ -107,7 +107,8 @@ QGroupButton&     ViewUtil::contraint      (int selected)
 		 , QObject::tr ("YZ-plane")
 		 , QObject::tr ("Camera-plane")
 		 , QObject::tr ("Primary plane")
-		 }) {
+		 })
+	{
 	  QRadioButton& button = radioButton (label);
 	  if (id == selected)
 	  {

@@ -15,7 +15,7 @@
 #include "gl-widget.hpp"
 #include "controller.h"
 #include "view/pointing-event.hpp"
-#include "view/util.hpp"
+#include "view-util.hpp"
 #include "main-window.hpp"
 
 ViewGlWidget::ViewGlWidget (ViewMainWindow& mW, Config& cfg, Cache& cch)

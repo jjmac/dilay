@@ -18,7 +18,6 @@
 #include "tool.hpp"
 #include "controller.h"
 #include "view/pointing-event.hpp"
-#include "view/properties.hpp"
 #include "view/tool-tip.hpp"
 #include "winged/mesh.hpp"
 

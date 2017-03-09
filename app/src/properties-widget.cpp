@@ -1,10 +1,10 @@
 #include "properties-widget.hpp"
-#include "view/util.hpp"
+#include "view-util.hpp"
 #include <QCheckBox>
 #include <QAbstractButton>
 #include <QButtonGroup>
 #include <QRadioButton>
-#include "view/double-slider.hpp"
+#include "double-slider.hpp"
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
 

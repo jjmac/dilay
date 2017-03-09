@@ -2,13 +2,13 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
+#include <QObject>
 #include <glm/glm.hpp>
 #include "cache.hpp"
 #include "state.hpp"
 #include "tool/util/movement.hpp"
 #include "tools.hpp"
 #include "view/pointing-event.hpp"
-#include "view/properties.hpp"
 #include "view/tool-tip.hpp"
 #include "winged/mesh.hpp"
 #include "winged/face-intersection.hpp"

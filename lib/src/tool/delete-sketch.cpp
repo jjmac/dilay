@@ -2,6 +2,7 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
+#include <QObject>
 #include "cache.hpp"
 #include "dimension.hpp"
 #include "scene.hpp"
@@ -12,9 +13,7 @@
 #include "tools.hpp"
 #include "util.hpp"
 #include "view/pointing-event.hpp"
-#include "view/properties.hpp"
 #include "view/tool-tip.hpp"
-#include "view/util.hpp"
 
 namespace {
   enum class Mode { DeleteSketch, DeleteNode, DeleteSpheres };

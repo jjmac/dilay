@@ -15,9 +15,9 @@
 #include "gl-widget.hpp"
 #include "main-window.hpp"
 #include "controller.h"
-#include "view/two-column-grid.hpp"
-#include "view/util.hpp"
-#include "view/vector-edit.hpp"
+#include "two-column-grid.hpp"
+#include "view-util.hpp"
+#include "vector-edit.hpp"
 
 namespace {
 

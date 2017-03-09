@@ -15,7 +15,7 @@
 #include "gl-widget.hpp"
 #include "main-window.hpp"
 #include "menu-bar.hpp"
-#include "view/util.hpp"
+#include "view-util.hpp"
 
 #define DLY_FILE_FILTER "Dilay (*.dly)"
 #define OBJ_FILE_FILTER "Wavefront (*.obj)"

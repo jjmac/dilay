@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "tools.hpp"
-#include "view/properties.hpp"
+#include "properties.hpp"
 
 class PropertiesWidget : public QWidget
 {

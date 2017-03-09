@@ -3,8 +3,8 @@
  * Use and redistribute under the terms of the GNU General Public License
  */
 #include <glm/glm.hpp>
-#include "../util.hpp"
-#include "view/double-slider.hpp"
+#include "util.hpp"
+#include "double-slider.hpp"
 
 struct ViewDoubleSlider::Impl {
   ViewDoubleSlider*    self;

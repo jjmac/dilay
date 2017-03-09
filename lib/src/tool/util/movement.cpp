@@ -2,8 +2,7 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QAbstractButton>
-#include <QButtonGroup>
+#include <QObject>
 #include "../../util.hpp"
 #include "camera.hpp"
 #include "dimension.hpp"
@@ -13,8 +12,6 @@
 #include "primitive/ray.hpp"
 #include "tool/util/movement.hpp"
 #include "view/pointing-event.hpp"
-#include "view/properties.hpp"
-#include "view/util.hpp"
 
 namespace {
   int constraintToInt (MovementConstraint c) {
@@ -161,24 +158,6 @@ struct ToolUtilMovement::Impl {
     this->position         = p;
   }
 
-  void addProperties (ViewTwoColumnGrid& properties, const std::function <void ()>& onClick) {
-	QButtonGroup& constraintEdit = *new QButtonGroup;
-    properties.add ( constraintEdit , { QObject::tr ("X-axis")
-                                      , QObject::tr ("Y-axis")
-                                      , QObject::tr ("Z-axis")
-                                      , QObject::tr ("XY-plane")
-                                      , QObject::tr ("XZ-plane")
-                                      , QObject::tr ("YZ-plane")
-                                      , QObject::tr ("Camera-plane")
-                                      , QObject::tr ("Primary plane") 
-                                      } );
-    ViewUtil::connect (constraintEdit, [this, onClick] (int id) {
-      this->constraint = constraintFromInt (id);
-      onClick ();
-    });
-//	constraintEdit.button(this->constraint)->setChecked(true);
-	constraintEdit.button (constraintToInt (this->constraint))->click ();
-  }
 };
 
 
@@ -200,4 +179,3 @@ GETTER_CONST    (const glm::vec3&  , ToolUtilMovement, position)
 SETTER          (const glm::vec3&  , ToolUtilMovement, position)
 DELEGATE2       (bool              , ToolUtilMovement, move, const ViewPointingEvent&, bool)
 DELEGATE1       (void              , ToolUtilMovement, resetPosition, const glm::vec3&)
-DELEGATE2       (void              , ToolUtilMovement, addProperties, ViewTwoColumnGrid&, const std::function <void ()>&)

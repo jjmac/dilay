@@ -19,8 +19,8 @@
 #include "gl-widget.hpp"
 #include "properties-widget.hpp"
 #include "main-widget.hpp"
-#include "view/properties.hpp"
-#include "view/util.hpp"
+#include "properties.hpp"
+#include "view-util.hpp"
 #include "properties-widget.hpp"
 #include <QFrame>
 

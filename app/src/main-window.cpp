@@ -14,8 +14,8 @@
 #include "main-window.hpp"
 #include "menu-bar.hpp"
 #include "view/tool-tip.hpp"
-#include "view/util.hpp"
-#include "view/properties.hpp"
+#include "view-util.hpp"
+#include "properties.hpp"
 
 ViewMainWindow::ViewMainWindow (Config& config, Cache& cache)
 {

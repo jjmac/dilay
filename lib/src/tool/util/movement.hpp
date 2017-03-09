@@ -11,7 +11,6 @@
 
 class Camera;
 class ViewPointingEvent;
-class ViewTwoColumnGrid;
 
 enum class MovementConstraint { XAxis, YAxis, ZAxis
                               , XYPlane, XZPlane, YZPlane
@@ -29,7 +28,6 @@ class ToolUtilMovement {
           void         position      (const glm::vec3&);
           bool         move          (const ViewPointingEvent&, bool);
           void         resetPosition (const glm::vec3&);
-          void         addProperties (ViewTwoColumnGrid&, const std::function <void ()>&);
 
   private:
     IMPLEMENTATION

@@ -4,8 +4,8 @@
  */
 #include <QVBoxLayout>
 #include <QLineEdit>
-#include "view/util.hpp"
-#include "view/vector-edit.hpp"
+#include "vector-edit.hpp"
+#include "view-util.hpp"
 
 struct ViewVectorEdit::Impl {
   ViewVectorEdit*   self;

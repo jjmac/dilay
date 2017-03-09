@@ -7,7 +7,7 @@
 #include "color.hpp"
 #include "view/helper.hpp"
 #include "color-button.hpp"
-#include "view/util.hpp"
+#include "util.hpp"
 
 ViewColorButton::ViewColorButton(const Color& c)
     : m_color (c)

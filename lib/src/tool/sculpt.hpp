@@ -62,7 +62,6 @@ class ToolSculpt : public Tool {
       const char* key                    () const { return theKey ; }              \
       void        runSetupBrush          (SculptBrush&);                           \
       void        runSetupCursor         (ViewCursor&);                            \
-      void        runSetupProperties     (ViewTwoColumnGrid&);                     \
       void        runSetupToolTip        (ViewToolTip&);                           \
       bool        runSculptPointingEvent (const ViewPointingEvent&);               \
     public:                                                                        \

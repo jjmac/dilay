@@ -15,8 +15,8 @@
 #include <QToolButton>
 #include <QTimer>
 #include <glm/glm.hpp>
-#include "view/double-slider.hpp"
-#include "view/util.hpp"
+#include "double-slider.hpp"
+#include "view-util.hpp"
 
 
 QSpinBox& ViewUtil :: spinBox (int min, int value, int max, int stepSize) {

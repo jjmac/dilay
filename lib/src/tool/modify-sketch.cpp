@@ -2,10 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
-#include <QFrame>
-#include <QPushButton>
-#include <QSlider>
 #include "cache.hpp"
 #include "mirror.hpp"
 #include "primitive/plane.hpp"
@@ -31,7 +27,7 @@ struct ToolModifySketch::Impl {
   ToolUtilScaling   scaling;
   bool              transformChildren;
   bool              snap;
-  QSlider&          snapWidthEdit;
+  int               snapWidth;
 
   Impl (ToolModifySketch* s)
     : self              (s)
@@ -42,62 +38,14 @@ struct ToolModifySketch::Impl {
                         , s->cache ().getFrom <MovementConstraint>
                             ("constraint", MovementConstraint::PrimaryPlane) )
     , scaling           (s->state ().camera ())
-    , transformChildren (s->cache ().get <bool> ("transform-children", false))
+    , transformChildren (s->cache ().get <bool> ("transformChildren", false))
     , snap              (s->cache ().get <bool> ("snap", true))
-	, snapWidthEdit     (ViewUtil::slider (1, s->cache ().get <int> ("snapWidth", 5), 10))
+    , snapWidth         (s->cache ().get <int> ("snapWidth", 5))
   {
     this->self->renderMirror (false);
 
-    // this->setupProperties ();
     this->setupToolTip    ();
   }
-
-  void setupProperties () {
-      ViewTwoColumnGrid& properties = this->self->properties ().body ();
-
-      properties.add (QObject::tr ("Move along"), ViewUtil::emptyWidget ());
-      this->movement.addProperties (properties, [this] () {
-        this->self->cache ().set ("constraint", this->movement.constraint ());
-      });
-      properties.add (ViewUtil::horizontalLine ());
-
-      QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
-      ViewUtil::connect (syncButton, [this] () {
-        this->self->mirrorSketchMeshes ();
-        this->self->updateGlWidget ();
-      });
-      syncButton.setEnabled (this->self->hasMirror ());
-
-      QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
-                                                 , this->self->hasMirror () );
-      ViewUtil::connect (mirrorEdit, [this, &syncButton] (bool m) {
-        this->self->mirror (m);
-        syncButton.setEnabled (m);
-      });
-      properties.add (mirrorEdit, syncButton);
-
-      QCheckBox& transformCEdit = ViewUtil::checkBox ( QObject::tr ("Transform children")
-                                                     , this->transformChildren );
-      ViewUtil::connect (transformCEdit, [this] (bool m) {
-        this->transformChildren = m;
-        this->self->cache ().set ("transform-children", m);
-      });
-      properties.add (transformCEdit);
-
-      QCheckBox& snapEdit = ViewUtil::checkBox (QObject::tr ("Snap"), this->snap);
-      ViewUtil::connect (snapEdit, [this] (bool s) {
-        this->snap = s;
-        this->snapWidthEdit.setEnabled (s);
-        this->self->cache ().set ("snap", s);
-      });
-      properties.add (snapEdit);
-
-      this->snapWidthEdit.setEnabled (this->snap);
-      ViewUtil::connect (this->snapWidthEdit, [this] (int w) {
-		this->self->cache ().set ("snapWidth", w);
-      });
-      properties.addStacked (QObject::tr ("Snap width"), this->snapWidthEdit);
-    }
 
   void setupToolTip () {
     ViewToolTip toolTip;
@@ -210,7 +158,7 @@ struct ToolModifySketch::Impl {
 
         const auto isSnappable = [this, &mirrorPlane] (const SketchNode& node) -> bool {
           return mirrorPlane.absDistance (node.data ().center ()) <=
-                 (this->snapWidthEdit.value ()) * this->self->mirror ().width ();
+                 this->snapWidth * this->self->mirror ().width ();
         };
 
         if (this->node && isSnappable (*this->node)) {
@@ -234,3 +182,50 @@ DELEGATE_TOOL                   (ToolModifySketch)
 DELEGATE_TOOL_RUN_MOVE_EVENT    (ToolModifySketch)
 DELEGATE_TOOL_RUN_PRESS_EVENT   (ToolModifySketch)
 DELEGATE_TOOL_RUN_RELEASE_EVENT (ToolModifySketch)
+
+MovementConstraint ToolModifySketch::constraint() const
+{
+    return impl->movement.constraint();
+}
+void ToolModifySketch::constraint(MovementConstraint c)
+{
+    impl->movement.constraint(c);
+    impl->setupToolTip ();
+    cache ().set ("constraint", impl->movement.constraint ());
+}
+
+void ToolModifySketch::syncMirror()
+{
+    mirrorWingedMeshes ();
+    updateGlWidget ();
+}
+
+bool ToolModifySketch::transformChildren() const
+{
+    return impl->transformChildren;
+}
+void ToolModifySketch::transformChildren(bool m)
+{
+    impl->transformChildren = m;
+    impl->self->cache ().set ("transformChildren", m);
+}
+
+bool ToolModifySketch::snap() const
+{
+    return impl->snap;
+}
+void ToolModifySketch::snap(bool m)
+{
+    impl->snap = m;
+    impl->self->cache ().set ("snap", m);
+}
+
+int ToolModifySketch::snapWidth() const
+{
+    return impl->snapWidth;
+}
+void ToolModifySketch::snapWidth(int w)
+{
+    impl->snapWidth = w;
+    impl->self->cache ().set ("snapWidth", w);
+}

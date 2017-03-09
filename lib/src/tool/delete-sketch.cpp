@@ -2,9 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
-#include <QFrame>
-#include <QRadioButton>
 #include "cache.hpp"
 #include "dimension.hpp"
 #include "scene.hpp"
@@ -22,20 +19,20 @@
 namespace {
   enum class Mode { DeleteSketch, DeleteNode, DeleteSpheres };
 
-  int fromMode (Mode m) {
+  int fromMode (DeleteSketchMode m) {
     switch (m) {
-      case Mode::DeleteSketch:  return 0;
-      case Mode::DeleteNode:    return 1;
-      case Mode::DeleteSpheres: return 2;
+      case DeleteSketchMode::DeleteSketch:  return 0;
+      case DeleteSketchMode::DeleteNode:    return 1;
+      case DeleteSketchMode::DeleteSpheres: return 2;
       default:                  DILAY_IMPOSSIBLE;
     }
   }
 
-  Mode toMode (int m) {
+  DeleteSketchMode toMode (int m) {
     switch (m) {
-      case  0: return Mode::DeleteSketch;
-      case  1: return Mode::DeleteNode;
-      case  2: return Mode::DeleteSpheres;
+      case  0: return DeleteSketchMode::DeleteSketch;
+      case  1: return DeleteSketchMode::DeleteNode;
+      case  2: return DeleteSketchMode::DeleteSpheres;
       default: DILAY_IMPOSSIBLE;
     }
   }
@@ -43,80 +40,17 @@ namespace {
 
 struct ToolDeleteSketch::Impl {
   ToolDeleteSketch* self;
-  Mode              mode;
+  DeleteSketchMode  mode;
   bool              deleteChildren;
 
   Impl (ToolDeleteSketch* s) 
     : self           (s)
-    , mode           (toMode (s->cache ().get <int> ("mode", fromMode (Mode::DeleteNode))))
+    , mode           (toMode (s->cache ().get <int> ("mode", fromMode (DeleteSketchMode::DeleteNode))))
 	, deleteChildren (s->cache ().get <bool> ("deleteChildren", false))
   {
     this->self->renderMirror (false);
 
-//    // this->setupProperties ();
     this->setupToolTip    ();
-  }
-
-  void setupProperties () {
-    ViewTwoColumnGrid& properties = this->self->properties ().body ();
-
-    QCheckBox& deleteChildrenEdit = ViewUtil::checkBox ( QObject::tr ("Delete children")
-                                                       , this->deleteChildren );
-    ViewUtil::connect (deleteChildrenEdit, [this] (bool m) {
-      this->deleteChildren = m;
-	  this->self->cache ().set ("deleteChildren", m);
-    });
-    deleteChildrenEdit.setEnabled (this->mode == Mode::DeleteNode);
-
-    QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
-                                               , this->self->hasMirror () );
-    ViewUtil::connect (mirrorEdit, [this] (bool m) {
-      this->self->mirror (m);
-    });
-    mirrorEdit.setEnabled (this->mode != Mode::DeleteSketch);
-
-    QRadioButton& deleteSketchEdit = ViewUtil::radioButton ( QObject::tr ("Delete sketch")
-                                                           , this->mode == Mode::DeleteSketch );
-    ViewUtil::connect (deleteSketchEdit, 
-      [this, &deleteChildrenEdit, &mirrorEdit] (bool m)
-    {
-      this->mode = Mode::DeleteSketch;
-      this->self->cache ().set ("mode", fromMode (this->mode));
-
-      deleteChildrenEdit.setEnabled (!m);
-      mirrorEdit        .setEnabled (!m);
-    });
-
-    QRadioButton& deleteNodeEdit = ViewUtil::radioButton ( QObject::tr ("Delete node")
-                                                         , this->mode == Mode::DeleteNode );
-    ViewUtil::connect (deleteNodeEdit, 
-      [this, &deleteChildrenEdit, &mirrorEdit] (bool m)
-    {
-      this->mode = Mode::DeleteNode;
-      this->self->cache ().set ("mode", fromMode (this->mode));
-
-      deleteChildrenEdit.setEnabled (m);
-      mirrorEdit        .setEnabled (m);
-    });
-
-    QRadioButton& deleteSpheresEdit = ViewUtil::radioButton ( QObject::tr ("Delete spheres")
-                                                            , this->mode == Mode::DeleteSpheres );
-    ViewUtil::connect (deleteSpheresEdit, 
-      [this, &deleteChildrenEdit, &mirrorEdit] (bool m)
-    {
-      this->mode = Mode::DeleteSpheres;
-      this->self->cache ().set ("mode", fromMode (this->mode));
-
-      deleteChildrenEdit.setEnabled (!m);
-      mirrorEdit        .setEnabled (m);
-    });
-
-    properties.add (deleteSketchEdit);
-    properties.add (deleteNodeEdit);
-    properties.add (deleteSpheresEdit);
-    properties.add (ViewUtil::horizontalLine ());
-    properties.add (deleteChildrenEdit);
-    properties.add (mirrorEdit);
   }
 
   void setupToolTip () {
@@ -128,7 +62,7 @@ struct ToolDeleteSketch::Impl {
   ToolResponse runReleaseEvent (const ViewPointingEvent& e) {
     if (e.primaryButton ()) {
       switch (this->mode) {
-        case Mode::DeleteSketch: {
+        case DeleteSketchMode::DeleteSketch: {
           SketchMeshIntersection intersection;
           if (this->self->intersectsScene (e, intersection)) {
             this->self->snapshotSketchMeshes ();
@@ -136,7 +70,7 @@ struct ToolDeleteSketch::Impl {
           }
           return ToolResponse::Redraw;
         }
-        case Mode::DeleteNode: {
+        case DeleteSketchMode::DeleteNode: {
           SketchNodeIntersection intersection;
           if (this->self->intersectsScene (e, intersection)) {
             this->self->snapshotSketchMeshes ();
@@ -149,7 +83,7 @@ struct ToolDeleteSketch::Impl {
           }
           return ToolResponse::Redraw;
         }
-        case Mode::DeleteSpheres: {
+        case DeleteSketchMode::DeleteSpheres: {
           SketchPathIntersection intersection;
           if (this->self->intersectsScene (e, intersection)) {
             this->self->snapshotSketchMeshes ();
@@ -169,3 +103,24 @@ struct ToolDeleteSketch::Impl {
 
 DELEGATE_TOOL                   (ToolDeleteSketch)
 DELEGATE_TOOL_RUN_RELEASE_EVENT (ToolDeleteSketch)
+
+bool ToolDeleteSketch::deleteChildren() const
+{
+    return impl->deleteChildren;
+}
+void ToolDeleteSketch::deleteChildren(bool m)
+{
+    impl->deleteChildren = m;
+    cache ().set ("deleteChildren", m);
+
+}
+
+DeleteSketchMode ToolDeleteSketch::mode() const
+{
+    return impl->mode;
+}
+void ToolDeleteSketch::mode(DeleteSketchMode m)
+{
+    impl->mode = m;
+    cache ().set ("mode", fromMode (m));
+}

@@ -2,9 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
-#include <QFrame>
-#include <QPushButton>
 #include <QWheelEvent>
 #include "action/sculpt.hpp"
 #include "cache.hpp"
@@ -18,7 +15,6 @@
 #include "tool/sculpt.hpp"
 #include "tool/util/movement.hpp"
 #include "view/cursor.hpp"
-#include "view/double-slider.hpp"
 #include "view/pointing-event.hpp"
 #include "view/properties.hpp"
 #include "view/tool-tip.hpp"
@@ -30,8 +26,6 @@ struct ToolSculpt::Impl {
   SculptBrush       brush;
   ViewCursor        cursor;
   CacheProxy        commonCache;
-  ViewDoubleSlider& radiusEdit;
-  ViewDoubleSlider* secondarySlider;
   bool              absoluteRadius;
   bool              sculpted;
 
@@ -40,10 +34,6 @@ struct ToolSculpt::Impl {
   Impl (ToolSculpt* s) 
     : self            (s)
     , commonCache     (this->self->cache ("sculpt"))
-    , radiusEdit      (ViewUtil::slider  (2, 0.01f
-                                           , this->commonCache.get <float> ("radius", 0.1f)
-                                           , 1.0f, 3))
-    , secondarySlider (nullptr)
 	, absoluteRadius  (this->commonCache.get <bool> ("absoluteRadius", true))
     , sculpted        (false)
 	, radius          (this->commonCache.get <float> ("radius", 0.1f))
@@ -84,65 +74,6 @@ struct ToolSculpt::Impl {
     this->cursor.radius (this->brush.radius ());
 
     this->self->runSetupCursor (this->cursor);
-  }
-
-  void setupProperties () {
-    ViewTwoColumnGrid& properties = this->self->properties ().body ();
-
-    ViewUtil::connect (this->radiusEdit, [this] (float r) {
-		this->radius  = this->radiusEdit.doubleValue();
-	  if (this->absoluteRadius) {
-        this->setAbsoluteRadius ();
-      }
-      else {
-        this->setRelativeRadius ();
-      }
-      this->commonCache.set ("radius", r);
-      this->self->updateGlWidget ();
-    });
-    properties.addStacked (QObject::tr ("Radius"), this->radiusEdit);
-
-    QAbstractButton& absRadiusEdit = ViewUtil::checkBox ( "tool_sculpt_property_absradius", QObject::tr ("Absolute radius")
-                                                  , this->absoluteRadius );
-    ViewUtil::connectCheck (absRadiusEdit, [this] (bool a) {
-      if (a) {
-        this->setAbsoluteRadius ();
-      }
-      else {
-        this->setRelativeRadius ();
-      }
-	  this->commonCache.set ("absoluteRadius", a);
-      this->self->updateGlWidget ();
-    });
-    properties.add (absRadiusEdit);
-
-    QAbstractButton& subdivEdit = ViewUtil::checkBox ( "tool_sculpt_property_subdivide", QObject::tr ("Subdivide")
-                                               , this->brush.subdivide () );
-    ViewUtil::connectCheck (subdivEdit, [this] (bool s) {
-      this->brush.subdivide (s);
-      this->commonCache.set ("subdivide", s);
-    });
-    properties.add (subdivEdit);
-
-    QPushButton& syncButton = ViewUtil::pushButton ("tool_sculpt_property_syncmirror", QObject::tr ("Sync"));
-    ViewUtil::connect (syncButton, [this] () {
-      this->self->mirrorWingedMeshes ();
-      this->self->updateGlWidget ();
-    });
-    syncButton.setEnabled (this->self->hasMirror ());
-
-    QAbstractButton& mirrorEdit = ViewUtil::checkBox ( "tool_sculpt_property_mirror", QObject::tr ("Mirror")
-                                               , this->self->hasMirror () );
-    ViewUtil::connectCheck (mirrorEdit, [this,&syncButton] (bool m) {
-      this->self->mirror (m);
-      syncButton.setEnabled (m);
-    });
-
-    properties.add (mirrorEdit, syncButton);
-
-    properties.add (ViewUtil::horizontalLine ());
-
-    this->self->runSetupProperties (properties);
   }
 
   void setupToolTip () {
@@ -188,26 +119,6 @@ struct ToolSculpt::Impl {
     }
   }
 
-  ToolResponse runWheelEvent (const QWheelEvent& e) {
-    auto updateSlider = [&e] (ViewDoubleSlider& slider) {
-      if (e.delta () > 0) {
-        slider.setIntValue (slider.intValue () + slider.intSingleStep ());
-      }
-      else if (e.delta () < 0) {
-        slider.setIntValue (slider.intValue () - slider.intSingleStep ());
-      }
-    };
-
-    if (e.orientation () == Qt::Vertical) {
-      if (e.modifiers () == Qt::ShiftModifier) {
-        updateSlider (this->radiusEdit);
-      }
-      else if (this->secondarySlider && e.modifiers () == Qt::ControlModifier) {
-        updateSlider (*this->secondarySlider);
-      }
-    }
-    return ToolResponse::Redraw;
-  }
 
   ToolResponse runCursorUpdate (const glm::ivec2& pos) {
     this->updateBrushAndCursorByIntersection (pos, false, false);
@@ -365,10 +276,6 @@ struct ToolSculpt::Impl {
     }
   }
 
-  void registerSecondarySlider (ViewDoubleSlider& slider) {
-    this->secondarySlider = &slider;
-  }
-
   void setRelativeRadius ( float distance) {
 	const Camera& cam    = this->self->state ().camera ();
 	const float   factor = cam.toWorld (float (cam.resolution ().x) * this->radius, distance);
@@ -401,11 +308,9 @@ DELEGATE        (void        , ToolSculpt, sculpt)
 DELEGATE3       (bool        , ToolSculpt, carvelikeStroke, const ViewPointingEvent&, bool, const std::function <void ()>*)
 DELEGATE2       (bool        , ToolSculpt, initializeDraglikeStroke, const ViewPointingEvent&, ToolUtilMovement&)
 DELEGATE2       (bool        , ToolSculpt, draglikeStroke, const ViewPointingEvent&, ToolUtilMovement&)
-DELEGATE1       (void        , ToolSculpt, registerSecondarySlider, ViewDoubleSlider&)
 DELEGATE        (ToolResponse, ToolSculpt, runInitialize)
 DELEGATE_CONST  (void        , ToolSculpt, runRender)
 DELEGATE1       (ToolResponse, ToolSculpt, runPointingEvent, const ViewPointingEvent&)
-DELEGATE1       (ToolResponse, ToolSculpt, runWheelEvent, const QWheelEvent&)
 DELEGATE1       (ToolResponse, ToolSculpt, runCursorUpdate, const glm::ivec2&)
 DELEGATE        (void        , ToolSculpt, runFromConfig)
 

@@ -29,15 +29,6 @@ struct ToolMoveMesh::Impl {
     this->setupToolTip    ();
   }
 
-  void setupProperties () {
-    this->movement.addProperties ( this->self->properties ().body ()
-                                 , [this] ()
-    {
-      this->setupToolTip ();
-      this->self->cache ().set ("constraint", this->movement.constraint ());
-    });
-  }
-
   void setupToolTip () {
     ViewToolTip toolTip;
     toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Drag to move"));
@@ -86,3 +77,15 @@ DELEGATE_TOOL                   (ToolMoveMesh)
 DELEGATE_TOOL_RUN_MOVE_EVENT    (ToolMoveMesh)
 DELEGATE_TOOL_RUN_PRESS_EVENT   (ToolMoveMesh)
 DELEGATE_TOOL_RUN_RELEASE_EVENT (ToolMoveMesh)
+
+MovementConstraint ToolMoveMesh::constraint() const
+{
+    return impl->movement.constraint();
+}
+
+void ToolMoveMesh::constraint(MovementConstraint c)
+{
+    impl->movement.constraint(c);
+    impl->setupToolTip ();
+    cache ().set ("constraint", impl->movement.constraint ());
+}

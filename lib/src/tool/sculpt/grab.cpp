@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
 #include "state.hpp"
@@ -34,29 +33,6 @@ struct ToolSculptGrab::Impl {
   }
 
   void runSetupCursor (ViewCursor&) {}
-
-  void runSetupProperties (ViewTwoColumnGrid& properties) {
-    auto& params = this->self->brush ().parameters <SBDraglikeParameters> ();
-  
-    QCheckBox& primPlaneEdit = ViewUtil::checkBox 
-      ( QObject::tr ("Along primary plane")
-      , this->movement.constraint () == MovementConstraint::PrimaryPlane
-      );
-    ViewUtil::connect (primPlaneEdit, [this] (bool p) {
-      this->movement.constraint ( p ? MovementConstraint::PrimaryPlane
-                                    : MovementConstraint::CameraPlane );
-	  this->self->cache ().set ("alongPrimaryPlane", p);
-    });
-    properties.add (primPlaneEdit);
-
-    QCheckBox& discardEdit = ViewUtil::checkBox ( QObject::tr ("Discard backfaces")
-                                                , params.discardBackfaces () );
-    ViewUtil::connect (discardEdit, [this,&params] (bool d) {
-      params.discardBackfaces (d);
-	  this->self->cache ().set ("discardBackfaces", d);
-    });
-    properties.add (discardEdit);
-  }
 
   void runSetupToolTip (ViewToolTip& toolTip) {
     this->self->addDefaultToolTip (toolTip, false);

@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
 #include "tools.hpp"
@@ -24,32 +23,6 @@ struct ToolSculptCarve::Impl {
   }
 
   void runSetupCursor (ViewCursor&) {}
-
-  void runSetupProperties (ViewTwoColumnGrid& properties) {
-    auto& params = this->self->brush ().parameters <SBCarveParameters> ();
-
-    ViewDoubleSlider& intensityEdit = ViewUtil::slider (3, 0.0f, params.intensity (), 0.05f);
-    ViewUtil::connect (intensityEdit, [this,&params] (float i) {
-      params.intensity (i);
-      this->self->cache ().set ("intensity", i);
-    });
-    properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
-    this->self->registerSecondarySlider (intensityEdit);
-
-    QAbstractButton& invertEdit = ViewUtil::checkBox ("tool_sculpt_property_invert", QObject::tr ("Invert"), params.invert ());
-    ViewUtil::connectCheck (invertEdit, [this,&params] (bool i) {
-      params.invert (i);
-      this->self->cache ().set ("invert", i);
-    });
-    properties.add (invertEdit);
-
-    QAbstractButton& inflateEdit = ViewUtil::checkBox ("tool_sculpt_property_inflate", QObject::tr ("Inflate"), params.inflate ());
-    ViewUtil::connectCheck (inflateEdit, [this,&params] (bool i) {
-      params.inflate (i);
-      this->self->cache ().set ("inflate", i);
-    });
-    properties.add (inflateEdit);
-  }
 
   void runSetupToolTip (ViewToolTip& toolTip) {
     this->self->addDefaultToolTip        (toolTip, true);

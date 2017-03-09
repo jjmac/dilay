@@ -8,10 +8,14 @@
 #include "tool.hpp"
 #include "tool/sculpt.hpp"
 #include "tool/util/movement.hpp"
+#include "sketch/mesh.hpp"
 
-DECLARE_TOOL (ToolMoveMesh, "move", DECLARE_TOOL_RUN_MOVE_EVENT
+DECLARE_TOOL2 (ToolMoveMesh, "move", DECLARE_TOOL_RUN_MOVE_EVENT
                                     DECLARE_TOOL_RUN_PRESS_EVENT
-                                    DECLARE_TOOL_RUN_RELEASE_EVENT )
+                                    DECLARE_TOOL_RUN_RELEASE_EVENT,
+                                    MovementConstraint constraint() const;
+                                    void constraint(MovementConstraint c);
+              )
 
 DECLARE_TOOL (ToolDeleteMesh, "delete-mesh", DECLARE_TOOL_RUN_RELEASE_EVENT)
 
@@ -51,17 +55,33 @@ DECLARE_TOOL_SCULPT (ToolSculptReduce , "sculpt/reduce",
 
 DECLARE_TOOL (ToolNewSketch, "new-sketch", DECLARE_TOOL_RUN_INITIALIZE)
 
-DECLARE_TOOL (ToolModifySketch, "modify-sketch", DECLARE_TOOL_RUN_MOVE_EVENT
-                                                 DECLARE_TOOL_RUN_PRESS_EVENT
-                                                 DECLARE_TOOL_RUN_RELEASE_EVENT )
+DECLARE_TOOL2 (ToolModifySketch, "modify-sketch", DECLARE_TOOL_RUN_MOVE_EVENT
+                                                  DECLARE_TOOL_RUN_PRESS_EVENT
+                                                  DECLARE_TOOL_RUN_RELEASE_EVENT,
+                                                  MovementConstraint constraint() const;
+                                                  void constraint(MovementConstraint c);
+                                                  void syncMirror();
+                                                  bool transformChildren() const;
+                                                  void transformChildren(bool);
+                                                  bool snap() const;
+                                                  void snap(bool);
+                                                  int snapWidth() const;
+                                                  void snapWidth(int);
+               )
 
-DECLARE_TOOL (ToolDeleteSketch, "delete-sketch", DECLARE_TOOL_RUN_RELEASE_EVENT)
+enum class DeleteSketchMode { DeleteSketch, DeleteNode, DeleteSpheres };
+DECLARE_TOOL2 (ToolDeleteSketch, "delete-sketch", DECLARE_TOOL_RUN_RELEASE_EVENT,
+                                                  bool deleteChildren() const;
+                                                  void deleteChildren(bool);
+                                                  DeleteSketchMode mode() const;
+                                                  void mode(DeleteSketchMode);
+               )
 
 DECLARE_TOOL (ToolRebalanceSketch, "rebalance-sketch", DECLARE_TOOL_RUN_RELEASE_EVENT
                                                        DECLARE_TOOL_RUN_CLOSE )
 
-DECLARE_TOOL2(ToolConvertSketch, "convert-sketch", DECLARE_TOOL_RUN_RELEASE_EVENT
-                                                 , float getMinResolution() const;
+DECLARE_TOOL2(ToolConvertSketch, "convert-sketch", DECLARE_TOOL_RUN_RELEASE_EVENT,
+                                                   float getMinResolution() const;
                                                    float getResolution()    const;
                                                    void  setResolution(float);
                                                    float getMaxResolution() const;
@@ -71,12 +91,21 @@ DECLARE_TOOL2(ToolConvertSketch, "convert-sketch", DECLARE_TOOL_RUN_RELEASE_EVEN
                                                    void setSmoothMesh(bool b);
 )
 
-DECLARE_TOOL (ToolSketchSpheres, "sketch-spheres", DECLARE_TOOL_RUN_INITIALIZE
+DECLARE_TOOL2 (ToolSketchSpheres, "sketch-spheres", DECLARE_TOOL_RUN_INITIALIZE
                                                    DECLARE_TOOL_RUN_RENDER
                                                    DECLARE_TOOL_RUN_MOVE_EVENT
                                                    DECLARE_TOOL_RUN_PRESS_EVENT
                                                    DECLARE_TOOL_RUN_RELEASE_EVENT
                                                    DECLARE_TOOL_RUN_MOUSE_WHEEL_EVENT
                                                    DECLARE_TOOL_RUN_CURSOR_UPDATE
-                                                   DECLARE_TOOL_RUN_FROM_CONFIG )
+                                                   DECLARE_TOOL_RUN_FROM_CONFIG,
+                                                   void syncMirror();
+                                                   float radius()    const;
+                                                   void  radius(float);
+                                                   float height()    const;
+                                                   void  height(float);
+                                                   SketchPathSmoothEffect smoothEffect() const;
+                                                   void smoothEffect(SketchPathSmoothEffect);
+
+)
 #endif

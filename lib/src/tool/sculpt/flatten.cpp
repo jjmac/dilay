@@ -23,18 +23,6 @@ struct ToolSculptFlatten::Impl {
 
   void runSetupCursor (ViewCursor&) {}
 
-  void runSetupProperties (ViewTwoColumnGrid& properties) {
-    auto& params = this->self->brush ().parameters <SBFlattenParameters> ();
-
-    ViewDoubleSlider& intensityEdit = ViewUtil::slider (2, 0.1f, params.intensity (), 1.0f);
-    ViewUtil::connect (intensityEdit, [this,&params] (float i) {
-      params.intensity (i);
-      this->self->cache ().set ("intensity", i);
-    });
-    properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
-    this->self->registerSecondarySlider (intensityEdit);
-  }
-
   void runSetupToolTip (ViewToolTip& toolTip) {
     this->self->addDefaultToolTip        (toolTip, false);
     this->self->addSecSliderWheelToolTip (toolTip, QObject::tr ("Change intensity"));

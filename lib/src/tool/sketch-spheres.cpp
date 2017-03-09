@@ -2,10 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QButtonGroup>
-#include <QCheckBox>
-#include <QFrame>
-#include <QPushButton>
 #include <QWheelEvent>
 #include "cache.hpp"
 #include "camera.hpp"
@@ -54,8 +50,9 @@ namespace {
 struct ToolSketchSpheres::Impl {
   ToolSketchSpheres*     self;
   ViewCursor             cursor;
-  ViewDoubleSlider&      radiusEdit;
-  ViewDoubleSlider&      heightEdit;
+  float                  radius;
+  float                  radiusStep;
+  float                  height;
   SketchPathSmoothEffect smoothEffect;
   float                  stepWidthFactor;
   glm::vec3              previousPosition;
@@ -63,57 +60,14 @@ struct ToolSketchSpheres::Impl {
 
   Impl (ToolSketchSpheres* s)
     : self            (s)
-    , radiusEdit      (ViewUtil::slider ( 2, 0.01f, s->cache ().get <float> ("radius", 0.1f)
-                                        , 0.3f ))
-    , heightEdit      (ViewUtil::slider ( 2, 0.01f, s->cache ().get <float> ("height", 0.2f)
-                                        , 0.45f ))
+    , radius          (s->cache ().get <float> ("radius", 0.1f))
+    , radiusStep      (0.1f)
+    , height          (s->cache ().get <float> ("height", 0.2f))
     , smoothEffect    (toSmoothEffect (s->cache ().get <int> 
 						("smoothEffect", toInt (SketchPathSmoothEffect::Embed))))
     , stepWidthFactor (0.0f)
     , mesh            (nullptr)
   {}
-
-  void setupProperties () {
-    ViewTwoColumnGrid& properties = this->self->properties ().body ();
-
-    QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
-    ViewUtil::connect (syncButton, [this] () {
-      this->self->mirrorSketchMeshes ();
-      this->self->updateGlWidget ();
-    });
-    syncButton.setEnabled (this->self->hasMirror ());
-
-    QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
-                                               , this->self->hasMirror () );
-    ViewUtil::connect (mirrorEdit, [this, &syncButton] (bool m) {
-      this->self->mirror (m);
-      syncButton.setEnabled (m);
-    });
-    properties.add (mirrorEdit, syncButton);
-
-    ViewUtil::connect (this->radiusEdit, [this] (float r) {
-      this->cursor.radius (r);
-      this->self->cache ().set ("radius", r);
-    });
-    properties.addStacked (QObject::tr ("Radius"), this->radiusEdit);
-
-    ViewUtil::connect (this->heightEdit, [this] (float d) {
-      this->self->cache ().set ("height", d);
-    });
-    properties.addStacked (QObject::tr ("Height"), this->heightEdit);
-
-    QButtonGroup& smoothEffectEdit = *new QButtonGroup;
-    properties.add ( smoothEffectEdit , { QObject::tr ("None")
-                                        , QObject::tr ("Embed")
-                                        , QObject::tr ("Embed and adjust")
-                                        , QObject::tr ("Pinch")
-                                        } );
-    ViewUtil::connect (smoothEffectEdit, [this] (int id) {
-      this->smoothEffect = toSmoothEffect (id);
-	  this->self->cache ().set ("smoothEffect", id);
-    });
-    smoothEffectEdit.button (toInt (this->smoothEffect))->click ();
-  }
 
   void setupToolTip () {
     ViewToolTip toolTip;
@@ -127,7 +81,7 @@ struct ToolSketchSpheres::Impl {
 
   void setupCursor () {
     this->cursor.disable ();
-    this->cursor.radius  (this->radiusEdit.doubleValue ());
+    this->cursor.radius  (this->radius);
   }
 
   ToolResponse runInitialize () {
@@ -151,8 +105,8 @@ struct ToolSketchSpheres::Impl {
   glm::vec3 newSpherePosition (bool considerHeight, const SketchMeshIntersection& intersection) {
     if (considerHeight) {
       return intersection.position () 
-           - (intersection.normal () * float (this->radiusEdit.doubleValue ()
-                                     * (1.0f - (2.0f * this->heightEdit.doubleValue ()))));
+           - (intersection.normal () * float (this->radius
+                                     * (1.0f - (2.0f * this->height))));
     }
     else {
       return intersection.position ();
@@ -161,7 +115,7 @@ struct ToolSketchSpheres::Impl {
 
   ToolResponse runMoveEvent (const ViewPointingEvent& e) {
     auto minDistance = [this] (const Intersection& intersection) -> bool {
-      const float d = this->radiusEdit.doubleValue () * this->stepWidthFactor;
+      const float d = this->radius * this->stepWidthFactor;
       return glm::distance (this->previousPosition, intersection.position ()) > d;
     };
 
@@ -179,7 +133,7 @@ struct ToolSketchSpheres::Impl {
 
             this->mesh->smoothPath ( intersection.path ()
                                    , PrimSphere ( intersection.position ()
-                                                , this->radiusEdit.doubleValue () )
+                                                , this->radius )
                                    , 1
                                    , this->smoothEffect
                                    , this->self->mirrorDimension () );
@@ -209,7 +163,7 @@ struct ToolSketchSpheres::Impl {
           this->mesh->addSphere ( false
                                 , intersection.position ()
                                 , this->newSpherePosition (considerHeight, intersection)
-                                , this->radiusEdit.doubleValue ()
+                                , this->radius
                                 , this->self->mirrorDimension () );
         }
       }
@@ -239,7 +193,7 @@ struct ToolSketchSpheres::Impl {
 
           this->mesh->smoothPath ( intersection.path ()
                                  , PrimSphere ( intersection.position ()
-                                              , this->radiusEdit.doubleValue () )
+                                              , this->radius )
                                  , 1
                                  , this->smoothEffect
                                  , this->self->mirrorDimension () );
@@ -253,7 +207,7 @@ struct ToolSketchSpheres::Impl {
           this->mesh->addSphere ( true
                                 , intersection.position ()
                                 , this->newSpherePosition (true, intersection)
-                                , this->radiusEdit.doubleValue ()
+                                , this->radius
                                 , this->self->mirrorDimension () );
         }
         else {
@@ -275,12 +229,10 @@ struct ToolSketchSpheres::Impl {
   ToolResponse runWheelEvent (const QWheelEvent& e) {
     if (e.orientation () == Qt::Vertical && e.modifiers () == Qt::ShiftModifier) {
       if (e.delta () > 0) {
-        this->radiusEdit.setDoubleValue ( this->radiusEdit.doubleValue ()
-                                        + this->radiusEdit.doubleSingleStep () );
+        this->radius = this->radius + this->radiusStep;
       }
       else if (e.delta () < 0) {
-        this->radiusEdit.setDoubleValue ( this->radiusEdit.doubleValue ()
-                                        - this->radiusEdit.doubleSingleStep () );
+        this->radius = this->radius - this->radiusStep;
       }
     }
     return ToolResponse::Redraw;
@@ -315,3 +267,41 @@ DELEGATE_TOOL_RUN_RELEASE_EVENT     (ToolSketchSpheres)
 DELEGATE_TOOL_RUN_MOUSE_WHEEL_EVENT (ToolSketchSpheres)
 DELEGATE_TOOL_RUN_CURSOR_UPDATE     (ToolSketchSpheres)
 DELEGATE_TOOL_RUN_FROM_CONFIG       (ToolSketchSpheres)
+
+void ToolSketchSpheres::syncMirror()
+{
+    mirrorWingedMeshes ();
+    updateGlWidget ();
+}
+
+float ToolSketchSpheres::radius() const
+{
+    return impl->radius;
+}
+void ToolSketchSpheres::radius(float f)
+{
+    impl->radius = f;
+    impl->cursor.radius (f);
+    cache ().set ("radius", f);
+}
+
+float ToolSketchSpheres::height() const
+{
+    return impl->height;
+}
+void ToolSketchSpheres::height(float f)
+{
+    impl->height = f;
+    cache ().set ("height", f);
+}
+
+SketchPathSmoothEffect ToolSketchSpheres::smoothEffect() const
+{
+    return impl->smoothEffect;
+}
+void ToolSketchSpheres::smoothEffect(SketchPathSmoothEffect f)
+{
+    impl->smoothEffect = f;
+    cache ().set ("smoothEffect", toInt(f));
+}
+

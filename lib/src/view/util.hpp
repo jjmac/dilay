@@ -23,6 +23,7 @@ class QSlider;
 class QSpinBox;
 class QString;
 class QToolButton;
+class QStringList;
 
 namespace ViewUtil {
   QSpinBox&         spinBox        (int, int, int, int = 1);
@@ -34,6 +35,7 @@ namespace ViewUtil {
   QCheckBox&        checkBox       (const QString& name, const QString&, bool = false);
   QSlider&          slider         (int, int, int);
   ViewDoubleSlider& slider         (unsigned short, float, float, float, unsigned short = 1);
+  QButtonGroup&     buttonGroup    (const QStringList&, int = 0);
   QButtonGroup&     contraint      (int = 6);
   QFrame&           horizontalLine ();
   QWidget&          emptyWidget    ();

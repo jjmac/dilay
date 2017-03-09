@@ -95,11 +95,29 @@ ViewDoubleSlider& ViewUtil :: slider ( unsigned short numDecimals
   return slider;
 }
 
+QButtonGroup& ViewUtil :: buttonGroup    (const QStringList& items, int selected)
+{
+    QButtonGroup& bg = *new QButtonGroup();
+    int id = 0;
+    for (const QString& label : items)
+    {
+      QRadioButton& button = radioButton (label);
+      if (id == selected)
+      {
+          button.setChecked(true);
+      }
+
+      bg.addButton (&button, id);
+      id++;
+    }
+
+    return bg;
+
+}
+
 QButtonGroup& ViewUtil :: contraint(int selected)
 {
-	QButtonGroup& constraintEdit = *new QButtonGroup();
-	int id = 0;
-	for (const QString& label : { QObject::tr ("X-axis")
+    return buttonGroup({ QObject::tr ("X-axis")
 		 , QObject::tr ("Y-axis")
 		 , QObject::tr ("Z-axis")
 		 , QObject::tr ("XY-plane")
@@ -107,19 +125,7 @@ QButtonGroup& ViewUtil :: contraint(int selected)
 		 , QObject::tr ("YZ-plane")
 		 , QObject::tr ("Camera-plane")
 		 , QObject::tr ("Primary plane")
-		 })
-	{
-	  QRadioButton& button = radioButton (label);
-	  if (id == selected)
-	  {
-		  button.setChecked(true);
-	  }
-
-	  constraintEdit.addButton (&button, id);
-	  id++;
-	}
-
-	return constraintEdit;
+         }, selected);
 }
 
 QFrame& ViewUtil :: horizontalLine () {

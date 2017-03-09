@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
 #include "action/sculpt.hpp"
 #include "cache.hpp"
 #include "mesh.hpp"
@@ -45,42 +44,12 @@ struct ToolConvertSketch::Impl {
     , minResolution (0.01f)
     , maxResolution (0.1f)
     , resolution    (s->cache ().get <float> ("resolution", 0.06))
-	, moveToCenter  (s->cache ().get <bool>  ("moveToCenter", true))
-	, smoothMesh    (s->cache ().get <bool>  ("smoothMesh", true))
+    , moveToCenter  (s->cache ().get <bool>  ("moveToCenter", true))
+    , smoothMesh    (s->cache ().get <bool>  ("smoothMesh", true))
   {
     this->self->renderMirror (false);
 
-	// this->setupProperties ();
     this->setupToolTip    ();
-  }
-
-  void setupProperties () {
-    ViewTwoColumnGrid& properties = this->self->properties ().body ();
-
-    ViewDoubleSlider& resolutionEdit = ViewUtil::slider (2, this->minResolution
-                                                          , this->resolution
-                                                          , this->maxResolution);
-    ViewUtil::connect (resolutionEdit, [this] (float r) {
-      this->resolution = r;
-      this->self->cache ().set ("resolution", r);
-    });
-    properties.addStacked (QObject::tr ("Resolution"), resolutionEdit);
-
-    QCheckBox& moveToCenterEdit = ViewUtil::checkBox ( QObject::tr ("Move to center")
-                                                     , this->moveToCenter );
-    ViewUtil::connect (moveToCenterEdit, [this] (bool m) {
-      this->moveToCenter = m;
-	  this->self->cache ().set ("moveToCenter", m);
-    });
-    properties.add (moveToCenterEdit);
-
-    QCheckBox& smoothMeshEdit = ViewUtil::checkBox ( QObject::tr ("Smooth mesh")
-                                                   , this->smoothMesh );
-    ViewUtil::connect (smoothMeshEdit, [this] (bool s) {
-      this->smoothMesh = s;
-	  this->self->cache ().set ("smoothMesh", s);
-    });
-    properties.add (smoothMeshEdit);
   }
 
   void setupToolTip () {
@@ -150,7 +119,7 @@ bool ToolConvertSketch::getMoveToCenter() const
 void ToolConvertSketch::setMoveToCenter(bool b)
 {
     impl->moveToCenter = b;
-	cache ().set ("moveToCenter", b);
+    cache ().set ("moveToCenter", b);
 }
 
 bool ToolConvertSketch::getSmoothMesh() const
@@ -160,6 +129,6 @@ bool ToolConvertSketch::getSmoothMesh() const
 void ToolConvertSketch::setSmoothMesh(bool b)
 {
     impl->smoothMesh = b;
-	cache ().set ("smoothMesh", b);
+    cache ().set ("smoothMesh", b);
 }
 

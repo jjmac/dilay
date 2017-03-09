@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QCheckBox>
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
 #include "tools.hpp"
@@ -21,17 +20,6 @@ struct ToolSculptPinch::Impl {
   }
 
   void runSetupCursor (ViewCursor&) {}
-
-  void runSetupProperties (ViewTwoColumnGrid& properties) {
-    auto& params = this->self->brush ().parameters <SBPinchParameters> ();
-
-    QCheckBox& invertEdit = ViewUtil::checkBox (QObject::tr ("Invert"), params.invert ());
-    ViewUtil::connect (invertEdit, [this,&params] (bool i) {
-      params.invert (i);
-      this->self->cache ().set ("invert", i);
-    });
-    properties.add (invertEdit);
-  }
 
   void runSetupToolTip (ViewToolTip& toolTip) {
     this->self->addDefaultToolTip (toolTip, true);

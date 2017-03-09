@@ -3,6 +3,7 @@
 #include <QCheckBox>
 #include <QAbstractButton>
 #include <QButtonGroup>
+#include <QRadioButton>
 #include "view/double-slider.hpp"
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
@@ -43,12 +44,13 @@ void PropertiesWidget::setView(ViewProperties* properties)
 void PropertiesWidget::updateImpl(ToolMoveMesh& tool, ViewProperties& propertiesView)
 {
 	ViewTwoColumnGrid& properties = propertiesView.body ();
-	QButtonGroup& constraint = ViewUtil::contraint();
+    QButtonGroup& constraint = ViewUtil::contraint((int)tool.constraint());
 	for (auto button: constraint.buttons())
 	{
 		properties.add(*button);
 	}
 	ViewUtil::connect(constraint, [&tool] (int r) {
+        tool.constraint(MovementConstraint(r));
 	});
 }
 
@@ -115,7 +117,6 @@ void PropertiesWidget::updateImpl(ToolSculptCarve  & tool, ViewProperties& prope
         tool.intensity(i);
     });
     properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
-//    tool.registerSecondarySlider (intensityEdit);
 
     QAbstractButton& invertEdit = ViewUtil::checkBox ("tool_sculpt_property_invert", QObject::tr ("Invert"), tool.invert ());
     ViewUtil::connectCheck (invertEdit, [&tool] (bool i) {
@@ -141,7 +142,6 @@ void PropertiesWidget::updateImpl(ToolSculptDrag & tool, ViewProperties& propert
       tool.smoothness (f);
     });
     properties.addStacked (QObject::tr ("Smoothness"), smoothnessEdit);
-//    this->self->registerSecondarySlider (smoothnessEdit);
 
     QCheckBox& primPlaneEdit = ViewUtil::checkBox
       ( QObject::tr ("Along primary plane")
@@ -167,8 +167,7 @@ void PropertiesWidget::updateImpl(ToolSculptGrab   & tool, ViewProperties& prope
 	updateImpl(dynamic_cast<ToolSculpt&>(tool), propertiesView);
 	ViewTwoColumnGrid& properties = propertiesView.body();
 
-	QCheckBox& primPlaneEdit = ViewUtil::checkBox
-	  ( QObject::tr ("Along primary plane")
+    QCheckBox& primPlaneEdit = ViewUtil::checkBox ( QObject::tr ("Along primary plane")
 	  , tool.constraint () == MovementConstraint::PrimaryPlane
 	  );
 	ViewUtil::connect (primPlaneEdit, [&tool] (bool p) {
@@ -196,7 +195,6 @@ void PropertiesWidget::updateImpl(ToolSculptSmooth & tool, ViewProperties& prope
 	});
 	intensityEdit.setEnabled (!tool.relaxOnly ());
 	properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
-//	this->self->registerSecondarySlider (intensityEdit);
 
 	QCheckBox& relaxEdit = ViewUtil::checkBox (QObject::tr ("Relax only"), tool.relaxOnly ());
 	ViewUtil::connect (relaxEdit, [&tool,&intensityEdit] (bool r) {
@@ -228,7 +226,6 @@ void PropertiesWidget::updateImpl(ToolSculptCrease & tool, ViewProperties& prope
 	  tool.intensity (i);
 	});
 	properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
-//	this->self->registerSecondarySlider (intensityEdit);
 
 	QCheckBox& invertEdit = ViewUtil::checkBox (QObject::tr ("Invert"), tool.invert ());
 	ViewUtil::connect (invertEdit, [&tool] (bool i) {
@@ -259,7 +256,6 @@ void PropertiesWidget::updateImpl(ToolSculptReduce & tool, ViewProperties& prope
 	  tool.intensity (i);
 	});
 	properties.addStacked (QObject::tr ("Intensity"), intensityEdit);
-//	this->self->registerSecondarySlider (intensityEdit);
 }
 
 void PropertiesWidget::updateImpl(ToolNewSketch& tool, ViewProperties& propertiesView)
@@ -269,11 +265,110 @@ void PropertiesWidget::updateImpl(ToolNewSketch& tool, ViewProperties& propertie
 
 void PropertiesWidget::updateImpl(ToolModifySketch& tool, ViewProperties& propertiesView)
 {
+    ViewTwoColumnGrid& properties = propertiesView.body();
 
+    properties.add (QObject::tr ("Move along"), ViewUtil::emptyWidget ());
+    QButtonGroup& constraint = ViewUtil::contraint((int)tool.constraint());
+    for (auto button: constraint.buttons())
+    {
+        properties.add(*button);
+    }
+    ViewUtil::connect(constraint, [&tool] (int r) {
+        tool.constraint(MovementConstraint(r));
+    });
+
+    properties.add (ViewUtil::horizontalLine ());
+
+    QPushButton& syncButton = ViewUtil::pushButton ("tool_sketch_modify_syncmirror", QObject::tr ("Sync"));
+    ViewUtil::connect (syncButton, [&tool] () {
+      tool.syncMirror();
+    });
+    syncButton.setEnabled (tool.hasMirror ());
+
+    QAbstractButton& mirrorEdit = ViewUtil::checkBox ( "tool_sculpt_modify_mirror", QObject::tr ("Mirror")
+                                               , tool.hasMirror () );
+    ViewUtil::connectCheck (mirrorEdit, [&tool,&syncButton] (bool m) {
+      tool.mirror (m);
+      syncButton.setEnabled (m);
+    });
+
+    QCheckBox& transformCEdit = ViewUtil::checkBox ( QObject::tr ("Transform children")
+                                                   , tool.transformChildren() );
+    ViewUtil::connect (transformCEdit, [&tool] (bool m) {
+        tool.transformChildren(m);
+    });
+    properties.add (transformCEdit);
+
+    QCheckBox& snapEdit = ViewUtil::checkBox (QObject::tr ("Snap"), tool.snap());
+    ViewUtil::connect (snapEdit, [&tool] (bool s) {
+      tool.snap(s);
+    });
+    properties.add (snapEdit);
+
+    QSlider& snapWidthEdit = ViewUtil::slider (1, tool.snapWidth(), 10);
+    snapWidthEdit.setEnabled (tool.snap());
+    ViewUtil::connect (snapWidthEdit, [&tool] (int w) {
+        tool.snapWidth(w);
+    });
+    properties.addStacked (QObject::tr ("Snap width"), snapWidthEdit);
 }
 
 void PropertiesWidget::updateImpl(ToolDeleteSketch& tool, ViewProperties& propertiesView)
 {
+    ViewTwoColumnGrid& properties = propertiesView.body();
+
+    QCheckBox& deleteChildrenEdit = ViewUtil::checkBox ( QObject::tr ("Delete children")
+                                                       , tool.deleteChildren() );
+    ViewUtil::connect (deleteChildrenEdit, [&tool] (bool m) {
+      tool.deleteChildren(m);
+    });
+    deleteChildrenEdit.setEnabled (tool.mode() == DeleteSketchMode::DeleteNode);
+
+    QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
+                                               , tool.hasMirror () );
+    ViewUtil::connect (mirrorEdit, [&tool] (bool m) {
+      tool.mirror (m);
+    });
+    mirrorEdit.setEnabled (tool.mode() != DeleteSketchMode::DeleteSketch);
+
+    QRadioButton& deleteSketchEdit = ViewUtil::radioButton ( QObject::tr ("Delete sketch")
+                                                           , tool.mode() == DeleteSketchMode::DeleteSketch );
+    ViewUtil::connect (deleteSketchEdit,
+      [&tool, &deleteChildrenEdit, &mirrorEdit] (bool m)
+    {
+      tool.mode(DeleteSketchMode::DeleteSketch);
+
+      deleteChildrenEdit.setEnabled (!m);
+      mirrorEdit        .setEnabled (!m);
+    });
+
+    QRadioButton& deleteNodeEdit = ViewUtil::radioButton ( QObject::tr ("Delete node")
+                                                         , tool.mode() == DeleteSketchMode::DeleteNode );
+    ViewUtil::connect (deleteNodeEdit,
+      [&tool, &deleteChildrenEdit, &mirrorEdit] (bool m)
+    {
+      tool.mode(DeleteSketchMode::DeleteNode);
+      deleteChildrenEdit.setEnabled (m);
+      mirrorEdit        .setEnabled (m);
+    });
+
+    QRadioButton& deleteSpheresEdit = ViewUtil::radioButton ( QObject::tr ("Delete spheres")
+                                                            , tool.mode() == DeleteSketchMode::DeleteSpheres );
+    ViewUtil::connect (deleteSpheresEdit,
+      [&tool, &deleteChildrenEdit, &mirrorEdit] (bool m)
+    {
+      tool.mode(DeleteSketchMode::DeleteSpheres);
+
+      deleteChildrenEdit.setEnabled (!m);
+      mirrorEdit        .setEnabled (m);
+    });
+
+    properties.add (deleteSketchEdit);
+    properties.add (deleteNodeEdit);
+    properties.add (deleteSpheresEdit);
+    properties.add (ViewUtil::horizontalLine ());
+    properties.add (deleteChildrenEdit);
+    properties.add (mirrorEdit);
 
 }
 
@@ -312,5 +407,41 @@ void PropertiesWidget::updateImpl(ToolConvertSketch & tool, ViewProperties& prop
 
 void PropertiesWidget::updateImpl(ToolSketchSpheres& tool, ViewProperties& propertiesView)
 {
+    ViewTwoColumnGrid& properties = propertiesView.body ();
 
+    QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
+    ViewUtil::connect (syncButton, [&tool] () {
+      tool.syncMirror();
+    });
+    syncButton.setEnabled (tool.hasMirror ());
+
+    QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
+                                               , tool.hasMirror () );
+    ViewUtil::connect (mirrorEdit, [&tool, &syncButton] (bool m) {
+      tool.mirror (m);
+      syncButton.setEnabled (m);
+    });
+    properties.add (mirrorEdit, syncButton);
+
+    ViewDoubleSlider& radiusEdit = ViewUtil::slider ( 2, 0.01f, tool.radius(), 0.3f );
+    ViewUtil::connect (radiusEdit, [&tool] (float r) {
+        tool.radius(r);
+    });
+    properties.addStacked (QObject::tr ("Radius"), radiusEdit);
+
+    ViewDoubleSlider& heightEdit = ViewUtil::slider ( 2, 0.01f, tool.height(), 0.45f );
+    ViewUtil::connect (heightEdit, [&tool] (float d) {
+        tool.height(d);
+    });
+    properties.addStacked (QObject::tr ("Height"), heightEdit);
+
+    QButtonGroup& smoothEffectEdit = ViewUtil::buttonGroup({
+                                  QObject::tr ("None")
+                                , QObject::tr ("Embed")
+                                , QObject::tr ("Embed and adjust")
+                                , QObject::tr ("Pinch")
+                                }, int (tool.smoothEffect()) );
+    ViewUtil::connect (smoothEffectEdit, [&tool] (int id) {
+        tool.smoothEffect(SketchPathSmoothEffect(id));
+    });
 }

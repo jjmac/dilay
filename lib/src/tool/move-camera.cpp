@@ -91,7 +91,7 @@ struct ToolMoveCamera::Impl {
             glm::ivec2  newPos     = event.ivec2 ();
             glm::ivec2  delta      = newPos - oldPos;
 
-      if (event.modifiers () == Qt::NoModifier) {
+      if (event.modifiers () == KeyboardModifiers::NoModifier) {
         if (delta.x != 0) {
           cam.verticalRotation ( 2.0f * glm::pi <float> () 
                                * this->rotationFactor
@@ -103,7 +103,7 @@ struct ToolMoveCamera::Impl {
                                  * float (-delta.y) / float (resolution.y));
         }
       }
-      else if (event.modifiers () == Qt::ShiftModifier) {
+      else if (event.modifiers () == KeyboardModifiers::ShiftModifier) {
         cam.setGaze ( cam.gazePoint () 
                     + (this->movementFactor * float ( delta.x) * cam.right ())
                     + (this->movementFactor * float (-delta.y) * cam.up    ())
@@ -118,7 +118,7 @@ struct ToolMoveCamera::Impl {
     if (event.secondaryButton ()) {
       this->oldPos = event.ivec2 ();
 
-      if (event.modifiers () == Qt::ControlModifier) {
+      if (event.modifiers () == KeyboardModifiers::ControlModifier) {
         Camera& cam = state.camera ();
         Intersection intersection;
         if (state.scene ().intersects (cam.ray (event.ivec2 ()), intersection)) {

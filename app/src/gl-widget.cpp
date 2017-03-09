@@ -4,6 +4,7 @@
  */
 #include <QMouseEvent>
 #include <QPainter>
+#include <QGuiApplication>
 #include <glm/glm.hpp>
 #include "camera.hpp"
 #include "opengl.hpp"
@@ -18,6 +19,40 @@
 #include "view-util.hpp"
 #include "main-window.hpp"
 
+ViewPointingEvent toPointingEvent (const QMouseEvent& event)
+{
+    bool moveEvent = event.type () == QEvent::MouseMove;
+    return ViewPointingEvent(
+                KeyboardModifiers((int)event.modifiers ()),
+                event.type () == QEvent::MouseButtonPress,
+                event.type () == QEvent::MouseMove,
+                event.type () == QEvent::MouseButtonRelease,
+                moveEvent ? event.buttons () == Qt::LeftButton
+                          : event.button  () == Qt::LeftButton,
+                moveEvent ? event.buttons () == Qt::MiddleButton
+                          : event.button  () == Qt::MiddleButton,
+                glm::ivec2 (event.x (), event.y ()),
+                1.0f
+    );
+}
+
+ViewPointingEvent toPointingEvent (const QTabletEvent& event)
+{
+    bool moveEvent = event.type () == QEvent::TabletMove;
+    ViewPointingEvent vpe(
+                KeyboardModifiers((int)QGuiApplication::queryKeyboardModifiers ()),
+                event.type () == QEvent::TabletPress,
+                moveEvent,
+                event.type () == QEvent::TabletRelease,
+                moveEvent ? event.buttons () == Qt::LeftButton
+                          : event.button  () == Qt::LeftButton,
+                moveEvent ? event.buttons () == Qt::MiddleButton
+                          : event.button  () == Qt::MiddleButton,
+                glm::ivec2 (event.x (), event.y ()),
+                2.0f * event.pressure ()
+    );
+    return vpe;
+}
 ViewGlWidget::ViewGlWidget (ViewMainWindow& mW, Config& cfg, Cache& cch)
     : QOpenGLWidget(&mW)
     , m_mainWindow     (mW)
@@ -134,24 +169,24 @@ void ViewGlWidget::pointingEvent (const ViewPointingEvent& e) {
 void ViewGlWidget::mouseMoveEvent (QMouseEvent* e)
 {
     if (m_tabletPressed == false) {
-        pointingEvent (ViewPointingEvent (*e));
+        pointingEvent (toPointingEvent (*e));
     }
 }
 
 void ViewGlWidget::mousePressEvent (QMouseEvent* e) {
     if (m_tabletPressed == false) {
-        pointingEvent (ViewPointingEvent (*e));
+        pointingEvent (toPointingEvent (*e));
     }
 }
 
 void ViewGlWidget::mouseReleaseEvent (QMouseEvent* e) {
     if (m_tabletPressed == false) {
-        pointingEvent (ViewPointingEvent (*e));
+        pointingEvent (toPointingEvent (*e));
     }
 }
 
 void ViewGlWidget::wheelEvent (QWheelEvent* e) {
-    if (e->modifiers () == Qt::NoModifier) {
+    if (e->modifiers () == Qt::KeyboardModifier(KeyboardModifiers::NoModifier)) {
         m_toolMoveCamera.wheelEvent (state (), *e);
         updateCursorInTool ();
         floorPlane ().update (state ().camera ());
@@ -162,7 +197,7 @@ void ViewGlWidget::wheelEvent (QWheelEvent* e) {
 }
 
 void ViewGlWidget::tabletEvent (QTabletEvent* e) {
-    const ViewPointingEvent pe (*e);
+    const ViewPointingEvent pe  = toPointingEvent (*e);
 
     if (pe.pressEvent ()) {
         m_tabletPressed = true;

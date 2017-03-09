@@ -58,7 +58,7 @@ struct ToolModifySketch::Impl {
 
   ToolResponse runMoveEvent (const ViewPointingEvent& e) {
     if (e.primaryButton () && this->node) {
-      if (e.modifiers () == Qt::ShiftModifier) {
+      if (e.modifiers () == KeyboardModifiers::ShiftModifier) {
         if (this->scaling.move (e)) {
           if (this->parent) {
             this->mesh->scale ( *this->parent, this->scaling.factor ()
@@ -95,7 +95,7 @@ struct ToolModifySketch::Impl {
       this->mesh   = &intersection.mesh ();
       this->parent = nullptr;
 
-      if (e.modifiers () == Qt::ControlModifier) {
+      if (e.modifiers () == KeyboardModifiers::ControlModifier) {
         SketchNode& iNode = intersection.node ();
 
         const float radius = iNode.numChildren () > 0
@@ -119,7 +119,7 @@ struct ToolModifySketch::Impl {
 
       this->mesh = &intersection.mesh ();
 
-      if (e.modifiers () == Qt::ControlModifier) {
+      if (e.modifiers () == KeyboardModifiers::ControlModifier) {
         const float radius = glm::distance ( intersection.projectedPosition ()
                                            , intersection.position () );
 

@@ -5,19 +5,42 @@
 #ifndef DILAY_VIEW_POINTING_EVENT
 #define DILAY_VIEW_POINTING_EVENT
 
-#include <Qt>
 #include <glm/glm.hpp>
 
-class QMouseEvent;
-class QTabletEvent;
+enum class KeyboardModifiers {
+    NoModifier           = 0x00000000,
+    ShiftModifier        = 0x02000000,
+    ControlModifier      = 0x04000000,
+    AltModifier          = 0x08000000,
+    MetaModifier         = 0x10000000,
+    KeypadModifier       = 0x20000000,
+    GroupSwitchModifier  = 0x40000000,
+    // Do not extend the mask to include 0x01000000
+    KeyboardModifierMask = 0xfe000000
+};
 
 class ViewPointingEvent {
   public:
-    explicit ViewPointingEvent (const QMouseEvent&);
-    explicit ViewPointingEvent (const QTabletEvent&);
+    ViewPointingEvent(KeyboardModifiers     _modifiers,
+                      bool                  _pressEvent,
+                      bool                  _moveEvent,
+                      bool                  _releaseEvent,
+                      bool                  _primaryButton,
+                      bool                  _secondaryButton,
+                      glm::ivec2            _ivec2,
+                      float                 _intensity)
+        : _modifiers(_modifiers)
+        , _pressEvent(_pressEvent)
+        , _moveEvent(_moveEvent)
+        , _releaseEvent(_releaseEvent)
+        , _primaryButton(_primaryButton)
+        , _secondaryButton(_secondaryButton)
+        , _ivec2(_ivec2)
+        , _intensity(_intensity)
+    {}
 
-    bool                  valid           () const;
-    Qt::KeyboardModifiers modifiers       () const { return this->_modifiers; }
+    bool                  valid           () const { return this->pressEvent () || this->moveEvent () || this->releaseEvent (); }
+    KeyboardModifiers     modifiers       () const { return this->_modifiers; }
     bool                  pressEvent      () const { return this->_pressEvent; }
     bool                  moveEvent       () const { return this->_moveEvent; }
     bool                  releaseEvent    () const { return this->_releaseEvent; }
@@ -27,13 +50,13 @@ class ViewPointingEvent {
     float                 intensity       () const { return this->_intensity; }
 
   private:
-    Qt::KeyboardModifiers _modifiers;
-    bool                  _pressEvent;
-    bool                  _moveEvent;
-    bool                  _releaseEvent;
-    bool                  _primaryButton;
-    bool                  _secondaryButton;
-    glm::ivec2            _ivec2;
-    float                 _intensity;
+    const  KeyboardModifiers    _modifiers;
+    const bool                  _pressEvent;
+    const bool                  _moveEvent;
+    const bool                  _releaseEvent;
+    const bool                  _primaryButton;
+    const bool                  _secondaryButton;
+    const glm::ivec2            _ivec2;
+    const float                 _intensity;
 };
 #endif

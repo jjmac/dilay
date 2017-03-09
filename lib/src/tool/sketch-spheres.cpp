@@ -118,7 +118,7 @@ struct ToolSketchSpheres::Impl {
     };
 
     if (e.primaryButton ()) {
-      if (e.modifiers () == Qt::ShiftModifier) {
+      if (e.modifiers () == KeyboardModifiers::ShiftModifier) {
         SketchPathIntersection intersection;
 
         if (this->self->intersectsScene (e, intersection)) {
@@ -184,7 +184,7 @@ struct ToolSketchSpheres::Impl {
     };
 
     if (e.primaryButton ()) {
-      if (e.modifiers () == Qt::ShiftModifier) {
+      if (e.modifiers () == KeyboardModifiers::ShiftModifier) {
         SketchPathIntersection intersection;
         if (this->self->intersectsScene (e, intersection)) {
           setupOnIntersection (intersection);
@@ -225,7 +225,7 @@ struct ToolSketchSpheres::Impl {
   }
 
   ToolResponse runWheelEvent (const QWheelEvent& e) {
-    if (e.orientation () == Qt::Vertical && e.modifiers () == Qt::ShiftModifier) {
+    if (e.orientation () == Qt::Vertical && e.modifiers () == Qt::KeyboardModifier(KeyboardModifiers::ShiftModifier)) {
       if (e.delta () > 0) {
         this->radius = this->radius + this->radiusStep;
       }

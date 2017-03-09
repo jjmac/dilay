@@ -210,7 +210,7 @@ struct ToolSculpt::Impl {
 
       this->brush.intensity (defaultIntesity * e.intensity ());
 
-      if (toggle && e.modifiers () == Qt::ShiftModifier) {
+      if (toggle && e.modifiers () == KeyboardModifiers::ShiftModifier) {
         (*toggle) ();
         this->sculpt ();
         (*toggle) ();

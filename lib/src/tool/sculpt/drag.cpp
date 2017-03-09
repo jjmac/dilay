@@ -79,3 +79,16 @@ struct ToolSculptDrag::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptDrag)
+
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptDrag, float, smoothness, SBDraglikeParameters)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptDrag, bool, discardBackfaces, SBDraglikeParameters)
+MovementConstraint ToolSculptDrag::constraint()
+{
+    return impl->movement.constraint();
+}
+void ToolSculptDrag::constraint(MovementConstraint c)
+{
+    impl->movement.constraint(c);
+    cache ().set ("along-primary-plane", c);
+}
+

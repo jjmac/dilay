@@ -14,6 +14,7 @@
 #include "tools.hpp"
 #include "view/double-slider.hpp"
 #include "view/pointing-event.hpp"
+#include "view/properties.hpp"
 #include "view/tool-tip.hpp"
 #include "view/util.hpp"
 #include "winged/mesh.hpp"
@@ -39,7 +40,7 @@ struct ToolConvertSketch::Impl {
   bool               moveToCenter;
   bool               smoothMesh;
 
-  Impl (ToolConvertSketch* s) 
+  Impl (ToolConvertSketch* s)
     : self          (s)
     , minResolution (0.01f)
     , maxResolution (0.1f)
@@ -99,7 +100,7 @@ struct ToolConvertSketch::Impl {
         sMesh.optimizePaths ();
 
         Mesh mesh = SketchConversion::convert ( sMesh
-                                              , this->maxResolution + this->minResolution 
+                                              , this->maxResolution + this->minResolution
                                                                     - this->resolution );
         WingedMesh& wMesh = this->self->state ().scene ()
                                                 .newWingedMesh ( this->self->state ().config ()
@@ -122,3 +123,43 @@ struct ToolConvertSketch::Impl {
 
 DELEGATE_TOOL                   (ToolConvertSketch)
 DELEGATE_TOOL_RUN_RELEASE_EVENT (ToolConvertSketch)
+
+float ToolConvertSketch::getMinResolution() const
+{
+    return impl->minResolution;
+}
+float ToolConvertSketch::getResolution()    const
+{
+    return impl->resolution;
+}
+void  ToolConvertSketch::setResolution(float r)
+{
+    impl->resolution = r;
+    cache ().set ("resolution", r);
+}
+
+float ToolConvertSketch::getMaxResolution() const
+{
+    return impl->maxResolution;
+}
+bool ToolConvertSketch::getMoveToCenter() const
+{
+    return impl->moveToCenter;
+}
+
+void ToolConvertSketch::setMoveToCenter(bool b)
+{
+    impl->moveToCenter = b;
+    cache ().set ("move-to-center", b);
+}
+
+bool ToolConvertSketch::getSmoothMesh() const
+{
+    return impl->smoothMesh;
+}
+void ToolConvertSketch::setSmoothMesh(bool b)
+{
+    impl->smoothMesh = b;
+    cache ().set ("smooth-mesh", b);
+}
+

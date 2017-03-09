@@ -19,7 +19,7 @@ class ToolSculpt : public Tool {
     DECLARE_BIG2 (ToolSculpt, State&, const char*)
 
   protected:
-    SculptBrush& brush                    ();
+        SculptBrush& brush                    ();
     ViewCursor&  cursor                   ();
     void         addDefaultToolTip        (ViewToolTip&, bool) const;
     void         addSecSliderWheelToolTip (ViewToolTip&, const QString&) const;
@@ -48,7 +48,7 @@ class ToolSculpt : public Tool {
     virtual bool        runSculptPointingEvent (const ViewPointingEvent&) = 0;
 };
 
-#define DECLARE_TOOL_SCULPT(name,theKey)                                           \
+#define DECLARE_TOOL_SCULPT(name,theKey,accessors)                                 \
   class name : public ToolSculpt { public:                                         \
     DECLARE_BIG2 (name, State&)                                                    \
     private:                                                                       \
@@ -59,7 +59,20 @@ class ToolSculpt : public Tool {
       void        runSetupProperties     (ViewTwoColumnGrid&);                     \
       void        runSetupToolTip        (ViewToolTip&);                           \
       bool        runSculptPointingEvent (const ViewPointingEvent&);               \
+    public:                                                                        \
+      accessors                                                                    \
   };
+
+#define DECLARE_TOOL_SCULPT_PARAM(type, name)                                       \
+    type name ();                                                                   \
+    void name (type);
+
+#define DELEGATE_TOOL_SCULPT_PARAM(tool, type, name, brushType)                     \
+    type tool :: name () { return brush ().parameters < brushType > (). name (); }  \
+    void tool :: name (type t) {                                                    \
+        brush ().parameters < brushType > (). name ( t );                           \
+        cache ().set ( #name , t);                                                  \
+    }
 
 #define DELEGATE_TOOL_SCULPT(name)                                                   \
   DELEGATE_BIG2_BASE (name, (State& s), (this), ToolSculpt, (s,this->key ()))        \

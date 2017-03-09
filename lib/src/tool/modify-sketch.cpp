@@ -53,51 +53,51 @@ struct ToolModifySketch::Impl {
   }
 
   void setupProperties () {
-    ViewTwoColumnGrid& properties = this->self->properties ().body ();
+      ViewTwoColumnGrid& properties = this->self->properties ().body ();
 
-    properties.add (QObject::tr ("Move along"), ViewUtil::emptyWidget ());
-    this->movement.addProperties (properties, [this] () {
-      this->self->cache ().set ("constraint", this->movement.constraint ());
-    });
-    properties.add (ViewUtil::horizontalLine ());
+      properties.add (QObject::tr ("Move along"), ViewUtil::emptyWidget ());
+      this->movement.addProperties (properties, [this] () {
+        this->self->cache ().set ("constraint", this->movement.constraint ());
+      });
+      properties.add (ViewUtil::horizontalLine ());
 
-    QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
-    ViewUtil::connect (syncButton, [this] () {
-      this->self->mirrorSketchMeshes ();
-      this->self->updateGlWidget ();
-    });
-    syncButton.setEnabled (this->self->hasMirror ());
+      QPushButton& syncButton = ViewUtil::pushButton ("sync", QObject::tr ("Sync"));
+      ViewUtil::connect (syncButton, [this] () {
+        this->self->mirrorSketchMeshes ();
+        this->self->updateGlWidget ();
+      });
+      syncButton.setEnabled (this->self->hasMirror ());
 
-    QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
-                                               , this->self->hasMirror () );
-    ViewUtil::connect (mirrorEdit, [this, &syncButton] (bool m) {
-      this->self->mirror (m);
-      syncButton.setEnabled (m);
-    });
-    properties.add (mirrorEdit, syncButton);
+      QCheckBox& mirrorEdit = ViewUtil::checkBox ( QObject::tr ("Mirror")
+                                                 , this->self->hasMirror () );
+      ViewUtil::connect (mirrorEdit, [this, &syncButton] (bool m) {
+        this->self->mirror (m);
+        syncButton.setEnabled (m);
+      });
+      properties.add (mirrorEdit, syncButton);
 
-    QCheckBox& transformCEdit = ViewUtil::checkBox ( QObject::tr ("Transform children")
-                                                   , this->transformChildren );
-    ViewUtil::connect (transformCEdit, [this] (bool m) {
-      this->transformChildren = m;
-      this->self->cache ().set ("transform-children", m);
-    });
-    properties.add (transformCEdit);
+      QCheckBox& transformCEdit = ViewUtil::checkBox ( QObject::tr ("Transform children")
+                                                     , this->transformChildren );
+      ViewUtil::connect (transformCEdit, [this] (bool m) {
+        this->transformChildren = m;
+        this->self->cache ().set ("transform-children", m);
+      });
+      properties.add (transformCEdit);
 
-    QCheckBox& snapEdit = ViewUtil::checkBox (QObject::tr ("Snap"), this->snap);
-    ViewUtil::connect (snapEdit, [this] (bool s) {
-      this->snap = s;
-      this->snapWidthEdit.setEnabled (s);
-      this->self->cache ().set ("snap", s);
-    });
-    properties.add (snapEdit);
+      QCheckBox& snapEdit = ViewUtil::checkBox (QObject::tr ("Snap"), this->snap);
+      ViewUtil::connect (snapEdit, [this] (bool s) {
+        this->snap = s;
+        this->snapWidthEdit.setEnabled (s);
+        this->self->cache ().set ("snap", s);
+      });
+      properties.add (snapEdit);
 
-    this->snapWidthEdit.setEnabled (this->snap);
-    ViewUtil::connect (this->snapWidthEdit, [this] (int w) {
-      this->self->cache ().set ("snap-width", w);
-    });
-    properties.addStacked (QObject::tr ("Snap width"), this->snapWidthEdit);
-  }
+      this->snapWidthEdit.setEnabled (this->snap);
+      ViewUtil::connect (this->snapWidthEdit, [this] (int w) {
+        this->self->cache ().set ("snap-width", w);
+      });
+      properties.addStacked (QObject::tr ("Snap width"), this->snapWidthEdit);
+    }
 
   void setupToolTip () {
     ViewToolTip toolTip;

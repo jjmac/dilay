@@ -79,13 +79,17 @@ class Tool {
     virtual void         runFromConfig    ()                         {}
 };
 
-#define DECLARE_TOOL(name,theKey,otherMethods)                       \
+#define DECLARE_TOOL2(name,theKey,otherMethods, publicMethods)       \
   class name : public Tool { public:                                 \
     DECLARE_BIG2 (name, State&)                                      \
     private:                                                         \
       IMPLEMENTATION                                                 \
       const char* key () const { return theKey ; }                   \
-      otherMethods };
+      otherMethods                                                   \
+    public:                                                          \
+      publicMethods};
+
+#define DECLARE_TOOL(name,theKey,otherMethods)   DECLARE_TOOL2(name, theKey, otherMethods, )
 
 #define DECLARE_TOOL_RUN_INITIALIZE        ToolResponse runInitialize    ();
 #define DECLARE_TOOL_RUN_RENDER            void         runRender        () const;

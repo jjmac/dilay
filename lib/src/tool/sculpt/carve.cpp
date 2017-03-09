@@ -65,3 +65,7 @@ struct ToolSculptCarve::Impl {
 };
 
 DELEGATE_TOOL_SCULPT (ToolSculptCarve)
+
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptCarve, float, intensity, SBCarveParameters)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptCarve, bool , invert, SBCarveParameters)
+DELEGATE_TOOL_SCULPT_PARAM(ToolSculptCarve, bool , inflate, SBCarveParameters)

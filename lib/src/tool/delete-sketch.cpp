@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "cache.hpp"
 #include "dimension.hpp"
 #include "scene.hpp"
@@ -13,7 +12,6 @@
 #include "tools.hpp"
 #include "util.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 
 namespace {
   enum class Mode { DeleteSketch, DeleteNode, DeleteSpheres };
@@ -49,13 +47,6 @@ struct ToolDeleteSketch::Impl {
   {
     this->self->renderMirror (false);
 
-    this->setupToolTip    ();
-  }
-
-  void setupToolTip () {
-    ViewToolTip toolTip;
-    toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Delete selection"));
-    this->self->showToolTip (toolTip);
   }
 
   ToolResponse runReleaseEvent (const ViewPointingEvent& e) {

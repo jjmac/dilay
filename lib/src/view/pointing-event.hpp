@@ -62,9 +62,9 @@ class ViewPointingEvent {
 
 class ViewWheelEvent {
 public:
-  ViewWheelEvent(KeyboardModifiers     _modifiers,
-				 bool _vertical,
-				 int _delta)
+  ViewWheelEvent(KeyboardModifiers	_modifiers,
+				 bool				_vertical,
+				 int				_delta)
 	  : _modifiers(_modifiers)
 	  , _vertical(_vertical)
 	  , _delta(_delta)

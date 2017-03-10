@@ -14,6 +14,7 @@ class ViewGlWidget;
 class PropertiesWidget;
 class QAbstractButton;
 class ViewProperties;
+class TooltipWidget;
 
 class ViewMainWidget : public QWidget
 {
@@ -26,6 +27,7 @@ public:
     ViewProperties& properties   ();
     void            deselectTool ();
     void            update       ();
+	void showMessage (const QString& message);
 
 private:
     QWidget* initalizeToolPane ();
@@ -37,8 +39,9 @@ private:
     void selectOnly (QAbstractButton& button);
 
 private:
-    ViewGlWidget*              m_glWidget;
-    PropertiesWidget*            m_properties;
+	ViewGlWidget*                  m_glWidget;
+	PropertiesWidget*              m_properties;
+	TooltipWidget*                 m_tipMessage;
     std::vector <QAbstractButton*> m_toolButtons;
 };
 

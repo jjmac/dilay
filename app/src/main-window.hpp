@@ -14,6 +14,7 @@ class QCloseEvent;
 class ViewMainWidget;
 class ViewToolTip;
 class QLabel;
+class TooltipWidget;
 
 class ViewMainWindow : public QMainWindow, public Controller
 {
@@ -24,8 +25,6 @@ public:
 
     ViewMainWidget& mainWidget         ();
     void            showMessage        (const QString&);
-    void            showToolTip        (const ViewToolTip&);
-    void            showDefaultToolTip ();
     void            showNumFaces       (unsigned int);
     void            update             ();
 
@@ -46,13 +45,10 @@ protected:
 
 private:
     void setupShortcuts ();
-    void setupStatusBar();
 
 private:
 
     ViewMainWidget* m_mainWidget;
-    QStatusBar*     m_statusBar;
-    QLabel*         m_messageLabel;
     QLabel*         m_numFacesLabel;
 };
 #endif

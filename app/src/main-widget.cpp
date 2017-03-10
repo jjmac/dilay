@@ -22,11 +22,13 @@
 #include "properties.hpp"
 #include "view-util.hpp"
 #include "properties-widget.hpp"
+#include "tooltip-widget.hpp"
 #include <QFrame>
 
 ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config, Cache& cache)
     : m_glWidget   (new ViewGlWidget (mW, config, cache))
     , m_properties (new PropertiesWidget)
+	, m_tipMessage (new TooltipWidget)
 {
     QGridLayout* selfLayout = new QGridLayout(this);
     selfLayout->addWidget (m_glWidget);
@@ -35,9 +37,12 @@ ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config, Cache& cache
     controlsLayout->setColumnStretch(0, 0);
     controlsLayout->setColumnStretch(1, 1);
     controlsLayout->setColumnStretch(2, 0);
-    controlsLayout->addWidget(initalizeToolPane (), 0, 0, Qt::AlignLeft);
-    controlsLayout->addWidget(initializeSettingsPane(), 0, 1, Qt::AlignLeft);
-    controlsLayout->addWidget(m_properties, 0, 2, Qt::AlignLeft);
+	controlsLayout->setRowStretch(0, 1);
+	controlsLayout->setRowStretch(0, 0);
+	controlsLayout->addWidget(initalizeToolPane (), 0, 0, Qt::AlignLeft);
+	controlsLayout->addWidget(initializeSettingsPane(), 0, 1, 2, 1, Qt::AlignLeft);
+	controlsLayout->addWidget(m_properties, 0, 2, 2, 1, Qt::AlignLeft);
+	controlsLayout->addWidget(m_tipMessage , 1, 0, Qt::AlignLeft);
 }
 
 QWidget* ViewMainWidget::initalizeToolPane ()
@@ -171,6 +176,7 @@ void ViewMainWidget::addToolButton (QLayout* layout, const QString& name, const 
 		T* t = new T (s);
 		s.setTool   (std::move (*t));
 		m_properties->update(*t);
+		m_tipMessage->update(*t);
 
 		this->m_glWidget->layout()->update();
     });
@@ -211,3 +217,9 @@ void ViewMainWidget::update ()
 //    this->self->QSplitter::update ();
     m_glWidget->update ();
 }
+
+void ViewMainWidget::showMessage (const QString& message)
+{
+	m_tipMessage->showMessage(message);
+}
+

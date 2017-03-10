@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "cache.hpp"
 #include "camera.hpp"
 #include "config.hpp"
@@ -20,7 +19,6 @@
 #include "util.hpp"
 #include "view/cursor.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 
 namespace {
   int toInt (SketchPathSmoothEffect effect) {
@@ -66,16 +64,6 @@ struct ToolSketchSpheres::Impl {
     , mesh            (nullptr)
   {}
 
-  void setupToolTip () {
-    ViewToolTip toolTip;
-    toolTip.add ( ViewToolTip::MouseEvent::Left, QObject::tr ("Drag to sketch"));
-    toolTip.add ( ViewToolTip::MouseEvent::Left, ViewToolTip::Modifier::Shift
-                , QObject::tr ("Drag to smooth"));
-    toolTip.add ( ViewToolTip::MouseEvent::Wheel, ViewToolTip::Modifier::Shift
-                , QObject::tr ("Change radius") );
-    this->self->showToolTip (toolTip);
-  }
-
   void setupCursor () {
     this->cursor.disable ();
     this->cursor.radius  (this->radius);
@@ -84,8 +72,6 @@ struct ToolSketchSpheres::Impl {
   ToolResponse runInitialize () {
     this->self->renderMirror (false);
 
-    // this->setupProperties ();
-    this->setupToolTip    ();
     this->setupCursor     ();
 
     return ToolResponse::Redraw;

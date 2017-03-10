@@ -18,7 +18,6 @@ class ViewWheelEvent;
 class State;
 class ViewPointingEvent;
 class ViewProperties;
-class ViewToolTip;
 class WingedFaceIntersection;
 
 enum class ToolResponse {
@@ -42,8 +41,6 @@ class Tool {
   protected:
     State&           state                  () const;
     void             updateGlWidget         ();
-    ViewProperties&  properties             () const;
-    void             showToolTip            (const ViewToolTip&);
     Config&          config                 () const;
     CacheProxy&      cache                  ();
     CacheProxy       cache                  (const char*) const;

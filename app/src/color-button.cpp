@@ -5,7 +5,7 @@
 #include <QColorDialog>
 #include <QPainter>
 #include "color.hpp"
-#include "view/helper.hpp"
+#include "helper.hpp"
 #include "color-button.hpp"
 #include "util.hpp"
 

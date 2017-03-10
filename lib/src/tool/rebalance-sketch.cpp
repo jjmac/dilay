@@ -2,12 +2,10 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "render-mode.hpp"
 #include "scene.hpp"
 #include "state.hpp"
 #include "tools.hpp"
-#include "view/tool-tip.hpp"
 #include "sketch/mesh.hpp"
 #include "sketch/node-intersection.hpp"
 #include "view/pointing-event.hpp"
@@ -22,10 +20,6 @@ struct ToolRebalanceSketch::Impl {
   {
     this->self->renderMirror (false);
     this->self->state ().scene ().renderWireframe (true);
-
-    ViewToolTip toolTip;
-    toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Set new root"));
-    this->self->showToolTip (toolTip);
   }
 
   ToolResponse runReleaseEvent (const ViewPointingEvent& e) {

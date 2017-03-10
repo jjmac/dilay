@@ -13,15 +13,13 @@
 #include "main-widget.hpp"
 #include "main-window.hpp"
 #include "menu-bar.hpp"
-#include "view/tool-tip.hpp"
 #include "view-util.hpp"
 #include "properties.hpp"
+#include "tooltip-widget.hpp"
 
 ViewMainWindow::ViewMainWindow (Config& config, Cache& cache)
 {
     m_mainWidget = new ViewMainWidget (*this, config, cache);
-    m_statusBar = new QStatusBar();
-    m_messageLabel = new QLabel();
     m_numFacesLabel = new QLabel();
 
     setCentralWidget(m_mainWidget);
@@ -29,7 +27,6 @@ ViewMainWindow::ViewMainWindow (Config& config, Cache& cache)
     ViewMenuBar::setup (*this, m_mainWidget->glWidget ());
 
     setupShortcuts ();
-    setupStatusBar ();
 }
 
 void ViewMainWindow::setupShortcuts ()
@@ -66,41 +63,9 @@ void ViewMainWindow::setupShortcuts ()
     });
 }
 
-void ViewMainWindow::setupStatusBar ()
-{
-    setStatusBar (m_statusBar);
-
-    m_statusBar->setStyleSheet      ("QStatusBar::item { border: 0px solid black };");
-    m_statusBar->setSizeGripEnabled (false);
-    m_statusBar->addPermanentWidget (m_messageLabel,1);
-    m_statusBar->addPermanentWidget (m_numFacesLabel);
-
-    showDefaultToolTip ();
-    showNumFaces       (0);
-}
-
 void ViewMainWindow::showMessage (const QString& message)
 {
-    m_messageLabel->setText (message);
-}
-
-void ViewMainWindow::showToolTip (const ViewToolTip& tip)
-{
-    showMessage (tip.toString ());
-}
-
-void ViewMainWindow::showDefaultToolTip ()
-{
-    ViewToolTip tip;
-
-    tip.add ( ViewToolTip::MouseEvent::Middle, QObject::tr ("Drag to rotate"));
-    tip.add ( ViewToolTip::MouseEvent::Middle, ViewToolTip::Modifier::Shift
-            , QObject::tr ("Drag to move"));
-    tip.add ( ViewToolTip::MouseEvent::Middle, ViewToolTip::Modifier::Ctrl
-            , QObject::tr ("Gaze"));
-
-
-    showToolTip (tip);
+	m_mainWidget->showMessage(message);
 }
 
 void ViewMainWindow::showNumFaces (unsigned int n) {

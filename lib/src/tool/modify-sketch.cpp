@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "cache.hpp"
 #include "mirror.hpp"
 #include "primitive/plane.hpp"
@@ -15,7 +14,6 @@
 #include "tool/util/scaling.hpp"
 #include "tools.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 
 struct ToolModifySketch::Impl {
   ToolModifySketch* self;
@@ -42,18 +40,6 @@ struct ToolModifySketch::Impl {
     , snapWidth         (s->cache ().get <int> ("snapWidth", 5))
   {
     this->self->renderMirror (false);
-
-    this->setupToolTip    ();
-  }
-
-  void setupToolTip () {
-    ViewToolTip toolTip;
-    toolTip.add ( ViewToolTip::MouseEvent::Left, QObject::tr ("Drag to move"));
-    toolTip.add ( ViewToolTip::MouseEvent::Left, ViewToolTip::Modifier::Shift
-                , QObject::tr ("Drag to scale") );
-    toolTip.add ( ViewToolTip::MouseEvent::Left, ViewToolTip::Modifier::Ctrl
-                , QObject::tr ("Drag to add new node") );
-    this->self->showToolTip (toolTip);
   }
 
   ToolResponse runMoveEvent (const ViewPointingEvent& e) {
@@ -189,7 +175,6 @@ MovementConstraint ToolModifySketch::constraint() const
 void ToolModifySketch::constraint(MovementConstraint c)
 {
     impl->movement.constraint(c);
-    impl->setupToolTip ();
     cache ().set ("constraint", impl->movement.constraint ());
 }
 

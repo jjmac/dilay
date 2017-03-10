@@ -3,18 +3,15 @@
 
 #include <glm/fwd.hpp>
 
-class ViewToolTip;
 class ViewProperties;
 
 class Controller {
 public:
-    virtual void showDefaultToolTip() = 0;
     virtual void resetProperties() = 0;
     // this->mainWindow->mainWidget ().properties ().reset ();
     virtual void deselectTool() = 0;
     // this->mainWindow->mainWidget ().deselectTool ();
     virtual void update() = 0;
-    virtual void showToolTip (const ViewToolTip& ) = 0;
     virtual void updateGl() = 0;
     // this->state.mainWindow ().mainWidget ().glWidget ().update ();
     virtual ViewProperties& viewProperties() = 0;

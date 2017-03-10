@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "action/sculpt.hpp"
 #include "cache.hpp"
 #include "camera.hpp"
@@ -16,7 +15,6 @@
 #include "tool/util/movement.hpp"
 #include "view/cursor.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 #include "winged/face-intersection.hpp"
 
 struct ToolSculpt::Impl {
@@ -40,8 +38,6 @@ struct ToolSculpt::Impl {
   ToolResponse runInitialize () {
     this->setupBrush      ();
     this->setupCursor     ();
-    // this->setupProperties ();
-    this->setupToolTip    ();
 
     return ToolResponse::Redraw;
   }
@@ -72,16 +68,6 @@ struct ToolSculpt::Impl {
     this->cursor.radius (this->brush.radius ());
 
     this->self->runSetupCursor (this->cursor);
-  }
-
-  void setupToolTip () {
-    ViewToolTip toolTip;
-
-    this->self->runSetupToolTip (toolTip);
-    toolTip.add ( ViewToolTip::MouseEvent::Wheel, ViewToolTip::Modifier::Shift
-                , QObject::tr ("Change radius") );
-
-    this->self->showToolTip (toolTip);
   }
 
   void runRender () const {
@@ -130,19 +116,6 @@ struct ToolSculpt::Impl {
 	this->brush.stepWidthFactor (config.get <float> ("editor/tool/sculpt/stepWidthFactor"));
 
 	this->cursor.color  (this->self->config ().get <Color> ("editor/tool/sculpt/cursorColor"));
-  }
-
-  void addDefaultToolTip (ViewToolTip& toolTip, bool hasInvertedMode) {
-    toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Drag to sculpt"));
-
-    if (hasInvertedMode) {
-      toolTip.add ( ViewToolTip::MouseEvent::Left
-                  , ViewToolTip::Modifier::Shift, QObject::tr ("Drag to sculpt inverted"));
-    }
-  }
-
-  void addSecSliderWheelToolTip (ViewToolTip& toolTip, const QString& label) {
-    toolTip.add (ViewToolTip::MouseEvent::Wheel, ViewToolTip::Modifier::Ctrl, label);
   }
 
   void sculpt () {
@@ -300,8 +273,6 @@ struct ToolSculpt::Impl {
 DELEGATE_BIG2_BASE (ToolSculpt, (State& s, const char* k), (this), Tool, (s, k))
 GETTER          (SculptBrush&, ToolSculpt, brush)
 GETTER          (ViewCursor& , ToolSculpt, cursor)
-DELEGATE2_CONST (void        , ToolSculpt, addDefaultToolTip, ViewToolTip&, bool)
-DELEGATE2_CONST (void        , ToolSculpt, addSecSliderWheelToolTip, ViewToolTip&, const QString&)
 DELEGATE        (void        , ToolSculpt, sculpt)
 DELEGATE3       (bool        , ToolSculpt, carvelikeStroke, const ViewPointingEvent&, bool, const std::function <void ()>*)
 DELEGATE2       (bool        , ToolSculpt, initializeDraglikeStroke, const ViewPointingEvent&, ToolUtilMovement&)

@@ -30,8 +30,6 @@ class ToolSculpt : public Tool {
   protected:
 	SculptBrush& brush                    ();
     ViewCursor&  cursor                   ();
-    void         addDefaultToolTip        (ViewToolTip&, bool) const;
-    void         addSecSliderWheelToolTip (ViewToolTip&, const QString&) const;
     void         sculpt                   ();
     bool         carvelikeStroke          ( const ViewPointingEvent&, bool
                                           , const std::function <void ()>* = nullptr );
@@ -50,7 +48,6 @@ class ToolSculpt : public Tool {
     virtual const char* key                    () const = 0;
     virtual void        runSetupBrush          (SculptBrush&) = 0;
     virtual void        runSetupCursor         (ViewCursor&) = 0;
-    virtual void        runSetupToolTip        (ViewToolTip&) = 0;
     virtual bool        runSculptPointingEvent (const ViewPointingEvent&) = 0;
 };
 
@@ -62,7 +59,6 @@ class ToolSculpt : public Tool {
       const char* key                    () const { return theKey ; }              \
       void        runSetupBrush          (SculptBrush&);                           \
       void        runSetupCursor         (ViewCursor&);                            \
-      void        runSetupToolTip        (ViewToolTip&);                           \
       bool        runSculptPointingEvent (const ViewPointingEvent&);               \
     public:                                                                        \
       accessors                                                                    \
@@ -83,7 +79,6 @@ class ToolSculpt : public Tool {
   DELEGATE_BIG2_BASE (name, (State& s), (this), ToolSculpt, (s,this->key ()))        \
   DELEGATE1 (void, name, runSetupBrush, SculptBrush&);                               \
   DELEGATE1 (void, name, runSetupCursor, ViewCursor&);                               \
-  DELEGATE1 (void, name, runSetupToolTip, ViewToolTip&);                             \
   DELEGATE1 (bool, name, runSculptPointingEvent, const ViewPointingEvent&)
 
 #endif

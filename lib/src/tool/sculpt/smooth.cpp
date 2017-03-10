@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
 #include "tools.hpp"
@@ -23,14 +22,8 @@ struct ToolSculptSmooth::Impl {
 
   void runSetupCursor (ViewCursor&) {}
 
-
-  void runSetupToolTip (ViewToolTip& toolTip) {
-    this->self->addDefaultToolTip        (toolTip, false);
-    this->self->addSecSliderWheelToolTip (toolTip, QObject::tr ("Change intensity"));
-  }
-
   bool runSculptPointingEvent (const ViewPointingEvent& e) {
-    return this->self->carvelikeStroke (e, false);
+	return this->self->carvelikeStroke (e, false);
   }
 };
 

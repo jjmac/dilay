@@ -2,14 +2,12 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include <glm/glm.hpp>
 #include "cache.hpp"
 #include "state.hpp"
 #include "tool/util/movement.hpp"
 #include "tools.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 #include "winged/mesh.hpp"
 #include "winged/face-intersection.hpp"
 
@@ -25,19 +23,6 @@ struct ToolMoveMesh::Impl {
                , s->cache ().getFrom <MovementConstraint> ( "constraint"
                                                           , MovementConstraint::CameraPlane ))
   {
-    // this->setupProperties ();
-    this->setupToolTip    ();
-  }
-
-  void setupToolTip () {
-    ViewToolTip toolTip;
-    toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Drag to move"));
-
-    if (this->movement.constraint () != MovementConstraint::CameraPlane) {
-      toolTip.add ( ViewToolTip::MouseEvent::Left, ViewToolTip::Modifier::Shift
-                  , QObject::tr ("Drag to move orthogonally") );
-    }
-    this->self->showToolTip (toolTip);
   }
 
   ToolResponse runMoveEvent (const ViewPointingEvent& e) {
@@ -86,6 +71,5 @@ MovementConstraint ToolMoveMesh::constraint() const
 void ToolMoveMesh::constraint(MovementConstraint c)
 {
     impl->movement.constraint(c);
-    impl->setupToolTip ();
-    cache ().set ("constraint", impl->movement.constraint ());
+	cache ().set ("constraint", impl->movement.constraint ());
 }

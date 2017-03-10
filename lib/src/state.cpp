@@ -71,7 +71,6 @@ struct State::Impl {
 
       this->toolPtr.reset (); 
       if (mainWindow) {
-          this->mainWindow->showDefaultToolTip ();
           this->mainWindow->resetProperties ();
       }
       if (mainWindow) {

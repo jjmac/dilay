@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "cache.hpp"
 #include "sculpt-brush.hpp"
 #include "state.hpp"
@@ -32,11 +31,6 @@ struct ToolSculptDrag::Impl {
   }
 
   void runSetupCursor (ViewCursor&) {}
-
-  void runSetupToolTip (ViewToolTip& toolTip) {
-    this->self->addDefaultToolTip        (toolTip, false);
-    this->self->addSecSliderWheelToolTip (toolTip, QObject::tr ("Change smoothness"));
-  }
 
   bool runSculptPointingEvent (const ViewPointingEvent& e) {
     return e.pressEvent () ? this->self->initializeDraglikeStroke (e, this->movement)

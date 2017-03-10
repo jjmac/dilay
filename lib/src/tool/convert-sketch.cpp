@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "action/sculpt.hpp"
 #include "cache.hpp"
 #include "mesh.hpp"
@@ -13,7 +12,6 @@
 #include "state.hpp"
 #include "tools.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 #include "winged/mesh.hpp"
 
 namespace {
@@ -46,14 +44,6 @@ struct ToolConvertSketch::Impl {
     , smoothMesh    (s->cache ().get <bool>  ("smoothMesh", true))
   {
     this->self->renderMirror (false);
-
-    this->setupToolTip    ();
-  }
-
-  void setupToolTip () {
-    ViewToolTip toolTip;
-    toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Convert selection"));
-    this->self->showToolTip (toolTip);
   }
 
   ToolResponse runReleaseEvent (const ViewPointingEvent& e) {

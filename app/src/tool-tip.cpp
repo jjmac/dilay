@@ -3,7 +3,7 @@
  * Use and redistribute under the terms of the GNU General Public License
  */
 #include <QObject>
-#include "view/tool-tip.hpp"
+#include "tool-tip.hpp"
 
 namespace {
   typedef std::tuple <ViewToolTip::MouseEvent, ViewToolTip::Modifier, QString> Tip;

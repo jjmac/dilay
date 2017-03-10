@@ -18,7 +18,6 @@
 #include "tool.hpp"
 #include "controller.h"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 #include "winged/mesh.hpp"
 
 struct Tool::Impl {
@@ -34,7 +33,6 @@ struct Tool::Impl {
     ,_cache        (this->cache (key))
     , renderMirror (true)
   {
-    this->state.mainWindow ().showToolTip (ViewToolTip ());
     this->mirror (this->hasMirror ());
   }
 
@@ -84,10 +82,6 @@ struct Tool::Impl {
 
   ViewProperties& properties () const {
     return this->state.mainWindow ().viewProperties ();
-  }
-
-  void showToolTip (const ViewToolTip& toolTip) {
-    this->state.mainWindow ().showToolTip (toolTip);
   }
 
   Config& config () const {
@@ -224,8 +218,6 @@ DELEGATE        (void            , Tool, close)
 DELEGATE        (void            , Tool, fromConfig)
 GETTER_CONST    (State&          , Tool, state)
 DELEGATE        (void            , Tool, updateGlWidget)
-DELEGATE_CONST  (ViewProperties& , Tool, properties)
-DELEGATE1       (void            , Tool, showToolTip, const ViewToolTip&)
 DELEGATE_CONST  (Config&         , Tool, config)
 DELEGATE        (CacheProxy&     , Tool, cache)
 DELEGATE1_CONST (CacheProxy      , Tool, cache, const char*)

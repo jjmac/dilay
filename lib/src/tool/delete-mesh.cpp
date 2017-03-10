@@ -2,12 +2,10 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QObject>
 #include "scene.hpp"
 #include "state.hpp"
 #include "tools.hpp"
 #include "view/pointing-event.hpp"
-#include "view/tool-tip.hpp"
 #include "winged/face-intersection.hpp"
 
 struct ToolDeleteMesh::Impl {
@@ -16,9 +14,6 @@ struct ToolDeleteMesh::Impl {
   Impl (ToolDeleteMesh* s) 
     : self (s)
   {
-    ViewToolTip toolTip;
-    toolTip.add (ViewToolTip::MouseEvent::Left, QObject::tr ("Delete selection"));
-    this->self->showToolTip (toolTip);
   }
 
   ToolResponse runReleaseEvent (const ViewPointingEvent& e) {

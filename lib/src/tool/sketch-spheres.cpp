@@ -3,7 +3,6 @@
  * Use and redistribute under the terms of the GNU General Public License
  */
 #include <QObject>
-#include <QWheelEvent>
 #include "cache.hpp"
 #include "camera.hpp"
 #include "config.hpp"
@@ -224,8 +223,8 @@ struct ToolSketchSpheres::Impl {
     return ToolResponse::None;
   }
 
-  ToolResponse runWheelEvent (const QWheelEvent& e) {
-    if (e.orientation () == Qt::Vertical && e.modifiers () == Qt::KeyboardModifier(KeyboardModifiers::ShiftModifier)) {
+  ToolResponse runWheelEvent (const ViewWheelEvent& e) {
+	if (e.isVertical() && e.modifiers () == KeyboardModifiers::ShiftModifier) {
       if (e.delta () > 0) {
         this->radius = this->radius + this->radiusStep;
       }

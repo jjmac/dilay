@@ -186,13 +186,15 @@ void ViewGlWidget::mouseReleaseEvent (QMouseEvent* e) {
 }
 
 void ViewGlWidget::wheelEvent (QWheelEvent* e) {
-    if (e->modifiers () == Qt::KeyboardModifier(KeyboardModifiers::NoModifier)) {
-        m_toolMoveCamera.wheelEvent (state (), *e);
+	int d = e->delta();
+	ViewWheelEvent we(KeyboardModifiers((int)e->modifiers()), e->orientation() == Qt::Vertical, e->delta());
+	if (we.modifiers () == KeyboardModifiers::NoModifier) {
+		m_toolMoveCamera.wheelEvent (state (), we);
         updateCursorInTool ();
         floorPlane ().update (state ().camera ());
     }
     else if (state ().hasTool ()) {
-        state ().handleToolResponse (state ().tool ().wheelEvent (*e));
+		state ().handleToolResponse (state ().tool ().wheelEvent (we));
     }
 }
 

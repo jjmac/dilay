@@ -59,4 +59,25 @@ class ViewPointingEvent {
     const glm::ivec2            _ivec2;
     const float                 _intensity;
 };
+
+class ViewWheelEvent {
+public:
+  ViewWheelEvent(KeyboardModifiers     _modifiers,
+				 bool _vertical,
+				 int _delta)
+	  : _modifiers(_modifiers)
+	  , _vertical(_vertical)
+	  , _delta(_delta)
+	  {}
+
+  KeyboardModifiers     modifiers       () const { return this->_modifiers; }
+  bool                  isVertical      () const { return this->_vertical; }
+  int                   delta           () const { return this->_delta; }
+
+private:
+	const KeyboardModifiers	_modifiers;
+	const bool				_vertical;
+	const int				_delta;
+};
+
 #endif

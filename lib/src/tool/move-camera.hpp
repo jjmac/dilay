@@ -10,7 +10,7 @@
 
 class Config;
 class State;
-class QWheelEvent;
+class ViewWheelEvent;
 class ViewPointingEvent;
 
 class ToolMoveCamera : public Configurable {
@@ -22,7 +22,7 @@ class ToolMoveCamera : public Configurable {
 
     void moveEvent      (State&, const ViewPointingEvent&);
     void pressEvent     (State&, const ViewPointingEvent&);
-    void wheelEvent     (State&, const QWheelEvent&);
+	void wheelEvent     (State&, const ViewWheelEvent&);
 
   private:
     IMPLEMENTATION

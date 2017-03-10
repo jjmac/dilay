@@ -2,7 +2,6 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#include <QWheelEvent>
 #include <glm/gtc/constants.hpp>
 #include "camera.hpp"
 #include "config.hpp"
@@ -131,8 +130,8 @@ struct ToolMoveCamera::Impl {
     }
   }
 
-  void wheelEvent (State& state, const QWheelEvent& event) {
-    if (event.orientation () == Qt::Vertical) {
+  void wheelEvent (State& state, const ViewWheelEvent& event) {
+	if (event.isVertical()) {
       if (event.delta () > 0) {
         state.camera ().stepAlongGaze (this->zoomInFactor);
       }
@@ -155,5 +154,5 @@ DELEGATE2 (void, ToolMoveCamera, snap, State&, bool)
 DELEGATE1 (void, ToolMoveCamera, resetGazePoint, State&)
 DELEGATE2 (void, ToolMoveCamera, moveEvent, State&, const ViewPointingEvent&)
 DELEGATE2 (void, ToolMoveCamera, pressEvent, State&, const ViewPointingEvent&)
-DELEGATE2 (void, ToolMoveCamera, wheelEvent, State&, const QWheelEvent&)
+DELEGATE2 (void, ToolMoveCamera, wheelEvent, State&, const ViewWheelEvent&)
 DELEGATE1 (void, ToolMoveCamera, runFromConfig, const Config&)

@@ -3,7 +3,6 @@
  * Use and redistribute under the terms of the GNU General Public License
  */
 #include <QObject>
-#include <QWheelEvent>
 #include "action/sculpt.hpp"
 #include "cache.hpp"
 #include "camera.hpp"

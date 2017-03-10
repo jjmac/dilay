@@ -59,7 +59,7 @@ struct Tool::Impl {
     return response;
   }
 
-  ToolResponse wheelEvent (const QWheelEvent& e) {
+  ToolResponse wheelEvent (const ViewWheelEvent& e) {
     return this->self->runWheelEvent (e);
   }
 
@@ -218,7 +218,7 @@ DELEGATE2_BIG3_SELF (Tool, State&, const char*)
 DELEGATE        (ToolResponse    , Tool, initialize)
 DELEGATE_CONST  (void            , Tool, render)
 DELEGATE1       (ToolResponse    , Tool, pointingEvent, const ViewPointingEvent&)
-DELEGATE1       (ToolResponse    , Tool, wheelEvent, const QWheelEvent&)
+DELEGATE1       (ToolResponse    , Tool, wheelEvent, const ViewWheelEvent&)
 DELEGATE1       (ToolResponse    , Tool, cursorUpdate, const glm::ivec2&)
 DELEGATE        (void            , Tool, close)
 DELEGATE        (void            , Tool, fromConfig)

@@ -81,17 +81,18 @@ struct Renderer::Impl {
   }
 
   void setupRendering () {
-    OpenGL::instance().glClearColor   ( this->clearColor.r ()
+    OpenGLApi& opengl = OpenGL::instance();
+    opengl.glClearColor   ( this->clearColor.r ()
                            , this->clearColor.g ()
                            , this->clearColor.b (), 0.0f);
-    OpenGL::instance().glClearStencil (0);
-    OpenGL::instance().glFrontFace    (OpenGL::instance().CCW       ());
-    OpenGL::instance().glEnable       (OpenGL::instance().CullFace  ());
-    OpenGL::instance().glCullFace     (OpenGL::instance().Back      ());
-    OpenGL::instance().glEnable       (OpenGL::instance().DepthTest ()); 
-    OpenGL::instance().glDepthFunc    (OpenGL::instance().LEqual    ()); 
-    OpenGL::instance().glClear        ( OpenGL::instance().ColorBufferBit ()
-                           | OpenGL::instance().DepthBufferBit () );
+    opengl.glClearStencil (0);
+    opengl.glFrontFace    (opengl.CCW       ());
+    opengl.glEnable       (opengl.CullFace  ());
+    opengl.glCullFace     (opengl.Back      ());
+    opengl.glEnable       (opengl.DepthTest ());
+    opengl.glDepthFunc    (opengl.LEqual    ());
+    opengl.glClear        ( opengl.ColorBufferBit ()
+                           | opengl.DepthBufferBit () );
   }
 
   unsigned int shaderIndex (const RenderMode& renderMode) {
@@ -110,10 +111,11 @@ struct Renderer::Impl {
   }
 
   void initalizeProgram (const RenderMode& renderMode) {
+    OpenGLApi& opengl = OpenGL::instance();
     assert ( renderMode.renderWireframe () == false
-          || OpenGL::instance().supportsGeometryShader () );
+          || opengl.supportsGeometryShader () );
 
-    const unsigned int id = OpenGL::instance().loadProgram ( renderMode.vertexShader ()
+    const unsigned int id = opengl.loadProgram ( renderMode.vertexShader ()
                                                 , renderMode.fragmentShader ()
                                                 , renderMode.renderWireframe () );
 
@@ -123,20 +125,20 @@ struct Renderer::Impl {
     ShaderIds *s = &this->shaderIds [index];
 
     s->programId                = id;
-    s->modelId                  = OpenGL::instance().glGetUniformLocation (id, "model");
-    s->modelNormalId            = OpenGL::instance().glGetUniformLocation (id, "modelNormal");
-    s->viewId                   = OpenGL::instance().glGetUniformLocation (id, "view");
-    s->projectionId             = OpenGL::instance().glGetUniformLocation (id, "projection");
-    s->colorId                  = OpenGL::instance().glGetUniformLocation (id, "color");
-    s->wireframeColorId         = OpenGL::instance().glGetUniformLocation (id, "wireframeColor");
-    s->eyePointId               = OpenGL::instance().glGetUniformLocation (id, "eyePoint");
-    s->barycentricId            = OpenGL::instance().glGetUniformLocation (id, "barycentric");
-    s->lightIds[0].directionId  = OpenGL::instance().glGetUniformLocation (id, "light1Direction");
-    s->lightIds[0].colorId      = OpenGL::instance().glGetUniformLocation (id, "light1Color");
-    s->lightIds[0].irradianceId = OpenGL::instance().glGetUniformLocation (id, "light1Irradiance");
-    s->lightIds[1].directionId  = OpenGL::instance().glGetUniformLocation (id, "light2Direction");
-    s->lightIds[1].colorId      = OpenGL::instance().glGetUniformLocation (id, "light2Color");
-    s->lightIds[1].irradianceId = OpenGL::instance().glGetUniformLocation (id, "light2Irradiance");
+    s->modelId                  = opengl.glGetUniformLocation (id, "model");
+    s->modelNormalId            = opengl.glGetUniformLocation (id, "modelNormal");
+    s->viewId                   = opengl.glGetUniformLocation (id, "view");
+    s->projectionId             = opengl.glGetUniformLocation (id, "projection");
+    s->colorId                  = opengl.glGetUniformLocation (id, "color");
+    s->wireframeColorId         = opengl.glGetUniformLocation (id, "wireframeColor");
+    s->eyePointId               = opengl.glGetUniformLocation (id, "eyePoint");
+    s->barycentricId            = opengl.glGetUniformLocation (id, "barycentric");
+    s->lightIds[0].directionId  = opengl.glGetUniformLocation (id, "light1Direction");
+    s->lightIds[0].colorId      = opengl.glGetUniformLocation (id, "light1Color");
+    s->lightIds[0].irradianceId = opengl.glGetUniformLocation (id, "light1Irradiance");
+    s->lightIds[1].directionId  = opengl.glGetUniformLocation (id, "light2Direction");
+    s->lightIds[1].colorId      = opengl.glGetUniformLocation (id, "light2Color");
+    s->lightIds[1].irradianceId = opengl.glGetUniformLocation (id, "light2Irradiance");
   }
 
   void setProgram (const RenderMode& renderMode) {
@@ -146,21 +148,22 @@ struct Renderer::Impl {
       this->initalizeProgram (renderMode);
     }
     assert (this->shaderIds[index].programId);
+    OpenGLApi& opengl = OpenGL::instance();
 
     this->activeShaderIndex = &this->shaderIds[index];
-    OpenGL::instance().glUseProgram (this->activeShaderIndex->programId);
+    opengl.glUseProgram (this->activeShaderIndex->programId);
 
-    OpenGL::instance().glUniformVec3 
+    opengl.glUniformVec3
       (this->activeShaderIndex->eyePointId, this->globalUniforms.eyePoint);
 
     for (unsigned int i = 0; i < numLights; i++) {
-      OpenGL::instance().glUniformVec3 
+      opengl.glUniformVec3
         ( this->activeShaderIndex->lightIds[i].directionId
         , this->globalUniforms.lightUniforms[i].direction);
-      OpenGL::instance().glUniformVec3 
+      opengl.glUniformVec3
         ( this->activeShaderIndex->lightIds[i].colorId
         , this->globalUniforms.lightUniforms[i].color.vec3 ());
-      OpenGL::instance().glUniform1f ( this->activeShaderIndex->lightIds[i].irradianceId
+      opengl.glUniform1f ( this->activeShaderIndex->lightIds[i].irradianceId
                           , this->globalUniforms.lightUniforms[i].irradiance );
     }
   }

@@ -55,35 +55,36 @@ struct ViewCursor::Impl {
 
   void render (Camera& camera) const {
     if (this->isEnabled) {
-      OpenGL::instance().glClear         (OpenGL::instance().StencilBufferBit ());
+      OpenGLApi& opengl = OpenGL::instance();
+      opengl.glClear         (opengl.StencilBufferBit ());
 
-      OpenGL::instance().glDepthMask     (false);
-      OpenGL::instance().glColorMask     (false, false, false, false);
-      OpenGL::instance().glEnable        (OpenGL::instance().StencilTest ());
+      opengl.glDepthMask     (false);
+      opengl.glColorMask     (false, false, false, false);
+      opengl.glEnable        (opengl.StencilTest ());
 
-      OpenGL::instance().glCullFace      (OpenGL::instance().Front ());
+      opengl.glCullFace      (opengl.Front ());
 
-      OpenGL::instance().glEnable        (OpenGL::instance().StencilTest ());
-      OpenGL::instance().glStencilFunc   (OpenGL::instance().Always (), 1, 255);
-      OpenGL::instance().glStencilOp     (OpenGL::instance().Keep (), OpenGL::instance().Replace (), OpenGL::instance().Keep ());
-
-      this->radiusMesh.render (camera);
-
-      OpenGL::instance().glCullFace      (OpenGL::instance().Back ());
-      OpenGL::instance().glColorMask     (true, true, true, true);
-
-      OpenGL::instance().glStencilFunc   (OpenGL::instance().Equal (), 1, 255);
-      OpenGL::instance().glStencilOp     (OpenGL::instance().Keep (), OpenGL::instance().Keep (), OpenGL::instance().Keep ());
-
-      OpenGL::instance().glEnable        (OpenGL::instance().Blend ());
-      OpenGL::instance().glBlendEquation (OpenGL::instance().FuncAdd ());
-      OpenGL::instance().glBlendFunc     (OpenGL::instance().DstColor (), OpenGL::instance().Zero ());
+      opengl.glEnable        (opengl.StencilTest ());
+      opengl.glStencilFunc   (opengl.Always (), 1, 255);
+      opengl.glStencilOp     (opengl.Keep (), opengl.Replace (), opengl.Keep ());
 
       this->radiusMesh.render (camera);
 
-      OpenGL::instance().glDisable       (OpenGL::instance().Blend ());
-      OpenGL::instance().glDisable       (OpenGL::instance().StencilTest ());
-      OpenGL::instance().glDepthMask     (true);
+      opengl.glCullFace      (opengl.Back ());
+      opengl.glColorMask     (true, true, true, true);
+
+      opengl.glStencilFunc   (opengl.Equal (), 1, 255);
+      opengl.glStencilOp     (opengl.Keep (), opengl.Keep (), opengl.Keep ());
+
+      opengl.glEnable        (opengl.Blend ());
+      opengl.glBlendEquation (opengl.FuncAdd ());
+      opengl.glBlendFunc     (opengl.DstColor (), opengl.Zero ());
+
+      this->radiusMesh.render (camera);
+
+      opengl.glDisable       (opengl.Blend ());
+      opengl.glDisable       (opengl.StencilTest ());
+      opengl.glDepthMask     (true);
     }
   }
 

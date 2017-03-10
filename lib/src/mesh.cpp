@@ -162,21 +162,22 @@ struct Mesh::Impl {
     if (this->normalBufferId.isValid () == false) {
       this->normalBufferId.allocate ();
     }
+    OpenGLApi& opengl = OpenGL::instance();
 
-    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), this->vertexBufferId.id ());
-    OpenGL::instance().glBufferData ( OpenGL::instance().ArrayBuffer (), this->sizeOfVertices ()
-                         , &this->vertices[0], OpenGL::instance().StaticDraw () );
+    opengl.glBindBuffer (opengl.ArrayBuffer (), this->vertexBufferId.id ());
+    opengl.glBufferData ( opengl.ArrayBuffer (), this->sizeOfVertices ()
+                         , &this->vertices[0], opengl.StaticDraw () );
 
-    OpenGL::instance().glBindBuffer (OpenGL::instance().ElementArrayBuffer (), this->indexBufferId.id ());
-    OpenGL::instance().glBufferData ( OpenGL::instance().ElementArrayBuffer (), this->sizeOfIndices ()
-                         , &this->indices[0], OpenGL::instance().StaticDraw () );
+    opengl.glBindBuffer (opengl.ElementArrayBuffer (), this->indexBufferId.id ());
+    opengl.glBufferData ( opengl.ElementArrayBuffer (), this->sizeOfIndices ()
+                         , &this->indices[0], opengl.StaticDraw () );
 
-    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), this->normalBufferId.id ());
-    OpenGL::instance().glBufferData ( OpenGL::instance().ArrayBuffer (), this->sizeOfNormals ()
-                         , &this->normals[0], OpenGL::instance().StaticDraw () );
+    opengl.glBindBuffer (opengl.ArrayBuffer (), this->normalBufferId.id ());
+    opengl.glBufferData ( opengl.ArrayBuffer (), this->sizeOfNormals ()
+                         , &this->normals[0], opengl.StaticDraw () );
 
-    OpenGL::instance().glBindBuffer (OpenGL::instance().ElementArrayBuffer (), 0);
-    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), 0);
+    opengl.glBindBuffer (opengl.ElementArrayBuffer (), 0);
+    opengl.glBindBuffer (opengl.ArrayBuffer (), 0);
   }
 
   glm::mat4x4 modelMatrix () const {
@@ -192,7 +193,8 @@ struct Mesh::Impl {
   }
 
   void renderBegin (Camera& camera) const {
-    if (this->renderMode.renderWireframe () && OpenGL::instance().supportsGeometryShader () == false) {
+    OpenGLApi& opengl = OpenGL::instance();
+    if (this->renderMode.renderWireframe () && opengl.supportsGeometryShader () == false) {
       RenderMode nonWireframeRenderMode (this->renderMode);
       nonWireframeRenderMode.renderWireframe (false);
 
@@ -206,45 +208,48 @@ struct Mesh::Impl {
 
     this->setModelMatrix              (camera, this->renderMode.cameraRotationOnly ());
 
-    OpenGL::instance().glBindBuffer              (OpenGL::instance().ArrayBuffer (), this->vertexBufferId.id ());
-    OpenGL::instance().glEnableVertexAttribArray (OpenGL::instance().PositionIndex);
-    OpenGL::instance().glVertexAttribPointer     (OpenGL::instance().PositionIndex, 3, OpenGL::instance().Float (), false, 0, 0);
+    opengl.glBindBuffer              (opengl.ArrayBuffer (), this->vertexBufferId.id ());
+    opengl.glEnableVertexAttribArray (opengl.PositionIndex);
+    opengl.glVertexAttribPointer     (opengl.PositionIndex, 3, opengl.Float (), false, 0, 0);
 
-    OpenGL::instance().glBindBuffer              (OpenGL::instance().ElementArrayBuffer (), this->indexBufferId.id ());
+    opengl.glBindBuffer              (opengl.ElementArrayBuffer (), this->indexBufferId.id ());
 
     if (this->renderMode.smoothShading ()) {
-      OpenGL::instance().glBindBuffer              (OpenGL::instance().ArrayBuffer (), this->normalBufferId.id ());
-      OpenGL::instance().glEnableVertexAttribArray (OpenGL::instance().NormalIndex);
-      OpenGL::instance().glVertexAttribPointer     (OpenGL::instance().NormalIndex, 3, OpenGL::instance().Float (), false, 0, 0);
+      opengl.glBindBuffer              (opengl.ArrayBuffer (), this->normalBufferId.id ());
+      opengl.glEnableVertexAttribArray (opengl.NormalIndex);
+      opengl.glVertexAttribPointer     (opengl.NormalIndex, 3, opengl.Float (), false, 0, 0);
     }
-    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), 0);
+    opengl.glBindBuffer (opengl.ArrayBuffer (), 0);
 
     if (this->renderMode.noDepthTest ()) {
-      OpenGL::instance().glDisable (OpenGL::instance().DepthTest ()); 
+      opengl.glDisable (opengl.DepthTest ());
     }
   }
 
   void renderEnd () const { 
-    OpenGL::instance().glDisableVertexAttribArray (OpenGL::instance().PositionIndex);
-    OpenGL::instance().glDisableVertexAttribArray (OpenGL::instance().NormalIndex);
-    OpenGL::instance().glBindBuffer               (OpenGL::instance().ArrayBuffer (), 0);
-    OpenGL::instance().glBindBuffer               (OpenGL::instance().ElementArrayBuffer (), 0);
-    OpenGL::instance().glEnable                   (OpenGL::instance().DepthTest ()); 
+    OpenGLApi& opengl = OpenGL::instance();
+    opengl.glDisableVertexAttribArray (opengl.PositionIndex);
+    opengl.glDisableVertexAttribArray (opengl.NormalIndex);
+    opengl.glBindBuffer               (opengl.ArrayBuffer (), 0);
+    opengl.glBindBuffer               (opengl.ElementArrayBuffer (), 0);
+    opengl.glEnable                   (opengl.DepthTest ());
   }
 
   void render (Camera& camera) const {
     this->renderBegin (camera);
+    OpenGLApi& opengl = OpenGL::instance();
 
-    OpenGL::instance().glDrawElements ( OpenGL::instance().Triangles (), this->numIndices ()
-                           , OpenGL::instance().UnsignedInt (), nullptr );
+    opengl.glDrawElements ( opengl.Triangles (), this->numIndices ()
+                           , opengl.UnsignedInt (), nullptr );
 
     this->renderEnd ();
   }
 
   void renderLines (Camera& camera) const {
     this->renderBegin (camera);
-    OpenGL::instance().glDrawElements ( OpenGL::instance().Lines (), this->numIndices ()
-                           , OpenGL::instance().UnsignedInt (), nullptr );
+      OpenGLApi& opengl = OpenGL::instance();
+    opengl.glDrawElements ( opengl.Lines (), this->numIndices ()
+                           , opengl.UnsignedInt (), nullptr );
     this->renderEnd ();
   }
 

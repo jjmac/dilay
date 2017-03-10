@@ -6,7 +6,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 # Find the QtWidgets library
-find_package(Qt5Widgets)
 find_package(Qt5Core)
 find_package(Qt5Xml)
 
@@ -33,7 +32,7 @@ assign_source_group(${SOURCE_LIST} )
 
 add_library(lib ${SOURCE_LIST})
 target_link_libraries (lib glm)
-target_link_libraries(lib Qt5::Core Qt5::Widgets Qt5::Xml)
+target_link_libraries(lib Qt5::Core Qt5::Xml)
 
 set(lib_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src
     CACHE INTERNAL "lib: Include Directories" FORCE)

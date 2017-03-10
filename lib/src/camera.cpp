@@ -143,7 +143,7 @@ struct Camera::Impl {
   }
 
   void updateProjection () {
-    OpenGL::glViewport (0, 0, this->resolution.x, this->resolution.y);
+    OpenGL::instance().glViewport (0, 0, this->resolution.x, this->resolution.y);
     this->projection = glm::perspective ( this->fieldOfView
                                         , float (this->resolution.x) / float (this->resolution.y)
                                         , this->nearClipping, this->farClipping );

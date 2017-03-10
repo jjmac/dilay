@@ -12,7 +12,7 @@
 
 int main (int argv, char **args) {
   QCoreApplication::setAttribute (Qt::AA_UseDesktopOpenGL);
-  OpenGL::setDefaultFormat ();
+//  OpenGL::instance().setDefaultFormat ();
 
   QApplication app (argv, args);
 

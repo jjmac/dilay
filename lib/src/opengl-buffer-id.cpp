@@ -41,13 +41,13 @@ bool OpenGLBufferId :: isValid () const {
 void OpenGLBufferId :: allocate () {
   assert (this->isValid () == false);
 
-  OpenGL::glGenBuffers (1, &this->_id);
+  OpenGL::instance().glGenBuffers (1, &this->_id);
 
   assert (this->isValid ());
 }
 
 void OpenGLBufferId :: reset () {
   if (this->isValid ()) {
-    OpenGL::safeDeleteBuffer (this->_id);
+    OpenGL::instance().safeDeleteBuffer (this->_id);
   }
 }

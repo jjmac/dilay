@@ -22,3 +22,5 @@ include_directories(${PROJECT_SOURCE_DIR}/src ${lib_INCLUDE_DIRS})
 
 add_executable(app ${CPP} ${H} ${HPP})
 target_link_libraries (app lib)
+target_link_libraries (app Qt5::Widgets )
+

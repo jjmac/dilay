@@ -163,20 +163,20 @@ struct Mesh::Impl {
       this->normalBufferId.allocate ();
     }
 
-    OpenGL::glBindBuffer (OpenGL::ArrayBuffer (), this->vertexBufferId.id ());
-    OpenGL::glBufferData ( OpenGL::ArrayBuffer (), this->sizeOfVertices ()
-                         , &this->vertices[0], OpenGL::StaticDraw () );
+    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), this->vertexBufferId.id ());
+    OpenGL::instance().glBufferData ( OpenGL::instance().ArrayBuffer (), this->sizeOfVertices ()
+                         , &this->vertices[0], OpenGL::instance().StaticDraw () );
 
-    OpenGL::glBindBuffer (OpenGL::ElementArrayBuffer (), this->indexBufferId.id ());
-    OpenGL::glBufferData ( OpenGL::ElementArrayBuffer (), this->sizeOfIndices ()
-                         , &this->indices[0], OpenGL::StaticDraw () );
+    OpenGL::instance().glBindBuffer (OpenGL::instance().ElementArrayBuffer (), this->indexBufferId.id ());
+    OpenGL::instance().glBufferData ( OpenGL::instance().ElementArrayBuffer (), this->sizeOfIndices ()
+                         , &this->indices[0], OpenGL::instance().StaticDraw () );
 
-    OpenGL::glBindBuffer (OpenGL::ArrayBuffer (), this->normalBufferId.id ());
-    OpenGL::glBufferData ( OpenGL::ArrayBuffer (), this->sizeOfNormals ()
-                         , &this->normals[0], OpenGL::StaticDraw () );
+    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), this->normalBufferId.id ());
+    OpenGL::instance().glBufferData ( OpenGL::instance().ArrayBuffer (), this->sizeOfNormals ()
+                         , &this->normals[0], OpenGL::instance().StaticDraw () );
 
-    OpenGL::glBindBuffer (OpenGL::ElementArrayBuffer (), 0);
-    OpenGL::glBindBuffer (OpenGL::ArrayBuffer (), 0);
+    OpenGL::instance().glBindBuffer (OpenGL::instance().ElementArrayBuffer (), 0);
+    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), 0);
   }
 
   glm::mat4x4 modelMatrix () const {
@@ -192,7 +192,7 @@ struct Mesh::Impl {
   }
 
   void renderBegin (Camera& camera) const {
-    if (this->renderMode.renderWireframe () && OpenGL::supportsGeometryShader () == false) {
+    if (this->renderMode.renderWireframe () && OpenGL::instance().supportsGeometryShader () == false) {
       RenderMode nonWireframeRenderMode (this->renderMode);
       nonWireframeRenderMode.renderWireframe (false);
 
@@ -206,45 +206,45 @@ struct Mesh::Impl {
 
     this->setModelMatrix              (camera, this->renderMode.cameraRotationOnly ());
 
-    OpenGL::glBindBuffer              (OpenGL::ArrayBuffer (), this->vertexBufferId.id ());
-    OpenGL::glEnableVertexAttribArray (OpenGL::PositionIndex);
-    OpenGL::glVertexAttribPointer     (OpenGL::PositionIndex, 3, OpenGL::Float (), false, 0, 0);
+    OpenGL::instance().glBindBuffer              (OpenGL::instance().ArrayBuffer (), this->vertexBufferId.id ());
+    OpenGL::instance().glEnableVertexAttribArray (OpenGL::instance().PositionIndex);
+    OpenGL::instance().glVertexAttribPointer     (OpenGL::instance().PositionIndex, 3, OpenGL::instance().Float (), false, 0, 0);
 
-    OpenGL::glBindBuffer              (OpenGL::ElementArrayBuffer (), this->indexBufferId.id ());
+    OpenGL::instance().glBindBuffer              (OpenGL::instance().ElementArrayBuffer (), this->indexBufferId.id ());
 
     if (this->renderMode.smoothShading ()) {
-      OpenGL::glBindBuffer              (OpenGL::ArrayBuffer (), this->normalBufferId.id ());
-      OpenGL::glEnableVertexAttribArray (OpenGL::NormalIndex);
-      OpenGL::glVertexAttribPointer     (OpenGL::NormalIndex, 3, OpenGL::Float (), false, 0, 0);
+      OpenGL::instance().glBindBuffer              (OpenGL::instance().ArrayBuffer (), this->normalBufferId.id ());
+      OpenGL::instance().glEnableVertexAttribArray (OpenGL::instance().NormalIndex);
+      OpenGL::instance().glVertexAttribPointer     (OpenGL::instance().NormalIndex, 3, OpenGL::instance().Float (), false, 0, 0);
     }
-    OpenGL::glBindBuffer (OpenGL::ArrayBuffer (), 0);
+    OpenGL::instance().glBindBuffer (OpenGL::instance().ArrayBuffer (), 0);
 
     if (this->renderMode.noDepthTest ()) {
-      OpenGL::glDisable (OpenGL::DepthTest ()); 
+      OpenGL::instance().glDisable (OpenGL::instance().DepthTest ()); 
     }
   }
 
   void renderEnd () const { 
-    OpenGL::glDisableVertexAttribArray (OpenGL::PositionIndex);
-    OpenGL::glDisableVertexAttribArray (OpenGL::NormalIndex);
-    OpenGL::glBindBuffer               (OpenGL::ArrayBuffer (), 0);
-    OpenGL::glBindBuffer               (OpenGL::ElementArrayBuffer (), 0);
-    OpenGL::glEnable                   (OpenGL::DepthTest ()); 
+    OpenGL::instance().glDisableVertexAttribArray (OpenGL::instance().PositionIndex);
+    OpenGL::instance().glDisableVertexAttribArray (OpenGL::instance().NormalIndex);
+    OpenGL::instance().glBindBuffer               (OpenGL::instance().ArrayBuffer (), 0);
+    OpenGL::instance().glBindBuffer               (OpenGL::instance().ElementArrayBuffer (), 0);
+    OpenGL::instance().glEnable                   (OpenGL::instance().DepthTest ()); 
   }
 
   void render (Camera& camera) const {
     this->renderBegin (camera);
 
-    OpenGL::glDrawElements ( OpenGL::Triangles (), this->numIndices ()
-                           , OpenGL::UnsignedInt (), nullptr );
+    OpenGL::instance().glDrawElements ( OpenGL::instance().Triangles (), this->numIndices ()
+                           , OpenGL::instance().UnsignedInt (), nullptr );
 
     this->renderEnd ();
   }
 
   void renderLines (Camera& camera) const {
     this->renderBegin (camera);
-    OpenGL::glDrawElements ( OpenGL::Lines (), this->numIndices ()
-                           , OpenGL::UnsignedInt (), nullptr );
+    OpenGL::instance().glDrawElements ( OpenGL::instance().Lines (), this->numIndices ()
+                           , OpenGL::instance().UnsignedInt (), nullptr );
     this->renderEnd ();
   }
 

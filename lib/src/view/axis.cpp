@@ -70,7 +70,7 @@ struct ViewAxis::Impl {
   }
 
   void render (Camera& camera) {
-    OpenGL::glClear (OpenGL::DepthBufferBit ());
+    OpenGL::instance().glClear (OpenGL::instance().DepthBufferBit ());
 
     const glm::uvec2  resolution = camera.resolution ();
     camera.updateResolution (glm::uvec2 (200,200));

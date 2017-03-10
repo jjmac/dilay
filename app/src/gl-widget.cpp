@@ -18,6 +18,7 @@
 #include "view/pointing-event.hpp"
 #include "view-util.hpp"
 #include "main-window.hpp"
+#include "opengl-impl.hpp"
 
 ViewPointingEvent toPointingEvent (const QMouseEvent& event)
 {
@@ -115,7 +116,8 @@ void ViewGlWidget::fromConfig ()
 
 void ViewGlWidget::initializeGL ()
 {
-    OpenGL::initializeFunctions ();
+
+    OpenGL::install(new  OpenGLImpl());
 
     m_state     .reset (new State (&(m_mainWindow), m_config, m_cache));
     m_axis      .reset (new ViewAxis (m_config));
@@ -139,7 +141,7 @@ void ViewGlWidget::paintGL ()
     }
     m_axis->render (state ().camera ());
 
-    OpenGL::glDisable (OpenGL::DepthTest ());
+    OpenGL::instance().glDisable (OpenGL::instance().DepthTest ());
     painter.endNativePainting ();
 
 //    m_axis->render (state ().camera (), painter);

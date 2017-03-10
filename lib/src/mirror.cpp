@@ -52,46 +52,46 @@ struct Mirror::Impl {
      || (this->_dimension == Dimension::Y && glm::abs (pos.y) <= width2)
      || (this->_dimension == Dimension::Z && glm::abs (pos.z) <= width2);
 
-    OpenGL::glClear         (OpenGL::StencilBufferBit ());
-    OpenGL::glDepthMask     (false);
-    OpenGL::glEnable        (OpenGL::StencilTest ());
+    OpenGL::instance().glClear         (OpenGL::instance().StencilBufferBit ());
+    OpenGL::instance().glDepthMask     (false);
+    OpenGL::instance().glEnable        (OpenGL::instance().StencilTest ());
 
-    OpenGL::glColorMask     (false, false, false, false);
+    OpenGL::instance().glColorMask     (false, false, false, false);
 
-    OpenGL::glCullFace      (OpenGL::Front ());
+    OpenGL::instance().glCullFace      (OpenGL::instance().Front ());
 
-    OpenGL::glEnable        (OpenGL::StencilTest ());
-    OpenGL::glStencilFunc   (OpenGL::Always (), 1, 255);
-    OpenGL::glStencilOp     (OpenGL::Keep (), OpenGL::Replace (), OpenGL::Keep ());
+    OpenGL::instance().glEnable        (OpenGL::instance().StencilTest ());
+    OpenGL::instance().glStencilFunc   (OpenGL::instance().Always (), 1, 255);
+    OpenGL::instance().glStencilOp     (OpenGL::instance().Keep (), OpenGL::instance().Replace (), OpenGL::instance().Keep ());
 
     this->mirrorMesh.render (camera);
 
     if (inside) {
-      OpenGL::glDisable (OpenGL::DepthTest ());
+      OpenGL::instance().glDisable (OpenGL::instance().DepthTest ());
     }
     else {
-      OpenGL::glCullFace (OpenGL::Back ());
+      OpenGL::instance().glCullFace (OpenGL::instance().Back ());
     }
 
-    OpenGL::glColorMask     (true, true, true, true);
+    OpenGL::instance().glColorMask     (true, true, true, true);
 
-    OpenGL::glStencilFunc   (OpenGL::Equal (), 1, 255);
-    OpenGL::glStencilOp     (OpenGL::Keep (), OpenGL::Keep (), OpenGL::Keep ());
+    OpenGL::instance().glStencilFunc   (OpenGL::instance().Equal (), 1, 255);
+    OpenGL::instance().glStencilOp     (OpenGL::instance().Keep (), OpenGL::instance().Keep (), OpenGL::instance().Keep ());
 
-    OpenGL::glEnable        (OpenGL::Blend ());
-    OpenGL::glBlendEquation (OpenGL::FuncAdd ());
-    OpenGL::glBlendFunc     (OpenGL::DstColor (), OpenGL::Zero ());
+    OpenGL::instance().glEnable        (OpenGL::instance().Blend ());
+    OpenGL::instance().glBlendEquation (OpenGL::instance().FuncAdd ());
+    OpenGL::instance().glBlendFunc     (OpenGL::instance().DstColor (), OpenGL::instance().Zero ());
 
     this->mirrorMesh.render (camera);
 
-    OpenGL::glDisable       (OpenGL::Blend ());
+    OpenGL::instance().glDisable       (OpenGL::instance().Blend ());
 
     if (inside) {
-      OpenGL::glCullFace (OpenGL::Back ());
-      OpenGL::glEnable   (OpenGL::DepthTest ());
+      OpenGL::instance().glCullFace (OpenGL::instance().Back ());
+      OpenGL::instance().glEnable   (OpenGL::instance().DepthTest ());
     }
-    OpenGL::glDisable   (OpenGL::StencilTest ());
-    OpenGL::glDepthMask (true);
+    OpenGL::instance().glDisable   (OpenGL::instance().StencilTest ());
+    OpenGL::instance().glDepthMask (true);
   }
 
   void updateMesh () {

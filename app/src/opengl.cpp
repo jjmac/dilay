@@ -12,56 +12,41 @@
 #include "util.hpp"
 
 #define DELEGATE_GL_CONSTANT(method,constant) \
-  unsigned int method () { return constant; }
+  unsigned int OpenGL::method () { return constant; }
 #define DELEGATE_GL(r,method) \
-  r method () { return fun-> method (); }
+  r OpenGL::method () { return fun-> method (); }
 #define DELEGATE1_GL(r,method,t1) \
-  r method (t1 a1) { return fun-> method (a1); }
+  r OpenGL::method (t1 a1) { return fun-> method (a1); }
 #define DELEGATE2_GL(r,method,t1,t2) \
-  r method (t1 a1,t2 a2) { return fun-> method (a1,a2); }
+  r OpenGL::method (t1 a1,t2 a2) { return fun-> method (a1,a2); }
 #define DELEGATE3_GL(r,method,t1,t2,t3) \
-  r method (t1 a1,t2 a2,t3 a3) { return fun-> method (a1,a2,a3); }
+  r OpenGL::method (t1 a1,t2 a2,t3 a3) { return fun-> method (a1,a2,a3); }
 #define DELEGATE4_GL(r,method,t1,t2,t3,t4) \
-  r method (t1 a1,t2 a2,t3 a3,t4 a4) { return fun-> method (a1,a2,a3,a4); }
+  r OpenGL::method (t1 a1,t2 a2,t3 a3,t4 a4) { return fun-> method (a1,a2,a3,a4); }
 #define DELEGATE5_GL(r,method,t1,t2,t3,t4,t5) \
-  r method (t1 a1,t2 a2,t3 a3,t4 a4,t5 a5) { return fun-> method (a1,a2,a3,a4,a5); }
+  r OpenGL::method (t1 a1,t2 a2,t3 a3,t4 a4,t5 a5) { return fun-> method (a1,a2,a3,a4,a5); }
 #define DELEGATE6_GL(r,method,t1,t2,t3,t4,t5,t6) \
-  r method (t1 a1,t2 a2,t3 a3,t4 a4,t5 a5,t6 a6) { return fun-> method (a1,a2,a3,a4,a5,a6); }
+  r OpenGL::method (t1 a1,t2 a2,t3 a3,t4 a4,t5 a5,t6 a6) { return fun-> method (a1,a2,a3,a4,a5,a6); }
 
 namespace OpenGL {
   static_assert (sizeof (unsigned int) >= 4, "type does not meet size required by OpenGL");
   static_assert (sizeof (int) >= 4, "type does not meet size required by OpenGL");
   static_assert (sizeof (float) >= 4, "type does not meet size required by OpenGL");
 
-  static QOpenGLFunctions_2_1* fun = nullptr;
-  static std::unique_ptr <QOpenGLExtension_EXT_geometry_shader4> gsFun;
+  void OpenGL::initializeFunctions () {
+	fun = QOpenGLContext::currentContext ()->versionFunctions <QOpenGLFunctions_2_1> ();
+	if (fun == nullptr) {
+	  DILAY_PANIC ("could not obtain OpenGL 2.1 context")
+	}
+	fun->initializeOpenGLFunctions ();
 
-  void setDefaultFormat () {
-    QSurfaceFormat format;
-
-    format.setVersion           (2, 1);
-    format.setDepthBufferSize   (24);
-    format.setStencilBufferSize (1);
-    format.setProfile           (QSurfaceFormat::NoProfile);
-    format.setRenderableType    (QSurfaceFormat::OpenGL);
-
-    QSurfaceFormat::setDefaultFormat (format);
-  }
-
-  void initializeFunctions () {
-    fun = QOpenGLContext::currentContext ()->versionFunctions <QOpenGLFunctions_2_1> ();
-    if (fun == nullptr) {
-      DILAY_PANIC ("could not obtain OpenGL 2.1 context")
-    }
-    fun->initializeOpenGLFunctions ();
-
-    if (OpenGL::supportsGeometryShader ()) {
-      gsFun = std::make_unique <QOpenGLExtension_EXT_geometry_shader4> ();
-      if (gsFun == nullptr) {
-        DILAY_PANIC ("could not initialize GL_EXT_geometry_shader4 extension")
-      }
-      gsFun->initializeOpenGLFunctions ();
-    }
+	if (OpenGL::supportsGeometryShader ()) {
+	  gsFun = std::make_unique <QOpenGLExtension_EXT_geometry_shader4> ();
+	  if (gsFun == nullptr) {
+		DILAY_PANIC ("could not initialize GL_EXT_geometry_shader4 extension")
+	  }
+	  gsFun->initializeOpenGLFunctions ();
+	}
   }
 
   DELEGATE_GL_CONSTANT (Always, GL_ALWAYS);

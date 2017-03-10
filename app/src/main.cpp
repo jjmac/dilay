@@ -10,9 +10,24 @@
 #include "opengl.hpp"
 #include "main-window.hpp"
 
+
+#include <QSurfaceFormat>
+
+void opengl_setDefaultFormat () {
+  QSurfaceFormat format;
+
+  format.setVersion           (2, 1);
+  format.setDepthBufferSize   (24);
+  format.setStencilBufferSize (1);
+  format.setProfile           (QSurfaceFormat::NoProfile);
+  format.setRenderableType    (QSurfaceFormat::OpenGL);
+
+  QSurfaceFormat::setDefaultFormat (format);
+}
+
 int main (int argv, char **args) {
   QCoreApplication::setAttribute (Qt::AA_UseDesktopOpenGL);
-  OpenGL::setDefaultFormat ();
+  opengl_setDefaultFormat ();
 
   QApplication app (argv, args);
 

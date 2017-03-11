@@ -6,7 +6,7 @@
 #include "camera.hpp"
 #include "dimension.hpp"
 #include "intersection.hpp"
-#include "kvstore.hpp"
+#include "json-kvstore.hpp"
 #include "primitive/plane.hpp"
 #include "primitive/ray.hpp"
 #include "tool/util/movement.hpp"
@@ -161,12 +161,12 @@ struct ToolUtilMovement::Impl {
 
 
 template <>
-void KVStore :: set (const std::string& path, const MovementConstraint& c) {
+void JsonKVStore :: set (const std::string& path, const MovementConstraint& c) {
   this->set (path, constraintToInt (c));
 }
-  
+
 template <>
-MovementConstraint KVStore :: getFrom (const std::string& path, const MovementConstraint& c) const {
+MovementConstraint JsonKVStore :: getFrom (const std::string& path, const MovementConstraint& c) const {
   return constraintFromInt (this->get (path, constraintToInt (c)));
 }
 

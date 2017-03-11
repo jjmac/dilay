@@ -3,15 +3,13 @@ cmake_minimum_required (VERSION 3.0)
 project (lib)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
-
-# Find the QtWidgets library
-find_package(Qt5Core)
-find_package(Qt5Xml)
 
 add_definitions(-DDILAY_VERSION="1")
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
-include_directories(${PROJECT_SOURCE_DIR}/src ${glm_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/src
+    ${glm_INCLUDE_DIRS}
+    ${json_INCLUDE_DIRS}
+    )
 
 
 function(assign_source_group)
@@ -32,7 +30,6 @@ assign_source_group(${SOURCE_LIST} )
 
 add_library(lib ${SOURCE_LIST})
 target_link_libraries (lib glm)
-target_link_libraries(lib Qt5::Core Qt5::Xml)
 
 set(lib_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src
     CACHE INTERNAL "lib: Include Directories" FORCE)

@@ -33,6 +33,11 @@ float Color :: g       () const { return this->_g; }
 float Color :: b       () const { return this->_b; }
 float Color :: opacity () const { return this->_opacity; }
 
+void Color :: rgb(float r, float g, float b) {
+    this->_r = r;
+    this->_g = g;
+    this->_b = b;
+}
 void Color :: r       (float v) { this->_r       = v; }
 void Color :: g       (float v) { this->_g       = v; }
 void Color :: b       (float v) { this->_b       = v; }

@@ -5,7 +5,7 @@
 #ifndef DILAY_CACHE
 #define DILAY_CACHE
 
-#include "kvstore.hpp"
+#include "json-kvstore.hpp"
 
 class Cache {
   public:   
@@ -27,7 +27,7 @@ class Cache {
     }
 
   private:
-    KVStore store;
+    JsonKVStore store;
 };
 
 class CacheProxy {

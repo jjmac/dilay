@@ -5,7 +5,7 @@
 #ifndef DILAY_CONFIG
 #define DILAY_CONFIG
 
-#include "kvstore.hpp"
+#include "json-kvstore.hpp"
 
 class Config {
   public:   
@@ -44,7 +44,7 @@ class Config {
   private:
     void update ();
 
-    KVStore store;
+    JsonKVStore store;
 };
 
 class ConfigProxy {

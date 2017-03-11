@@ -2,15 +2,15 @@
  * Copyright © 2015,2016 Alexander Bau
  * Use and redistribute under the terms of the GNU General Public License
  */
-#ifndef DILAY_KVSTORE
-#define DILAY_KVSTORE
+#ifndef DILAY_JSON_JsonKVStore
+#define DILAY_JSON_JsonKVStore
 
 #include <string>
 #include "macro.hpp"
 
-class KVStore {
+class JsonKVStore {
   public:   
-    DECLARE_BIG2 (KVStore, const std::string&)
+    DECLARE_BIG2 (JsonKVStore, const std::string&)
 
     template <class T> const T& get     (const std::string&) const;  
     template <class T>       T  getFrom (const std::string&) const;  

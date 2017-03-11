@@ -33,6 +33,7 @@ class Color {
     float b          () const;
     float opacity    () const;
 
+    void  rgb(float, float, float);
     void  r          (float);
     void  g          (float);
     void  b          (float);

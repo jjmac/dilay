@@ -6,7 +6,7 @@
 #define DILAY_COLOR_BUTTON
 
 #include <QPushButton>
-#include "color.hpp"
+#include "dilay/color.hpp"
 
 class Color;
 

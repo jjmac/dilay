@@ -47,8 +47,8 @@
 **
 ****************************************************************************/
 
-#include "qopenglextensions.h"
 #include <QtGui/qopenglcontext.h>
+#include "qopenglextensions.h"
 
 QT_BEGIN_NAMESPACE
 

@@ -5,8 +5,8 @@
 #ifndef DILAY_VIEW_FLOORPLANE
 #define DILAY_VIEW_FLOORPLANE
 
-#include "configurable.hpp"
-#include "macro.hpp"
+#include "../configurable.hpp"
+#include "../macro.hpp"
 
 class Camera;
 class Config;

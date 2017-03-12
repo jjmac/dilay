@@ -6,7 +6,7 @@
 #define DILAY_TOOL_SCALING
 
 #include <glm/fwd.hpp>
-#include "macro.hpp"
+#include "../../macro.hpp"
 
 class Camera;
 class ViewPointingEvent;

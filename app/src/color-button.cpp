@@ -4,10 +4,10 @@
  */
 #include <QColorDialog>
 #include <QPainter>
-#include "color.hpp"
 #include "helper.hpp"
 #include "color-button.hpp"
-#include "util.hpp"
+#include "dilay/color.hpp"
+#include "dilay/util.hpp"
 
 ViewColorButton::ViewColorButton(const Color& c)
     : m_color (c)

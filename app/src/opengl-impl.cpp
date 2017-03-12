@@ -7,9 +7,9 @@
 #include <QOpenGLFunctions_2_1>
 #include <glm/glm.hpp>
 #include <memory>
+#include "dilay/shader.hpp"
+#include "dilay/util.hpp"
 #include "opengl-impl.hpp"
-#include "shader.hpp"
-#include "util.hpp"
 
 #define DELEGATE_GL_CONSTANT(method,constant) \
   unsigned int OpenGLImpl::method () { return constant; }

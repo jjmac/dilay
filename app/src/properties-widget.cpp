@@ -1,16 +1,16 @@
-#include "properties-widget.hpp"
-#include "view-util.hpp"
-#include <QCheckBox>
 #include <QAbstractButton>
 #include <QButtonGroup>
-#include <QRadioButton>
-#include "double-slider.hpp"
-#include "cache.hpp"
-#include "sculpt-brush.hpp"
-
+#include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QRadioButton>
+#include "dilay/cache.hpp"
+#include "dilay/sculpt-brush.hpp"
+#include "double-slider.hpp"
+#include "properties-widget.hpp"
+#include "view-util.hpp"
+
 
 static QLabel* lapelPrt = nullptr;
 static int labelI = 0;

@@ -5,7 +5,7 @@
 #ifndef DILAY_OPENGL_IMPL
 #define DILAY_OPENGL_IMPL
 
-#include "opengl-Api.hpp"
+#include "dilay/opengl-Api.hpp"
 #include <memory>
 
 class QOpenGLFunctions_2_1;

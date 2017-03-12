@@ -3,7 +3,7 @@
 
 #include <QLabel>
 #include <QWidget>
-#include "tools.hpp"
+#include "dilay/tools.hpp"
 class ViewToolTip;
 
 class TooltipWidget : public QLabel

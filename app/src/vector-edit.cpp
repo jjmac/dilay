@@ -7,48 +7,39 @@
 #include "vector-edit.hpp"
 #include "view-util.hpp"
 
-struct ViewVectorEdit::Impl {
-  ViewVectorEdit*   self;
-  glm::vec3         vectorData;
-  QLineEdit*        edit [3];
+namespace {
+    static const int  numDecimals = 2;
+}
 
-  static const int  numDecimals = 2;
-
-  Impl (ViewVectorEdit* s, const glm::vec3& v) 
-    : self       (s) 
-    , vectorData (v)
-  { 
+ViewVectorEdit::ViewVectorEdit (const glm::vec3& v, QWidget* parent)
+    : QWidget(parent)
+    , m_vectorData (v)
+{
     QVBoxLayout* layout = new QVBoxLayout;
     layout->setSpacing         (0);
     layout->setContentsMargins (0,11,0,11);
-    this->self->setLayout      (layout);
+    setLayout      (layout);
 
     for (int i = 0; i <= 2; i++) {
-      this->edit[i] = &ViewUtil::lineEdit (v[i], Impl::numDecimals);
+      m_edit[i] = &ViewUtil::lineEdit (v[i], numDecimals);
 
-      ViewUtil::connectFloat (*this->edit[i], [this,i] (float v) {
-        this->vectorData[i] = v;
-        emit this->self->vectorEdited (this->vectorData);
+      ViewUtil::connectFloat (*m_edit[i], [this,i] (float v) {
+        this->m_vectorData[i] = v;
+        emit vectorEdited (m_vectorData);
       });
 
-      layout->addWidget (this->edit[i]);
+      layout->addWidget (m_edit[i]);
     }
-  };
+}
 
-  void vector (const glm::vec3& v) { this->x (v.x); this->y (v.y); this->z (v.z); }
-  void x      (float v)            { this->changeComponent (0,v); }
-  void y      (float v)            { this->changeComponent (1,v); }
-  void z      (float v)            { this->changeComponent (2,v); }
+void ViewVectorEdit::vector (const glm::vec3& v) { this->x (v.x); this->y (v.y); this->z (v.z); }
+void ViewVectorEdit::x      (float v)            { this->changeComponent (0,v); }
+void ViewVectorEdit::y      (float v)            { this->changeComponent (1,v); }
+void ViewVectorEdit::z      (float v)            { this->changeComponent (2,v); }
 
-  void changeComponent (int i, float v) {
-    this->vectorData[i] = v;
-    this->edit[i]->setText (QString::number (v, 'f', Impl::numDecimals));
-  }
-};
+void ViewVectorEdit::changeComponent (int i, float v) {
 
-DELEGATE_BIG2_BASE ( ViewVectorEdit, (const glm::vec3& v, QWidget* p)
-                   , (this,v), QWidget, (p) )
-DELEGATE1 (void, ViewVectorEdit, vector, const glm::vec3&)
-DELEGATE1 (void, ViewVectorEdit, x     , float)
-DELEGATE1 (void, ViewVectorEdit, y     , float)
-DELEGATE1 (void, ViewVectorEdit, z     , float)
+    m_vectorData[i] = v;
+    m_edit[i]->setText (QString::number (v, 'f', numDecimals));
+}
+

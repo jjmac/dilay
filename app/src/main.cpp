@@ -5,9 +5,9 @@
 #include <QApplication>
 #include <QDir>
 #include <QStandardPaths>
-#include "cache.hpp"
-#include "config.hpp"
-#include "opengl.hpp"
+#include "dilay/cache.hpp"
+#include "dilay/config.hpp"
+#include "dilay/opengl.hpp"
 #include "main-window.hpp"
 
 int main (int argv, char **args) {

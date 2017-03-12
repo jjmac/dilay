@@ -2,7 +2,7 @@
 #define DILAY_VIEW_HELPER
 
 #include <QColor>
-#include "color.hpp"
+#include "dilay/color.hpp"
 QColor toQt(const Color& color);
 Color toGL(const QColor& color);
 

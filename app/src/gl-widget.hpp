@@ -7,8 +7,8 @@
 
 #include <QOpenGLWidget>
 #include <glm/fwd.hpp>
-#include "view/axis.hpp"
-#include "tool/move-camera.hpp"
+#include "dilay/view/axis.hpp"
+#include "dilay/tool/move-camera.hpp"
 
 class Cache;
 class Config;

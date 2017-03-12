@@ -7,7 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <iosfwd>
-#include "primitive/sphere.hpp"
+#include "sphere.hpp"
 
 class PrimCone;
 

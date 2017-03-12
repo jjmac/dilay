@@ -6,7 +6,7 @@
 #define DILAY_DOUBLE_SLIDER
 
 #include <QSlider>
-#include "macro.hpp"
+#include "dilay/macro.hpp"
 
 class ViewDoubleSlider : public QSlider {
   Q_OBJECT

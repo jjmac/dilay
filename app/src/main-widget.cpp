@@ -14,8 +14,8 @@
 #include <QStackedLayout>
 #include <QGridLayout>
 #include <QTabBar>
-#include "state.hpp"
-#include "tools.hpp"
+#include "dilay/state.hpp"
+#include "dilay/tools.hpp"
 #include "gl-widget.hpp"
 #include "properties-widget.hpp"
 #include "main-widget.hpp"

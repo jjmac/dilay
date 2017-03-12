@@ -6,9 +6,9 @@
 #include <QLabel>
 #include <QShortcut>
 #include <QStatusBar>
-#include "scene.hpp"
-#include "state.hpp"
-#include "tool/move-camera.hpp"
+#include "dilay/tool/move-camera.hpp"
+#include "dilay/scene.hpp"
+#include "dilay/state.hpp"
 #include "gl-widget.hpp"
 #include "main-widget.hpp"
 #include "main-window.hpp"

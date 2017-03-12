@@ -5,8 +5,8 @@
 #ifndef DILAY_VIEW_PROPERTIES
 #define DILAY_VIEW_PROPERTIES
 
-#include "two-column-grid.hpp"
 #include <QVBoxLayout>
+#include "two-column-grid.hpp"
 
 class ViewProperties : public QWidget
 {

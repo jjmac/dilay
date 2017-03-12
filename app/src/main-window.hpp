@@ -6,7 +6,7 @@
 #define DILAY_VIEW_MAIN_WINDOW
 
 #include <QMainWindow>
-#include "controller.h"
+#include "dilay/controller.h"
 
 class Cache;
 class Config;

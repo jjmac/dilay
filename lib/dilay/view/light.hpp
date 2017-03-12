@@ -6,7 +6,7 @@
 #define DILAY_VIEW_LIGHT
 
 #include <glm/fwd.hpp>
-#include "macro.hpp"
+#include "../macro.hpp"
 
 class Color;
 

@@ -5,7 +5,7 @@
 #ifndef DILAY_TOOL_SCULPT
 #define DILAY_TOOL_SCULPT
 
-#include "tool.hpp"
+#include "../tool.hpp"
 
 class QString;
 class SculptBrush;

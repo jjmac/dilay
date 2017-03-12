@@ -5,7 +5,7 @@
 #ifndef DILAY_VIEW_TOOL_TIP
 #define DILAY_VIEW_TOOL_TIP
 
-#include "macro.hpp"
+#include "dilay/macro.hpp"
 
 class QString;
 

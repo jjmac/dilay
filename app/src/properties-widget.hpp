@@ -2,7 +2,7 @@
 #define DILAY_PROPERTIES_WIDGET
 
 #include <QWidget>
-#include "tools.hpp"
+#include "dilay/tools.hpp"
 #include "properties.hpp"
 
 class PropertiesWidget : public QWidget

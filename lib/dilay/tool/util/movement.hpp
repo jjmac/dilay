@@ -7,7 +7,7 @@
 
 #include <functional>
 #include <glm/fwd.hpp>
-#include "macro.hpp"
+#include "../../macro.hpp"
 
 class Camera;
 class ViewPointingEvent;

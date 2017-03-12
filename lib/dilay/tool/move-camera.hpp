@@ -6,7 +6,8 @@
 #define DILAY_TOOL_MOVE_CAMERA
 
 #include <glm/fwd.hpp>
-#include "configurable.hpp"
+#include "../configurable.hpp"
+#include "../macro.hpp"
 
 class Config;
 class State;

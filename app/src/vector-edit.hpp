@@ -7,12 +7,14 @@
 
 #include <QWidget>
 #include <glm/glm.hpp>
-#include "macro.hpp"
+
+class QLineEdit;
 
 class ViewVectorEdit : public QWidget {
   Q_OBJECT
+
   public:
-    DECLARE_BIG2 (ViewVectorEdit, const glm::vec3&, QWidget* = nullptr)
+    ViewVectorEdit(const glm::vec3&, QWidget* = nullptr);
 
     void vector (const glm::vec3&);
     void x      (float);
@@ -22,8 +24,12 @@ class ViewVectorEdit : public QWidget {
   signals:
     void vectorEdited (const glm::vec3&);
 
+private:
+    void changeComponent (int i, float v);
+
   private:
-    IMPLEMENTATION
+    glm::vec3         m_vectorData;
+    QLineEdit*        m_edit [3];
 };
 
 #endif

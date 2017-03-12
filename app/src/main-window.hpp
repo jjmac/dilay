@@ -6,7 +6,6 @@
 #define DILAY_VIEW_MAIN_WINDOW
 
 #include <QMainWindow>
-#include "dilay/controller.h"
 
 class Cache;
 class Config;
@@ -16,7 +15,7 @@ class ViewToolTip;
 class QLabel;
 class TooltipWidget;
 
-class ViewMainWindow : public QMainWindow, public Controller
+class ViewMainWindow : public QMainWindow
 {
     Q_OBJECT
 
@@ -26,14 +25,7 @@ public:
     ViewMainWidget& mainWidget         ();
     void            showMessage        (const QString&);
     void            showNumFaces       (unsigned int);
-    void            update             ();
 
-    void resetProperties();
-    // this->mainWindow->mainWidget ().properties ().reset ();
-    void deselectTool();
-    // this->mainWindow->mainWidget ().deselectTool ();
-    ViewProperties& viewProperties();
-    // return this->state.mainWindow ().mainWidget ().properties ();
     glm::ivec2 cursorPosition();
     // return this->state.mainWindow ().mainWidget ().glWidget ().cursorPosition ();
 

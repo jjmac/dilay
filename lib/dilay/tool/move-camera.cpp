@@ -12,7 +12,6 @@
 #include "state.hpp"
 #include "tool/move-camera.hpp"
 #include "util.hpp"
-#include "controller.h"
 #include "view/pointing-event.hpp"
 
 struct ToolMoveCamera::Impl {

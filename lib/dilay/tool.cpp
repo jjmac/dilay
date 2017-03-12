@@ -16,7 +16,6 @@
 #include "sketch/mesh.hpp"
 #include "state.hpp"
 #include "tool.hpp"
-#include "controller.h"
 #include "view/pointing-event.hpp"
 #include "winged/mesh.hpp"
 
@@ -75,10 +74,6 @@ struct Tool::Impl {
     this->self->runFromConfig ();
   }
 
-  ViewProperties& properties () const {
-    return this->state.mainWindow ().viewProperties ();
-  }
-
   Config& config () const {
     return this->state.config ();
   }
@@ -89,10 +84,6 @@ struct Tool::Impl {
 
   CacheProxy cache (const char* key) const {
     return CacheProxy (this->state.cache (), "editor/tool/" + std::string (key) + "/");
-  }
-
-  glm::ivec2 cursorPosition () {
-      return this->state.mainWindow ().cursorPosition ();
   }
 
   void snapshotAll () {
@@ -214,7 +205,6 @@ GETTER_CONST    (State&          , Tool, state)
 DELEGATE_CONST  (Config&         , Tool, config)
 DELEGATE        (CacheProxy&     , Tool, cache)
 DELEGATE1_CONST (CacheProxy      , Tool, cache, const char*)
-DELEGATE_CONST  (glm::ivec2      , Tool, cursorPosition)
 DELEGATE        (void            , Tool, snapshotAll)
 DELEGATE        (void            , Tool, snapshotWingedMeshes)
 DELEGATE        (void            , Tool, snapshotSketchMeshes)

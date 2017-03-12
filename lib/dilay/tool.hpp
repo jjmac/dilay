@@ -17,7 +17,6 @@ class Mirror;
 class ViewWheelEvent;
 class State;
 class ViewPointingEvent;
-class ViewProperties;
 class WingedFaceIntersection;
 
 class Tool {
@@ -40,7 +39,6 @@ class Tool {
     Config&          config                 () const;
     CacheProxy&      cache                  ();
     CacheProxy       cache                  (const char*) const;
-    glm::ivec2       cursorPosition         () const;
     void             snapshotAll            ();
     void             snapshotWingedMeshes   ();
     void             snapshotSketchMeshes   ();

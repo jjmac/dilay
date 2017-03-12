@@ -12,11 +12,9 @@
 #include "scene.hpp"
 #include "state.hpp"
 #include "tool.hpp"
-#include "controller.h"
 
 struct State::Impl {
   State*                 self;
-  Controller*            mainWindow;
   Config&                config;
   Cache&                 cache;
   Camera                 camera;
@@ -25,9 +23,8 @@ struct State::Impl {
   std::unique_ptr <Tool> toolPtr;
   EngineStatus           _status;
 
-  Impl (State* s, Controller* mW, Config& cfg, Cache& cch)
+  Impl (State* s, Config& cfg, Cache& cch)
     : self       (s)
-    , mainWindow (mW)
     , config     (cfg)
     , cache      (cch)
     , camera     (this->config)
@@ -105,12 +102,8 @@ struct State::Impl {
   }
 };
 
-DELEGATE3_BIG2_SELF (State, Controller*, Config&, Cache&)
-State::State(Config& cfg, Cache& cache)
-    : impl(new Impl(this, nullptr, cfg, cache))
-{}
+DELEGATE2_BIG2_SELF (State, Config&, Cache&)
 
-Controller& State::mainWindow() { return * (this->impl->mainWindow); }
 GETTER    (Config&           , State, config)
 GETTER    (Cache&            , State, cache)
 GETTER    (Camera&           , State, camera)

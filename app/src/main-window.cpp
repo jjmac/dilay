@@ -72,27 +72,6 @@ void ViewMainWindow::showNumFaces (unsigned int n) {
     m_numFacesLabel->setText (QString::number (n).append (" faces"));
 }
 
-void ViewMainWindow::update ()
-{
-    QMainWindow::update ();
-    m_mainWidget->update ();
-}
-
-void ViewMainWindow::resetProperties()
-{
-    m_mainWidget->properties ().reset ();
-}
-
-void ViewMainWindow::deselectTool()
-{
-    m_mainWidget->deselectTool ();
-}
-
-ViewProperties& ViewMainWindow::viewProperties()
-{
-    return m_mainWidget->properties ();
-}
-
 glm::ivec2 ViewMainWindow::cursorPosition()
 {
     return m_mainWidget->glWidget ().cursorPosition ();

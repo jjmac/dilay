@@ -16,7 +16,6 @@ class Mesh;
 class Scene;
 class Tool;
 enum class ToolResponse;
-class Controller;
 class WingedMesh;
 
 enum class EngineStatus {
@@ -25,10 +24,8 @@ enum class EngineStatus {
 
 class State {
   public:                                   
-    DECLARE_BIG2 (State, Controller*, Config&, Cache&)
-    State (Config&, Cache&);
+    DECLARE_BIG2 (State, Config&, Cache&)
 
-    Controller& mainWindow         ();
     Config&         config             ();
     Cache&          cache              ();
     Camera&         camera             ();

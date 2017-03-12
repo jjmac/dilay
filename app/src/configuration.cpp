@@ -8,7 +8,6 @@
 #include <QVBoxLayout>
 #include "dilay/color.hpp"
 #include "dilay/config.hpp"
-#include "dilay/controller.h"
 #include "dilay/state.hpp"
 #include "color-button.hpp"
 #include "configuration.hpp"

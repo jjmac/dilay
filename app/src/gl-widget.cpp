@@ -6,7 +6,6 @@
 #include <QPainter>
 #include <QGuiApplication>
 #include <glm/glm.hpp>
-#include "dilay/controller.h"
 #include "dilay/view/floor-plane.hpp"
 #include "dilay/view/pointing-event.hpp"
 #include "dilay/camera.hpp"
@@ -119,7 +118,7 @@ void ViewGlWidget::initializeGL ()
 
     OpenGL::install(new  OpenGLImpl());
 
-    m_state     .reset (new State (&(m_mainWindow), m_config, m_cache));
+    m_state     .reset (new State (m_config, m_cache));
     m_axis      .reset (new ViewAxis (m_config));
     m_floorPlane.reset (new ViewFloorPlane (m_config, state ().camera ()));
 

@@ -57,14 +57,14 @@ struct ToolSculpt::Impl {
   void setupCursor () {
     assert (this->brush.radius () > 0.0f);
 
-    WingedFaceIntersection intersection;
-    if (this->self->intersectsScene (this->self->cursorPosition (), intersection)) {
-      this->cursor.enable   ();
-      this->cursor.position (intersection.position ());
-    }
-    else {
+//    WingedFaceIntersection intersection;
+//    if (this->self->intersectsScene (this->self->cursorPosition (), intersection)) {
+//      this->cursor.enable   ();
+//      this->cursor.position (intersection.position ());
+//    }
+//    else {
       this->cursor.disable ();
-    }
+//    }
     this->cursor.radius (this->brush.radius ());
 
     this->self->runSetupCursor (this->cursor);

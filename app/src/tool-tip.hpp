@@ -5,13 +5,14 @@
 #ifndef DILAY_VIEW_TOOL_TIP
 #define DILAY_VIEW_TOOL_TIP
 
-#include "dilay/macro.hpp"
+#include <vector>
+
 
 class QString;
 
 class ViewToolTip {
   public:
-    DECLARE_BIG4COPY (ViewToolTip)
+    ViewToolTip();
 
     enum class MouseEvent { Left, Middle, Wheel, Right };
     enum class Modifier   { None, Ctrl, Shift, Alt };
@@ -22,8 +23,14 @@ class ViewToolTip {
     void add   (MouseEvent, const QString&);
     void reset ();
 
-  private:
-    IMPLEMENTATION
+private:
+    typedef std::tuple <ViewToolTip::MouseEvent, ViewToolTip::Modifier, QString> Tip;
+    QString tipToString (const Tip& tip) const ;
+
+private:
+    typedef std::vector <Tip> Tips;
+    Tips tips;
+
 };
 
 #endif

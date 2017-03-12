@@ -42,7 +42,7 @@ struct ToolModifySketch::Impl {
     this->self->renderMirror (false);
   }
 
-  ToolResponse runMoveEvent (const ViewPointingEvent& e) {
+  void runMoveEvent (const ViewPointingEvent& e) {
     if (e.primaryButton () && this->node) {
       if (e.modifiers () == KeyboardModifiers::ShiftModifier) {
         if (this->scaling.move (e)) {
@@ -62,14 +62,11 @@ struct ToolModifySketch::Impl {
         this->mesh->move (*this->node, this->movement.delta ()
                          , this->transformChildren, this->self->mirrorDimension () );
       }
-      return ToolResponse::Redraw;
-    }
-    else {
-      return ToolResponse::None;
+      this->self->state().setStatus(EngineStatus::Redraw);
     }
   }
 
-  ToolResponse runPressEvent (const ViewPointingEvent& e) {
+  void runPressEvent (const ViewPointingEvent& e) {
 
     auto handleNodeIntersection = [this, &e] (SketchNodeIntersection &intersection) {
       this->self->snapshotSketchMeshes ();
@@ -131,10 +128,9 @@ struct ToolModifySketch::Impl {
         handleBoneIntersection (boneIntersection);
       }
     }
-    return ToolResponse::None;
   }
 
-  ToolResponse runReleaseEvent (const ViewPointingEvent& e) {
+  void runReleaseEvent (const ViewPointingEvent& e) {
     bool redraw = false;
 
     if (e.primaryButton ()) {
@@ -159,7 +155,7 @@ struct ToolModifySketch::Impl {
       this->node   = nullptr;
       this->parent = nullptr;
     }
-    return redraw ? ToolResponse::Redraw : ToolResponse::None;
+    if (redraw) this->self->state().setStatus(EngineStatus::Redraw);
   }
 };
 
@@ -181,7 +177,7 @@ void ToolModifySketch::constraint(MovementConstraint c)
 void ToolModifySketch::syncMirror()
 {
     mirrorWingedMeshes ();
-    updateGlWidget ();
+    state().setStatus(EngineStatus::Redraw);
 }
 
 bool ToolModifySketch::transformChildren() const

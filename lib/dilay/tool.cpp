@@ -36,9 +36,9 @@ struct Tool::Impl {
     this->mirror (this->hasMirror ());
   }
 
-  ToolResponse initialize () { 
+  void initialize () {
     this->fromConfig ();
-    return this->self->runInitialize ();
+    this->self->runInitialize ();
   }
 
   void render () const { 
@@ -48,21 +48,20 @@ struct Tool::Impl {
     }
   }
 
-  ToolResponse pointingEvent (const ViewPointingEvent& e) {
-    ToolResponse response = this->self->runPointingEvent (e);
+  void pointingEvent (const ViewPointingEvent& e) {
+    this->self->runPointingEvent (e);
 
     if (e.releaseEvent ()) {
       this->state.scene ().sanitizeMeshes ();
     }
-    return response;
   }
 
-  ToolResponse wheelEvent (const ViewWheelEvent& e) {
-    return this->self->runWheelEvent (e);
+  void wheelEvent (const ViewWheelEvent& e) {
+    this->self->runWheelEvent (e);
   }
 
-  ToolResponse cursorUpdate (const glm::ivec2& pos) {
-    return this->self->runCursorUpdate (pos);
+  void cursorUpdate (const glm::ivec2& pos) {
+    this->self->runCursorUpdate (pos);
   }
 
   void close () { 
@@ -74,10 +73,6 @@ struct Tool::Impl {
       this->_mirror->fromConfig (this->config ());
     }
     this->self->runFromConfig ();
-  }
-
-  void updateGlWidget () {
-    this->state.mainWindow ().updateGl ();
   }
 
   ViewProperties& properties () const {
@@ -143,6 +138,7 @@ struct Tool::Impl {
     return *this->_mirror;
   }
 
+
   void mirror (bool m) {
     this->state.cache ().set ("editor/tool/mirror", m);
 
@@ -152,8 +148,7 @@ struct Tool::Impl {
     else {
       this->_mirror.reset ();
     }
-    this->updateGlWidget ();
-  }
+ }
 
   const Dimension* mirrorDimension () const {
     const static Dimension d = Dimension::X;
@@ -194,30 +189,28 @@ struct Tool::Impl {
     return this->intersectsScene (e.ivec2 (), intersection, std::forward <Ts> (args) ...);
   }
 
-  ToolResponse runPointingEvent (const ViewPointingEvent& e) {
+  void runPointingEvent (const ViewPointingEvent& e) {
     if (e.pressEvent ()) {
-      return this->self->runPressEvent (e);
+      this->self->runPressEvent (e);
     }
     else if (e.moveEvent ()) {
-      return this->self->runMoveEvent (e);
+      this->self->runMoveEvent (e);
     }
     else if (e.releaseEvent ()) {
-      return this->self->runReleaseEvent (e);
+      this->self->runReleaseEvent (e);
     }
-    return ToolResponse::None;
   }
 };
 
 DELEGATE2_BIG3_SELF (Tool, State&, const char*)
-DELEGATE        (ToolResponse    , Tool, initialize)
+DELEGATE        (void    , Tool, initialize)
 DELEGATE_CONST  (void            , Tool, render)
-DELEGATE1       (ToolResponse    , Tool, pointingEvent, const ViewPointingEvent&)
-DELEGATE1       (ToolResponse    , Tool, wheelEvent, const ViewWheelEvent&)
-DELEGATE1       (ToolResponse    , Tool, cursorUpdate, const glm::ivec2&)
+DELEGATE1       (void    , Tool, pointingEvent, const ViewPointingEvent&)
+DELEGATE1       (void    , Tool, wheelEvent, const ViewWheelEvent&)
+DELEGATE1       (void    , Tool, cursorUpdate, const glm::ivec2&)
 DELEGATE        (void            , Tool, close)
 DELEGATE        (void            , Tool, fromConfig)
 GETTER_CONST    (State&          , Tool, state)
-DELEGATE        (void            , Tool, updateGlWidget)
 DELEGATE_CONST  (Config&         , Tool, config)
 DELEGATE        (CacheProxy&     , Tool, cache)
 DELEGATE1_CONST (CacheProxy      , Tool, cache, const char*)
@@ -230,10 +223,11 @@ DELEGATE_CONST  (bool            , Tool, hasMirror)
 DELEGATE_CONST  (const Mirror&   , Tool, mirror)
 DELEGATE1       (void            , Tool, mirror, bool)
 SETTER          (bool            , Tool, renderMirror)
+
 DELEGATE_CONST  (const Dimension*, Tool, mirrorDimension)
 DELEGATE        (void            , Tool, mirrorWingedMeshes)
 DELEGATE        (void            , Tool, mirrorSketchMeshes)
-DELEGATE1       (ToolResponse    , Tool, runPointingEvent, const ViewPointingEvent&)
+DELEGATE1       (void    , Tool, runPointingEvent, const ViewPointingEvent&)
 
 template <typename T, typename ... Ts>
 bool Tool :: intersectsScene (const glm::ivec2& pos, T& intersection, Ts ... args) {

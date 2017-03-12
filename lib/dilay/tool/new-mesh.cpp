@@ -13,11 +13,11 @@ struct ToolNewMesh::Impl {
 
   Impl (ToolNewMesh* s) : self (s) {}
 
-  ToolResponse runInitialize () const {
+  void runInitialize () const {
     this->self->snapshotWingedMeshes ();
     this->self->state ().scene ().newWingedMesh ( this->self->state ().config ()
                                                 , MeshUtil::icosphere (3) );
-    return ToolResponse::Terminate;
+    this->self->state().setStatus(EngineStatus::Terminate);
   }
 };
 

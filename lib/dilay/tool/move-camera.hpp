@@ -25,6 +25,11 @@ class ToolMoveCamera : public Configurable {
     void pressEvent     (State&, const ViewPointingEvent&);
 	void wheelEvent     (State&, const ViewWheelEvent&);
 
+    void zoom           (State&, int delta);
+    void rotate         (State&, const glm::ivec2& delta);
+    void translate      (State&, const glm::ivec2& delta);
+    void moveTo         (State&, const glm::ivec2& delta);
+
   private:
     IMPLEMENTATION
 

@@ -7,8 +7,7 @@
 #include <QOpenGLFunctions_2_1>
 #include <glm/glm.hpp>
 #include <memory>
-#include "dilay/shader.hpp"
-#include "dilay/util.hpp"
+#include <qDebug>
 #include "opengl-impl.hpp"
 
 #define DELEGATE_GL_CONSTANT(method,constant) \
@@ -34,6 +33,34 @@ static_assert (sizeof (int) >= 4, "type does not meet size required by OpenGL");
 static_assert (sizeof (float) >= 4, "type does not meet size required by OpenGL");
 
 
+#define GEOMETRY_SHADER                                                                        \
+  "#extension GL_EXT_geometry_shader4: require                                             \n" \
+  "                                                                                        \n" \
+  "varying in  vec3 vsOut[3];                                                              \n" \
+  "varying out vec3 gsOut;                                                                 \n" \
+  "varying out vec3 barycentric;                                                           \n" \
+  "                                                                                        \n" \
+  "void main() {                                                                           \n" \
+  "    gl_Position = gl_PositionIn[0];                                                     \n" \
+  "    gsOut       = vsOut[0];                                                             \n" \
+  "    barycentric = vec3 (1.0,0.0,0.0);                                                   \n" \
+  "    EmitVertex();                                                                       \n" \
+  "                                                                                        \n" \
+  "    gl_Position = gl_PositionIn[1];                                                     \n" \
+  "    gsOut       = vsOut[1];                                                             \n" \
+  "    barycentric = vec3 (0.0,1.0,0.0);                                                   \n" \
+  "    EmitVertex();                                                                       \n" \
+  "                                                                                        \n" \
+  "    gl_Position = gl_PositionIn[2];                                                     \n" \
+  "    gsOut       = vsOut[2];                                                             \n" \
+  "    barycentric = vec3 (0.0,0.0,1.0);                                                   \n" \
+  "    EmitVertex();                                                                       \n" \
+  "                                                                                        \n" \
+  "    EndPrimitive();                                                                     \n" \
+  "}                                                                                       \n"
+
+
+
 OpenGLImpl::OpenGLImpl()
     : fun(nullptr)
 {
@@ -56,14 +83,14 @@ void OpenGLImpl::setDefaultFormat () {
 void OpenGLImpl::initializeFunctions () {
     fun = QOpenGLContext::currentContext ()->versionFunctions <QOpenGLFunctions_2_1> ();
     if (fun == nullptr) {
-      DILAY_PANIC ("could not obtain OpenGL 2.1 context")
+      qFatal("could not obtain OpenGL 2.1 context");
     }
     fun->initializeOpenGLFunctions ();
 
     if (supportsGeometryShader ()) {
       gsFun = std::make_unique <QOpenGLExtension_EXT_geometry_shader4> ();
       if (gsFun == nullptr) {
-        DILAY_PANIC ("could not initialize GL_EXT_geometry_shader4 extension")
+        qFatal("could not initialize GL_EXT_geometry_shader4 extension");
       }
       gsFun->initializeOpenGLFunctions ();
     }
@@ -190,7 +217,7 @@ unsigned int OpenGLImpl::loadProgram ( const char* vertexShader
       GLsizei   logLength;
       this->fun->glGetShaderInfoLog(id, maxLogLength, &logLength, logBuffer);
       if (logLength > 0) {
-        DILAY_WARN ("%s", logBuffer)
+        qWarning() << logBuffer;
       }
     };
 
@@ -205,7 +232,7 @@ unsigned int OpenGLImpl::loadProgram ( const char* vertexShader
       this->fun->glGetShaderiv (shaderId, GL_COMPILE_STATUS, &status);
       if (status == GL_FALSE) {
         showInfoLog (shaderId);
-        DILAY_PANIC ("can not compile shader: see info log above")
+        qFatal("can not compile shader: see info log above");
       }
       return shaderId;
     };
@@ -221,7 +248,7 @@ unsigned int OpenGLImpl::loadProgram ( const char* vertexShader
     if (loadGeometryShader) {
       assert (supportsGeometryShader ());
 
-      gmId = compileShader (GL_GEOMETRY_SHADER_EXT, Shader::geometryShader ());
+      gmId = compileShader (GL_GEOMETRY_SHADER_EXT, GEOMETRY_SHADER);
       fun->glAttachShader (programId, gmId);
 
       gsFun->glProgramParameteriEXT (programId, GL_GEOMETRY_VERTICES_OUT_EXT, 3);
@@ -240,7 +267,7 @@ unsigned int OpenGLImpl::loadProgram ( const char* vertexShader
     if (status == GL_FALSE) {
       showInfoLog           (programId);
       safeDeleteProgram (programId);
-      DILAY_PANIC ("can not link shader program: see info log above")
+      qFatal("can not link shader program: see info log above");
     }
     safeDeleteShader (vsId);
     safeDeleteShader (fsId);

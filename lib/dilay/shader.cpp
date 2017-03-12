@@ -121,32 +121,6 @@
   "float minF = min(min(barycFactor.x,barycFactor.y),barycFactor.z);                       \n" \
   "gl_FragColor.rgb = mix (wireframeColor,gl_FragColor.rgb,minF);                          \n"
 
-#define GEOMETRY_SHADER                                                                        \
-  "#extension GL_EXT_geometry_shader4: require                                             \n" \
-  "                                                                                        \n" \
-  "varying in  vec3 vsOut[3];                                                              \n" \
-  "varying out vec3 gsOut;                                                                 \n" \
-  "varying out vec3 barycentric;                                                           \n" \
-  "                                                                                        \n" \
-  "void main() {                                                                           \n" \
-  "    gl_Position = gl_PositionIn[0];                                                     \n" \
-  "    gsOut       = vsOut[0];                                                             \n" \
-  "    barycentric = vec3 (1.0,0.0,0.0);                                                   \n" \
-  "    EmitVertex();                                                                       \n" \
-  "                                                                                        \n" \
-  "    gl_Position = gl_PositionIn[1];                                                     \n" \
-  "    gsOut       = vsOut[1];                                                             \n" \
-  "    barycentric = vec3 (0.0,1.0,0.0);                                                   \n" \
-  "    EmitVertex();                                                                       \n" \
-  "                                                                                        \n" \
-  "    gl_Position = gl_PositionIn[2];                                                     \n" \
-  "    gsOut       = vsOut[2];                                                             \n" \
-  "    barycentric = vec3 (0.0,0.0,1.0);                                                   \n" \
-  "    EmitVertex();                                                                       \n" \
-  "                                                                                        \n" \
-  "    EndPrimitive();                                                                     \n" \
-  "}                                                                                       \n"
-
 const char* Shader::smoothVertexShader () {
   return SMOOTH_VERTEX_SHADER;
 }
@@ -183,6 +157,3 @@ const char* Shader::constantWireframeFragmentShader () {
   return CONSTANT_FRAGMENT_SHADER (ADD_WIREFRAME);
 }
 
-const char* Shader::geometryShader () {
-  return GEOMETRY_SHADER;
-}

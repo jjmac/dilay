@@ -73,43 +73,28 @@ struct ToolMoveCamera::Impl {
         snapTo (cam.primaryDimension (), false);
       }
     }
-    state.mainWindow ().updateGl();
+
+    state.setStatus(EngineStatus::Redraw);
   }
 
   void resetGazePoint (State& state) {
     Camera& cam = state.camera ();
 
     cam.set (glm::vec3 (0.0f), cam.position (), glm::vec3 (0.0f, 1.0f, 0.0f));
-    state.mainWindow ().updateGl();
+    state.setStatus(EngineStatus::Redraw);
   }
 
   void moveEvent (State& state, const ViewPointingEvent& event) {
     if (event.secondaryButton ()) {
-            Camera&     cam        = state.camera ();
-      const glm::uvec2& resolution = cam.resolution ();
-            glm::ivec2  newPos     = event.ivec2 ();
-            glm::ivec2  delta      = newPos - oldPos;
+      glm::ivec2  delta      = event.ivec2 () - oldPos;
 
       if (event.modifiers () == KeyboardModifiers::NoModifier) {
-        if (delta.x != 0) {
-          cam.verticalRotation ( 2.0f * glm::pi <float> () 
-                               * this->rotationFactor
-                               * float (-delta.x) / float (resolution.x));
-        }
-        if (delta.y != 0) {
-          cam.horizontalRotation ( 2.0f * glm::pi <float> ()
-                                 * this->rotationFactor
-                                 * float (-delta.y) / float (resolution.y));
-        }
+        rotate(state, delta);
       }
       else if (event.modifiers () == KeyboardModifiers::ShiftModifier) {
-        cam.setGaze ( cam.gazePoint () 
-                    + (this->movementFactor * float ( delta.x) * cam.right ())
-                    + (this->movementFactor * float (-delta.y) * cam.up    ())
-                    );
+          translate(state, delta);
       }
-      this->oldPos = newPos;
-      state.mainWindow ().updateGl();
+      this->oldPos = event.ivec2 ();
     }
   }
 
@@ -118,28 +103,62 @@ struct ToolMoveCamera::Impl {
       this->oldPos = event.ivec2 ();
 
       if (event.modifiers () == KeyboardModifiers::ControlModifier) {
-        Camera& cam = state.camera ();
-        Intersection intersection;
-        if (state.scene ().intersects (cam.ray (event.ivec2 ()), intersection)) {
-          cam.set ( intersection.position ()
-                  , cam.position () - intersection.position ()
-                  , cam.up () );
-          state.mainWindow ().updateGl();
-        }
+          moveTo(state, event.ivec2 ());
       }
     }
   }
 
   void wheelEvent (State& state, const ViewWheelEvent& event) {
 	if (event.isVertical()) {
-      if (event.delta () > 0) {
+      zoom(state, event.delta());
+    }
+  }
+
+  void zoom(State& state, int delta) {
+      if (delta > 0) {
         state.camera ().stepAlongGaze (this->zoomInFactor);
       }
-      else if (event.delta () < 0) {
+      else if (delta < 0) {
         state.camera ().stepAlongGaze (1.0f / this->zoomInFactor);
       }
-      state.mainWindow ().updateGl();
-    }
+      state.setStatus(EngineStatus::Redraw);
+  }
+
+  void rotate(State& state, const glm::ivec2& delta) {
+      Camera&     cam        = state.camera ();
+const glm::uvec2& resolution = cam.resolution ();
+
+      if (delta.x != 0) {
+        cam.verticalRotation ( 2.0f * glm::pi <float> ()
+                             * this->rotationFactor
+                             * float (-delta.x) / float (resolution.x));
+      }
+      if (delta.y != 0) {
+        cam.horizontalRotation ( 2.0f * glm::pi <float> ()
+                               * this->rotationFactor
+                               * float (-delta.y) / float (resolution.y));
+      }
+      state.setStatus(EngineStatus::Redraw);
+  }
+
+  void translate(State& state, const glm::ivec2& delta) {
+      Camera&     cam        = state.camera ();
+      cam.setGaze ( cam.gazePoint ()
+                  + (this->movementFactor * float ( delta.x) * cam.right ())
+                  + (this->movementFactor * float (-delta.y) * cam.up    ())
+                  );
+      state.setStatus(EngineStatus::Redraw);
+  }
+
+  void moveTo(State& state, const glm::ivec2& position) {
+      Camera& cam = state.camera ();
+      Intersection intersection;
+      if (state.scene ().intersects (cam.ray (position), intersection)) {
+        cam.set ( intersection.position ()
+                , cam.position () - intersection.position ()
+                , cam.up () );
+        state.setStatus(EngineStatus::Redraw);
+      }
   }
 
   void runFromConfig (const Config& config) {
@@ -155,4 +174,8 @@ DELEGATE1 (void, ToolMoveCamera, resetGazePoint, State&)
 DELEGATE2 (void, ToolMoveCamera, moveEvent, State&, const ViewPointingEvent&)
 DELEGATE2 (void, ToolMoveCamera, pressEvent, State&, const ViewPointingEvent&)
 DELEGATE2 (void, ToolMoveCamera, wheelEvent, State&, const ViewWheelEvent&)
+DELEGATE2 (void, ToolMoveCamera, zoom, State&, int)
+DELEGATE2 (void, ToolMoveCamera, rotate, State&, const glm::ivec2&)
+DELEGATE2 (void, ToolMoveCamera, translate, State&, const glm::ivec2&)
+DELEGATE2 (void, ToolMoveCamera, moveTo, State&, const glm::ivec2&)
 DELEGATE1 (void, ToolMoveCamera, runFromConfig, const Config&)

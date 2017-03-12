@@ -25,17 +25,14 @@ struct ToolMoveMesh::Impl {
   {
   }
 
-  ToolResponse runMoveEvent (const ViewPointingEvent& e) {
+  void runMoveEvent (const ViewPointingEvent& e) {
     if (e.primaryButton () && this->mesh && this->movement.move (e, true)) {
       this->mesh->translate  (this->movement.delta ());
-      return ToolResponse::Redraw;
-    }
-    else {
-      return ToolResponse::None;
+      this->self->state().setStatus(EngineStatus::Redraw);
     }
   }
 
-  ToolResponse runPressEvent (const ViewPointingEvent& e) {
+  void runPressEvent (const ViewPointingEvent& e) {
     if (e.primaryButton ()) {
       WingedFaceIntersection intersection;
       if (this->self->intersectsScene (e, intersection)) {
@@ -45,16 +42,14 @@ struct ToolMoveMesh::Impl {
         this->self->snapshotWingedMeshes ();
       }
     }
-    return ToolResponse::None;
   }
 
-  ToolResponse runReleaseEvent (const ViewPointingEvent& e) {
+  void runReleaseEvent (const ViewPointingEvent& e) {
     if (e.primaryButton () && this->mesh) {
       this->mesh->normalize  ();
       this->mesh->bufferData ();
       this->mesh = nullptr;
     }
-    return ToolResponse::None;
   }
 };
 

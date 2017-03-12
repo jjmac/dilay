@@ -23,6 +23,7 @@ struct State::Impl {
   History                history;
   Scene                  scene;
   std::unique_ptr <Tool> toolPtr;
+  EngineStatus           _status;
 
   Impl (State* s, Controller* mW, Config& cfg, Cache& cch)
     : self       (s)
@@ -32,6 +33,7 @@ struct State::Impl {
     , camera     (this->config)
     , history    (this->config)
     , scene      (this->config)
+    , _status    (EngineStatus::None)
   {
     this->scene.newWingedMesh (this->config, MeshUtil::icosphere (3));
   }
@@ -54,15 +56,7 @@ struct State::Impl {
 
     this->toolPtr.reset (&tool); 
 
-    ToolResponse initResponse = tool.initialize ();
-    switch (initResponse) {
-      case ToolResponse::None:
-        this->handleToolResponse (ToolResponse::Redraw);
-        break;
-      default:
-        this->handleToolResponse (initResponse);
-        break;
-    }
+    tool.initialize ();
   }
 
   void resetTool (bool deselect) {
@@ -70,15 +64,6 @@ struct State::Impl {
       this->toolPtr->close ();
 
       this->toolPtr.reset (); 
-      if (mainWindow) {
-          this->mainWindow->resetProperties ();
-      }
-      if (mainWindow) {
-          if (deselect) {
-            this->mainWindow->deselectTool ();
-          }
-          this->mainWindow->update ();
-      }
     }
   }
 
@@ -94,32 +79,29 @@ struct State::Impl {
 
   void undo () {
     this->history.undo (*this->self);
-      if (this->mainWindow) {
-          this->mainWindow->update ();
-      }
   }
 
   void redo () {
     this->history.redo (*this->self);
-      if (this->mainWindow) {
-          this->mainWindow->update ();
-      }
   }
 
-  void handleToolResponse (ToolResponse response) {
-    assert (this->hasTool ());
-    switch (response) {
-      case ToolResponse::None:
-        break;
-      case ToolResponse::Redraw:
-        if (this->mainWindow) {
-            this->mainWindow->update ();
-        }
-        break;
-      case ToolResponse::Terminate:
-        this->resetTool (true);
-        break;
-    }
+  EngineStatus popStatus () {
+    EngineStatus s = _status;
+    _status = EngineStatus::None;
+    return s;
+  }
+
+  EngineStatus status () const {
+      return _status;
+  }
+
+  void setStatus (EngineStatus s) {
+      if (_status == EngineStatus::None) {
+          _status = s;
+      }
+      else if (s == EngineStatus::Terminate) {
+          _status = s;
+      }
   }
 };
 
@@ -141,4 +123,6 @@ DELEGATE1 (void              , State, resetTool, bool)
 DELEGATE  (void              , State, fromConfig)
 DELEGATE  (void              , State, undo)
 DELEGATE  (void              , State, redo)
-DELEGATE1 (void              , State, handleToolResponse, ToolResponse)
+DELEGATE  (EngineStatus      , State, popStatus)
+DELEGATE_CONST (EngineStatus , State, status)
+DELEGATE1 (void              , State, setStatus, EngineStatus)

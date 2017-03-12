@@ -12,7 +12,6 @@ public:
     virtual void deselectTool() = 0;
     // this->mainWindow->mainWidget ().deselectTool ();
     virtual void update() = 0;
-    virtual void updateGl() = 0;
     // this->state.mainWindow ().mainWidget ().glWidget ().update ();
     virtual ViewProperties& viewProperties() = 0;
     // return this->state.mainWindow ().mainWidget ().properties ();

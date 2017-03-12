@@ -4,10 +4,23 @@
  */
 #include <QColorDialog>
 #include <QPainter>
-#include "helper.hpp"
 #include "color-button.hpp"
-#include "dilay/color.hpp"
-#include "dilay/util.hpp"
+
+namespace {
+QColor toQt(const Color& color)
+{
+    return QColor( qMin (255, int (255.0f * color.r())),
+                   qMin (255, int (255.0f * color.g())),
+                   qMin (255, int (255.0f * color.b())),
+                   qMin (255, int (255.0f * color.opacity()))
+                    );
+}
+Color toGL(const QColor& color)
+{
+    return Color (color.redF (), color.greenF (), color.blueF ());
+}
+}
+
 
 ViewColorButton::ViewColorButton(const Color& c)
     : m_color (c)

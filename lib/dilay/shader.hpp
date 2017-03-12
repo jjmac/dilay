@@ -17,7 +17,6 @@ namespace Shader {
   const char* constantVertexShader            ();
   const char* constantFragmentShader          ();
   const char* constantWireframeFragmentShader ();
-  const char* geometryShader                  ();
-};
+}
 
 #endif

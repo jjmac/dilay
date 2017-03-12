@@ -20,27 +20,23 @@ class ViewPointingEvent;
 class ViewProperties;
 class WingedFaceIntersection;
 
-enum class ToolResponse {
-  None, Terminate, Redraw
-};
-
 class Tool {
   public:
     DECLARE_BIG3_VIRTUAL (Tool, State&, const char*)
 
-    ToolResponse     initialize             ();
+    void             initialize             ();
     void             render                 () const;
-    ToolResponse     pointingEvent          (const ViewPointingEvent&);
-	ToolResponse     wheelEvent             (const ViewWheelEvent&);
-    ToolResponse     cursorUpdate           (const glm::ivec2&);
+    void             pointingEvent          (const ViewPointingEvent&);
+    void             wheelEvent             (const ViewWheelEvent&);
+    void             cursorUpdate           (const glm::ivec2&);
     void             close                  ();
     void             fromConfig             ();
 
-	bool             hasMirror              () const;
-	void             mirror                 (bool);
+    bool             hasMirror              () const;
+    void             mirror                 (bool);
+
   protected:
     State&           state                  () const;
-    void             updateGlWidget         ();
     Config&          config                 () const;
     CacheProxy&      cache                  ();
     CacheProxy       cache                  (const char*) const;
@@ -64,14 +60,14 @@ class Tool {
     IMPLEMENTATION
 
     virtual const char*  key              () const = 0;
-    virtual ToolResponse runInitialize    ()                         { return ToolResponse::None; }
+    virtual void         runInitialize    ()                         {}
     virtual void         runRender        () const                   {}
-    virtual ToolResponse runPointingEvent (const ViewPointingEvent&);
-    virtual ToolResponse runPressEvent    (const ViewPointingEvent&) { return ToolResponse::None; }
-    virtual ToolResponse runMoveEvent     (const ViewPointingEvent&) { return ToolResponse::None; }
-    virtual ToolResponse runReleaseEvent  (const ViewPointingEvent&) { return ToolResponse::None; }
-	virtual ToolResponse runWheelEvent    (const ViewWheelEvent&)       { return ToolResponse::None; }
-    virtual ToolResponse runCursorUpdate  (const glm::ivec2&)        { return ToolResponse::None; }
+    virtual void         runPointingEvent (const ViewPointingEvent&);
+    virtual void         runPressEvent    (const ViewPointingEvent&) {}
+    virtual void         runMoveEvent     (const ViewPointingEvent&) {}
+    virtual void         runReleaseEvent  (const ViewPointingEvent&) {}
+    virtual void         runWheelEvent    (const ViewWheelEvent&)    {}
+    virtual void         runCursorUpdate  (const glm::ivec2&)        {}
     virtual void         runClose         ()                         {}
     virtual void         runFromConfig    ()                         {}
 };
@@ -88,28 +84,28 @@ class Tool {
 
 #define DECLARE_TOOL(name,theKey,otherMethods)   DECLARE_TOOL2(name, theKey, otherMethods, )
 
-#define DECLARE_TOOL_RUN_INITIALIZE        ToolResponse runInitialize    ();
+#define DECLARE_TOOL_RUN_INITIALIZE        void         runInitialize    ();
 #define DECLARE_TOOL_RUN_RENDER            void         runRender        () const;
-#define DECLARE_TOOL_RUN_POINTING_EVENT    ToolResponse runPointingEvent (const ViewPointingEvent&);
-#define DECLARE_TOOL_RUN_PRESS_EVENT       ToolResponse runPressEvent    (const ViewPointingEvent&);
-#define DECLARE_TOOL_RUN_MOVE_EVENT        ToolResponse runMoveEvent     (const ViewPointingEvent&);
-#define DECLARE_TOOL_RUN_RELEASE_EVENT     ToolResponse runReleaseEvent  (const ViewPointingEvent&);
-#define DECLARE_TOOL_RUN_MOUSE_WHEEL_EVENT ToolResponse runWheelEvent    (const ViewWheelEvent&);
-#define DECLARE_TOOL_RUN_CURSOR_UPDATE     ToolResponse runCursorUpdate  (const glm::ivec2&);
+#define DECLARE_TOOL_RUN_POINTING_EVENT    void         runPointingEvent (const ViewPointingEvent&);
+#define DECLARE_TOOL_RUN_PRESS_EVENT       void         runPressEvent    (const ViewPointingEvent&);
+#define DECLARE_TOOL_RUN_MOVE_EVENT        void         runMoveEvent     (const ViewPointingEvent&);
+#define DECLARE_TOOL_RUN_RELEASE_EVENT     void         runReleaseEvent  (const ViewPointingEvent&);
+#define DECLARE_TOOL_RUN_MOUSE_WHEEL_EVENT void         runWheelEvent    (const ViewWheelEvent&);
+#define DECLARE_TOOL_RUN_CURSOR_UPDATE     void         runCursorUpdate  (const glm::ivec2&);
 #define DECLARE_TOOL_RUN_CLOSE             void         runClose         ();
 #define DECLARE_TOOL_RUN_FROM_CONFIG       void         runFromConfig    ();
 
 #define DELEGATE_TOOL(name) \
   DELEGATE_BIG2_BASE (name, (State& s), (this), Tool, (s, this->key ()))
 
-#define DELEGATE_TOOL_RUN_INITIALIZE(n)        DELEGATE       (ToolResponse, n, runInitialize)
+#define DELEGATE_TOOL_RUN_INITIALIZE(n)        DELEGATE       (void        , n, runInitialize)
 #define DELEGATE_TOOL_RUN_RENDER(n)            DELEGATE_CONST (void        , n, runRender)
-#define DELEGATE_TOOL_RUN_POINTING_EVENT(n)    DELEGATE1      (ToolResponse, n, runPointingEvent, const ViewPointingEvent&)
-#define DELEGATE_TOOL_RUN_PRESS_EVENT(n)       DELEGATE1      (ToolResponse, n, runPressEvent, const ViewPointingEvent&)
-#define DELEGATE_TOOL_RUN_MOVE_EVENT(n)        DELEGATE1      (ToolResponse, n, runMoveEvent, const ViewPointingEvent&)
-#define DELEGATE_TOOL_RUN_RELEASE_EVENT(n)     DELEGATE1      (ToolResponse, n, runReleaseEvent, const ViewPointingEvent&)
-#define DELEGATE_TOOL_RUN_MOUSE_WHEEL_EVENT(n) DELEGATE1      (ToolResponse, n, runWheelEvent, const ViewWheelEvent&)
-#define DELEGATE_TOOL_RUN_CURSOR_UPDATE(n)     DELEGATE1      (ToolResponse, n, runCursorUpdate, const glm::ivec2&)
+#define DELEGATE_TOOL_RUN_POINTING_EVENT(n)    DELEGATE1      (void        , n, runPointingEvent, const ViewPointingEvent&)
+#define DELEGATE_TOOL_RUN_PRESS_EVENT(n)       DELEGATE1      (void        , n, runPressEvent, const ViewPointingEvent&)
+#define DELEGATE_TOOL_RUN_MOVE_EVENT(n)        DELEGATE1      (void        , n, runMoveEvent, const ViewPointingEvent&)
+#define DELEGATE_TOOL_RUN_RELEASE_EVENT(n)     DELEGATE1      (void        , n, runReleaseEvent, const ViewPointingEvent&)
+#define DELEGATE_TOOL_RUN_MOUSE_WHEEL_EVENT(n) DELEGATE1      (void        , n, runWheelEvent, const ViewWheelEvent&)
+#define DELEGATE_TOOL_RUN_CURSOR_UPDATE(n)     DELEGATE1      (void        , n, runCursorUpdate, const glm::ivec2&)
 #define DELEGATE_TOOL_RUN_CLOSE(n)             DELEGATE       (void        , n, runClose)
 #define DELEGATE_TOOL_RUN_FROM_CONFIG(n)       DELEGATE       (void        , n, runFromConfig)
 

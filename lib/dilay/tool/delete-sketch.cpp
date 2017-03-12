@@ -49,7 +49,7 @@ struct ToolDeleteSketch::Impl {
 
   }
 
-  ToolResponse runReleaseEvent (const ViewPointingEvent& e) {
+  void runReleaseEvent (const ViewPointingEvent& e) {
     if (e.primaryButton ()) {
       switch (this->mode) {
         case DeleteSketchMode::DeleteSketch: {
@@ -58,7 +58,7 @@ struct ToolDeleteSketch::Impl {
             this->self->snapshotSketchMeshes ();
             this->self->state ().scene ().deleteMesh (intersection.mesh ());
           }
-          return ToolResponse::Redraw;
+          this->self->state().setStatus(EngineStatus::Redraw);
         }
         case DeleteSketchMode::DeleteNode: {
           SketchNodeIntersection intersection;
@@ -71,7 +71,7 @@ struct ToolDeleteSketch::Impl {
               this->self->state ().scene ().deleteMesh (intersection.mesh ());
             }
           }
-          return ToolResponse::Redraw;
+          this->self->state().setStatus(EngineStatus::Redraw);
         }
         case DeleteSketchMode::DeleteSpheres: {
           SketchPathIntersection intersection;
@@ -83,11 +83,10 @@ struct ToolDeleteSketch::Impl {
               this->self->state ().scene ().deleteMesh (intersection.mesh ());
             }
           }
-          return ToolResponse::Redraw;
+          this->self->state().setStatus(EngineStatus::Redraw);
         }
       }
     }
-    return ToolResponse::None;
   }
 };
 

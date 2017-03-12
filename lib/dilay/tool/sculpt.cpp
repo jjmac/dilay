@@ -35,11 +35,11 @@ struct ToolSculpt::Impl {
 	, radius          (this->commonCache.get <float> ("radius", 0.1f))
   {}
 
-  ToolResponse runInitialize () {
+  void runInitialize () {
     this->setupBrush      ();
     this->setupCursor     ();
 
-    return ToolResponse::Redraw;
+    this->self->state().setStatus(EngineStatus::Redraw);
   }
 
   void setupBrush () {
@@ -78,7 +78,7 @@ struct ToolSculpt::Impl {
     }
   }
 
-  ToolResponse runPointingEvent (const ViewPointingEvent& e) {
+  void runPointingEvent (const ViewPointingEvent& e) {
     if (e.releaseEvent ()) {
       if (e.primaryButton ()) {
         this->brush.resetPointOfAction ();
@@ -88,7 +88,7 @@ struct ToolSculpt::Impl {
         }
       }
       this->cursor.enable ();
-      return ToolResponse::Redraw;
+      this->self->state().setStatus(EngineStatus::Redraw);
     }
     else {
       if (e.pressEvent () && e.primaryButton ()) {
@@ -99,14 +99,14 @@ struct ToolSculpt::Impl {
       if (this->self->runSculptPointingEvent (e)) {
         this->sculpted = true;
       }
-      return ToolResponse::Redraw;
+      this->self->state().setStatus(EngineStatus::Redraw);
     }
   }
 
 
-  ToolResponse runCursorUpdate (const glm::ivec2& pos) {
+  void runCursorUpdate (const glm::ivec2& pos) {
     this->updateBrushAndCursorByIntersection (pos, false, false);
-    return ToolResponse::Redraw;
+    this->self->state().setStatus(EngineStatus::Redraw);
   }
 
   void runFromConfig () {
@@ -277,10 +277,10 @@ DELEGATE        (void        , ToolSculpt, sculpt)
 DELEGATE3       (bool        , ToolSculpt, carvelikeStroke, const ViewPointingEvent&, bool, const std::function <void ()>*)
 DELEGATE2       (bool        , ToolSculpt, initializeDraglikeStroke, const ViewPointingEvent&, ToolUtilMovement&)
 DELEGATE2       (bool        , ToolSculpt, draglikeStroke, const ViewPointingEvent&, ToolUtilMovement&)
-DELEGATE        (ToolResponse, ToolSculpt, runInitialize)
+DELEGATE        (void        , ToolSculpt, runInitialize)
 DELEGATE_CONST  (void        , ToolSculpt, runRender)
-DELEGATE1       (ToolResponse, ToolSculpt, runPointingEvent, const ViewPointingEvent&)
-DELEGATE1       (ToolResponse, ToolSculpt, runCursorUpdate, const glm::ivec2&)
+DELEGATE1       (void        , ToolSculpt, runPointingEvent, const ViewPointingEvent&)
+DELEGATE1       (void        , ToolSculpt, runCursorUpdate, const glm::ivec2&)
 DELEGATE        (void        , ToolSculpt, runFromConfig)
 
 
@@ -298,7 +298,7 @@ void  ToolSculpt::radius(float r)
 		impl->setRelativeRadius ();
 	  }
 	impl->commonCache.set ("radius", r);
-	updateGlWidget ();
+    state().setStatus(EngineStatus::Redraw);
 }
 
 bool ToolSculpt::absoluteRadius() const
@@ -314,7 +314,7 @@ void ToolSculpt::absoluteRadius(bool b)
 	  impl->setRelativeRadius ();
 	}
 	impl->commonCache.set ("absoluteRadius", b);
-	updateGlWidget ();
+    state().setStatus(EngineStatus::Redraw);
 
 }
 
@@ -331,5 +331,5 @@ void ToolSculpt::subdivide(bool b)
 void ToolSculpt::syncMirror()
 {
 	mirrorWingedMeshes ();
-	updateGlWidget ();
+    state().setStatus(EngineStatus::Redraw);
 }

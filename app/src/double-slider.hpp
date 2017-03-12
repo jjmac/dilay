@@ -6,12 +6,11 @@
 #define DILAY_DOUBLE_SLIDER
 
 #include <QSlider>
-#include "dilay/macro.hpp"
 
 class ViewDoubleSlider : public QSlider {
   Q_OBJECT
-  public:
-    DECLARE_BIG2 (ViewDoubleSlider, unsigned short, unsigned short)
+public:
+    ViewDoubleSlider(unsigned short, unsigned short, QWidget* parent = nullptr);
 
     double doubleValue      () const;
     double doubleSingleStep () const;
@@ -41,7 +40,13 @@ class ViewDoubleSlider : public QSlider {
     void setSingleStep (int);
     void setPageStep   (int);
 
-    IMPLEMENTATION
+    double toDouble (int value, bool forceLinear) const;
+    int toInt (double value, bool forceLinear) const;
+
+private:
+    const unsigned int   m_factor;
+    const unsigned short m_order;
+
 };
 
 #endif

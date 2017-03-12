@@ -69,12 +69,12 @@ struct ToolSketchSpheres::Impl {
     this->cursor.radius  (this->radius);
   }
 
-  ToolResponse runInitialize () {
+  void runInitialize () {
     this->self->renderMirror (false);
 
     this->setupCursor     ();
 
-    return ToolResponse::Redraw;
+    this->self->state().setStatus(EngineStatus::Redraw);
   }
 
   void runRender () const {
@@ -96,7 +96,7 @@ struct ToolSketchSpheres::Impl {
     }
   }
 
-  ToolResponse runMoveEvent (const ViewPointingEvent& e) {
+  void runMoveEvent (const ViewPointingEvent& e) {
     auto minDistance = [this] (const Intersection& intersection) -> bool {
       const float d = this->radius * this->stepWidthFactor;
       return glm::distance (this->previousPosition, intersection.position ()) > d;
@@ -150,14 +150,11 @@ struct ToolSketchSpheres::Impl {
                                 , this->self->mirrorDimension () );
         }
       }
-      return ToolResponse::Redraw;
-    }
-    else {
-      return this->runCursorUpdate (e.ivec2 ());
+      this->self->state().setStatus(EngineStatus::Redraw);
     }
   }
 
-  ToolResponse runPressEvent (const ViewPointingEvent& e) {
+  void runPressEvent (const ViewPointingEvent& e) {
     auto setupOnIntersection = [this] (const SketchMeshIntersection& intersection) {
       this->cursor.enable   ();
       this->cursor.position (intersection.position ());
@@ -197,19 +194,15 @@ struct ToolSketchSpheres::Impl {
           this->cursor.disable ();
         }
       }
-      return ToolResponse::Redraw;
-    }
-    else {
-      return ToolResponse::None;
+      this->self->state().setStatus(EngineStatus::Redraw);
     }
   }
 
-  ToolResponse runReleaseEvent (const ViewPointingEvent&) {
+  void runReleaseEvent (const ViewPointingEvent&) {
     this->mesh = nullptr;
-    return ToolResponse::None;
   }
 
-  ToolResponse runWheelEvent (const ViewWheelEvent& e) {
+  void runWheelEvent (const ViewWheelEvent& e) {
 	if (e.isVertical() && e.modifiers () == KeyboardModifiers::ShiftModifier) {
       if (e.delta () > 0) {
         this->radius = this->radius + this->radiusStep;
@@ -218,10 +211,10 @@ struct ToolSketchSpheres::Impl {
         this->radius = this->radius - this->radiusStep;
       }
     }
-    return ToolResponse::Redraw;
+    this->self->state().setStatus(EngineStatus::Redraw);
   }
 
-  ToolResponse runCursorUpdate (const glm::ivec2& pos) {
+  void runCursorUpdate (const glm::ivec2& pos) {
     SketchMeshIntersection intersection;
     if (this->self->intersectsScene (pos, intersection)) {
       this->cursor.enable   ();
@@ -230,7 +223,7 @@ struct ToolSketchSpheres::Impl {
     else {
       this->cursor.disable ();
     }
-    return ToolResponse::Redraw;
+    this->self->state().setStatus(EngineStatus::Redraw);
   }
 
   void runFromConfig () {
@@ -254,7 +247,7 @@ DELEGATE_TOOL_RUN_FROM_CONFIG       (ToolSketchSpheres)
 void ToolSketchSpheres::syncMirror()
 {
     mirrorWingedMeshes ();
-    updateGlWidget ();
+    state().setStatus(EngineStatus::Redraw);
 }
 
 float ToolSketchSpheres::radius() const
@@ -282,6 +275,7 @@ SketchPathSmoothEffect ToolSketchSpheres::smoothEffect() const
 {
     return impl->smoothEffect;
 }
+
 void ToolSketchSpheres::smoothEffect(SketchPathSmoothEffect f)
 {
     impl->smoothEffect = f;

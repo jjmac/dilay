@@ -46,7 +46,7 @@ struct ToolConvertSketch::Impl {
     this->self->renderMirror (false);
   }
 
-  ToolResponse runReleaseEvent (const ViewPointingEvent& e) {
+  void runReleaseEvent (const ViewPointingEvent& e) {
     if (e.primaryButton ()) {
       SketchMeshIntersection intersection;
       if (this->self->intersectsScene (e, intersection)) {
@@ -71,10 +71,9 @@ struct ToolConvertSketch::Impl {
           Action::smoothMesh (wMesh);
         }
         this->self->state ().scene ().deleteMesh (sMesh);
-        return ToolResponse::Redraw;
+        this->self->state().setStatus(EngineStatus::Redraw);
       }
     }
-    return ToolResponse::None;
   }
 };
 

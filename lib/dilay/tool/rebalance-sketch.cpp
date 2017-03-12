@@ -22,16 +22,15 @@ struct ToolRebalanceSketch::Impl {
     this->self->state ().scene ().renderWireframe (true);
   }
 
-  ToolResponse runReleaseEvent (const ViewPointingEvent& e) {
+  void runReleaseEvent (const ViewPointingEvent& e) {
     if (e.primaryButton ()) {
       SketchNodeIntersection intersection;
       if (this->self->intersectsScene (e, intersection)) {
         this->self->snapshotSketchMeshes ();
         intersection.mesh ().rebalance (intersection.node ());
-        return ToolResponse::Redraw;
+        this->self->state().setStatus(EngineStatus::Redraw);
       }
     }
-    return ToolResponse::None;
   }
 
   void runClose () {

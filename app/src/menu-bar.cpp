@@ -5,7 +5,6 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QMenuBar>
-#include "dilay/util.hpp"
 #include "dilay/history.hpp"
 #include "dilay/scene.hpp"
 #include "dilay/state.hpp"
@@ -21,6 +20,15 @@
 #define OBJ_FILE_FILTER "Wavefront (*.obj)"
 
 namespace {
+bool hasSuffix (const std::string& string, const std::string& suffix) {
+  if (string.size () >= suffix.size ()) {
+    return string.compare (string.size () - suffix.size (), suffix.size (), suffix) == 0;
+  }
+  else {
+    return false;
+  }
+}
+
   QAction& addAction ( QMenu& menu, const QString& label, const QKeySequence& keySequence
                      , const std::function <void ()>& f )
   {
@@ -59,10 +67,10 @@ namespace {
 
   QString selectedFilter (const Scene& scene) {
     if (scene.hasFileName ()) {
-      if (Util::hasSuffix (scene.fileName (), ".dly")) {
+      if (hasSuffix (scene.fileName (), ".dly")) {
         return filterDlyFiles ();
       }
-      else if (Util::hasSuffix (scene.fileName (), ".obj")) {
+      else if (hasSuffix (scene.fileName (), ".obj")) {
         return filterObjFiles ();
       }
     }
@@ -115,7 +123,7 @@ void ViewMenuBar :: setup (ViewMainWindow& mainWindow, ViewGlWidget& glWidget) {
                                                           , fileDialogFilters ()
                                                           , &filter ).toStdString ();
     if (fileName.empty () == false) {
-      const bool saveAsObj = Util::hasSuffix (fileName, ".obj") || filter == filterObjFiles ();
+      const bool saveAsObj = hasSuffix (fileName, ".obj") || filter == filterObjFiles ();
 
       if (scene.toDlyFile (fileName, saveAsObj) == false) {
         ViewUtil::error (mainWindow, QObject::tr ("Could not save to file."));
@@ -130,7 +138,7 @@ void ViewMenuBar :: setup (ViewMainWindow& mainWindow, ViewGlWidget& glWidget) {
   {
     Scene& scene = glWidget.state ().scene ();
     if (scene.hasFileName ()) {
-      const bool saveAsObj = Util::hasSuffix (scene.fileName (), ".obj");
+      const bool saveAsObj = hasSuffix (scene.fileName (), ".obj");
 
       if (scene.toDlyFile (saveAsObj) == false) {
         ViewUtil::error (mainWindow, QObject::tr ("Could not save to file."));
@@ -146,9 +154,11 @@ void ViewMenuBar :: setup (ViewMainWindow& mainWindow, ViewGlWidget& glWidget) {
   });
   addAction (editMenu, QObject::tr ("&Undo"), QKeySequence::Undo, [&glWidget] () {
     glWidget.state ().undo ();
+    glWidget.update();
   });
   addAction (editMenu, QObject::tr ("&Redo"), QKeySequence::Redo, [&glWidget] () {
     glWidget.state ().redo ();
+    glWidget.update();
   });
   addAction ( editMenu, QObject::tr ("&Configuration"), QKeySequence ()
             , [&mainWindow, &glWidget] ()

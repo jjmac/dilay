@@ -46,7 +46,6 @@ namespace Util {
   bool         fromString         (const std::string&, unsigned int&);
   bool         fromString         (const std::string&, float&);
   unsigned int countOnes          (unsigned int);
-  bool         hasSuffix          (const std::string&, const std::string&);
   void         setCLocale         ();
   void         setSystemLocale    ();
 

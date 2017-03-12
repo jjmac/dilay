@@ -179,6 +179,7 @@ void ViewMainWidget::addToolButton (QLayout* layout, const QString& name, const 
 		m_tipMessage->update(*t);
 
 		this->m_glWidget->layout()->update();
+        this->update();
     });
 	layout->addWidget(&button);
     m_toolButtons.push_back (&button);

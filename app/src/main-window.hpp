@@ -32,8 +32,6 @@ public:
     // this->mainWindow->mainWidget ().properties ().reset ();
     void deselectTool();
     // this->mainWindow->mainWidget ().deselectTool ();
-    void updateGl();
-    // this->state.mainWindow ().mainWidget ().glWidget ().update ();
     ViewProperties& viewProperties();
     // return this->state.mainWindow ().mainWidget ().properties ();
     glm::ivec2 cursorPosition();

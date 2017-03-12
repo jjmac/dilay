@@ -6,7 +6,6 @@
 #include <QDialogButtonBox>
 #include <QLineEdit>
 #include <QVBoxLayout>
-#include "dilay/util.hpp"
 #include "dilay/color.hpp"
 #include "dilay/config.hpp"
 #include "dilay/controller.h"
@@ -19,7 +18,10 @@
 #include "view-util.hpp"
 #include "vector-edit.hpp"
 
+
 namespace {
+
+  static const float minFloatValue = 0.0001f;
 
   template <typename T>
   void setAndUpdate (ViewGlWidget& glWidget, const std::string& path, const T& value) {
@@ -74,7 +76,7 @@ namespace {
     addColorButton (glWidget, *grid, "editor/background"          , QObject::tr ("Background"));
     addColorButton (glWidget, *grid, "editor/axis/color/normal"   , QObject::tr ("Axis"));
     addColorButton (glWidget, *grid, "editor/axis/color/label"    , QObject::tr ("Axis label"));
-	addColorButton (glWidget, *grid, "editor/floorPlane/color"   , QObject::tr ("Floor-plane"));
+    addColorButton (glWidget, *grid, "editor/floorPlane/color"    , QObject::tr ("Floor-plane"));
     addColorButton (glWidget, *grid, "editor/mesh/color/normal"   , QObject::tr ("Mesh"));
     addColorButton (glWidget, *grid, "editor/mesh/color/wireframe", QObject::tr ("Wireframe"));
     addColorButton (glWidget, *grid, "editor/sketch/bubble/color" , QObject::tr ("Sketch"));
@@ -114,17 +116,17 @@ namespace {
     ViewTwoColumnGrid* grid = new ViewTwoColumnGrid;
 
 	addFloatEdit ( glWidget, *grid, "editor/camera/nearClipping", QObject::tr ("Near clipping plane")
-                 , Util::epsilon (), 1.0f );
+                 , minFloatValue, 1.0f );
 	addFloatEdit ( glWidget, *grid, "editor/camera/farClipping", QObject::tr ("Far clipping plane")
                  , 100.0f, std::numeric_limits <float>::max () );
 	addFloatEdit ( glWidget, *grid, "editor/camera/rotationFactor", QObject::tr ("Rotation factor")
-                 , Util::epsilon (), 100.f );
+                 , minFloatValue, 100.f );
 	addFloatEdit ( glWidget, *grid, "editor/camera/movementFactor", QObject::tr ("Movement factor")
-                 , Util::epsilon (), 100.f );
+                 , minFloatValue, 100.f );
 	addFloatEdit ( glWidget, *grid, "editor/camera/zoomInFactor", QObject::tr ("Zoom factor")
-                 , Util::epsilon (), 100.f );
+                 , minFloatValue, 100.f );
 	addFloatEdit ( glWidget, *grid, "editor/camera/fieldOfView", QObject::tr ("Field of view")
-                 , Util::epsilon (), 120.f );
+                 , minFloatValue, 120.f );
 
     grid->addStretcher ();
 
@@ -140,15 +142,15 @@ namespace {
     ViewTwoColumnGrid* gridSculpt = new ViewTwoColumnGrid;
     gridSculpt->addLeft (QObject::tr ("Sculpt"));
 	addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/detailFactor"
-                   , QObject::tr ("Detail factor"), Util::epsilon (), 1.0f );
+                   , QObject::tr ("Detail factor"), minFloatValue, 1.0f );
 	addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/stepWidthFactor"
-                   , QObject::tr ("Step width factor"), Util::epsilon (), 1.0f );
+                   , QObject::tr ("Step width factor"), minFloatValue, 1.0f );
 	addColorButton ( glWidget, *gridSculpt, "editor/tool/sculpt/cursorColor"
                    , QObject::tr ("Cursor color") );
 	addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/maxAbsoluteRadius"
-                   , QObject::tr ("Maximum absolute radius"), Util::epsilon (), 100.0f );
+                   , QObject::tr ("Maximum absolute radius"), minFloatValue, 100.0f );
     addFloatEdit   ( glWidget, *gridSculpt, "editor/tool/sculpt/mirror/width"
-                   , QObject::tr ("Mirror width"), Util::epsilon (), 1.0f );
+                   , QObject::tr ("Mirror width"), minFloatValue, 1.0f );
     addColorButton ( glWidget, *gridSculpt, "editor/tool/sculpt/mirror/color"
                    , QObject::tr ("Mirror color") );
     gridSculpt->addStretcher ();
@@ -156,7 +158,7 @@ namespace {
     ViewTwoColumnGrid* gridSketch = new ViewTwoColumnGrid;
     gridSketch->addLeft (QObject::tr ("Sketch"));
 	addFloatEdit   ( glWidget, *gridSketch, "editor/tool/sketchSpheres/stepWidthFactor"
-                   , QObject::tr ("Step width factor"), Util::epsilon (), 1.0f );
+                   , QObject::tr ("Step width factor"), minFloatValue, 1.0f );
 	addColorButton ( glWidget, *gridSketch, "editor/tool/sketchSpheres/cursorColor"
                    , QObject::tr ("Cursor color") );
     gridSketch->addStretcher ();
@@ -181,7 +183,7 @@ namespace {
 	addVectorEdit (glWidget, *grid, "editor/axis/arrowScaling", QObject::tr ("Axis-arrow scaling"));
 
 	addFloatEdit ( glWidget, *grid, "editor/floorPlane/tileWidth"
-                 , QObject::tr ("Floor-plane tile-width"), Util::epsilon (), 10.0f );
+                 , QObject::tr ("Floor-plane tile-width"), minFloatValue, 10.0f );
 
     grid->addStretcher ();
 

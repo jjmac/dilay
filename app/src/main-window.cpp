@@ -88,11 +88,6 @@ void ViewMainWindow::deselectTool()
     m_mainWidget->deselectTool ();
 }
 
-void ViewMainWindow::updateGl()
-{
-    m_mainWidget->glWidget ().update ();
-}
-
 ViewProperties& ViewMainWindow::viewProperties()
 {
     return m_mainWidget->properties ();

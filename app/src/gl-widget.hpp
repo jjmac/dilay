@@ -45,6 +45,7 @@ class ViewGlWidget : public QOpenGLWidget
 private:
     void pointingEvent (const ViewPointingEvent& e);
     void updateCursorInTool ();
+    void handleEngineState();
 
 private:
     typedef std::unique_ptr <State>          StatePtr;

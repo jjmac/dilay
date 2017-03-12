@@ -163,8 +163,9 @@ void ViewGlWidget::pointingEvent (const ViewPointingEvent& e) {
             updateCursorInTool ();
         }
         else if (state ().hasTool ()) {
-            state ().handleToolResponse (state ().tool ().pointingEvent (e));
-        }
+            state ().tool ().pointingEvent (e);
+            handleEngineState();
+       }
     }
 }
 
@@ -196,8 +197,9 @@ void ViewGlWidget::wheelEvent (QWheelEvent* e) {
         floorPlane ().update (state ().camera ());
     }
     else if (state ().hasTool ()) {
-		state ().handleToolResponse (state ().tool ().wheelEvent (we));
+        state ().tool ().wheelEvent (we);
     }
+    handleEngineState();
 }
 
 void ViewGlWidget::tabletEvent (QTabletEvent* e) {
@@ -214,8 +216,32 @@ void ViewGlWidget::tabletEvent (QTabletEvent* e) {
 
 void ViewGlWidget::updateCursorInTool () {
     if (state ().hasTool ()) {
-        state ().handleToolResponse (state ().tool ()
-                                     .cursorUpdate (cursorPosition ()));
+        state ().tool ().cursorUpdate (cursorPosition ());
+        handleEngineState();
     }
 }
 
+#include <QTimer>
+void ViewGlWidget::handleEngineState() {
+    static QTimer* timer = nullptr;
+    if (!timer) {
+        timer = new QTimer(this);
+        timer->setSingleShot(true);
+        timer->setInterval(50);
+
+        connect(timer, &QTimer::timeout, [this]() {
+            switch(state().popStatus()) {
+            case EngineStatus::Redraw:
+                this->update();
+                break;
+            case EngineStatus::Terminate:
+                state().resetTool(true);
+                this->update();
+                break;
+            default:
+                break;
+            }
+        });
+    }
+    if (!timer->isActive()) timer->start();
+}

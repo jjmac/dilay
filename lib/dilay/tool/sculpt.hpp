@@ -39,10 +39,10 @@ class ToolSculpt : public Tool {
   private:
     IMPLEMENTATION
 
-    ToolResponse runInitialize    ();
+    void         runInitialize    ();
     void         runRender        () const;
-    ToolResponse runPointingEvent (const ViewPointingEvent&);
-    ToolResponse runCursorUpdate  (const glm::ivec2&);
+    void         runPointingEvent (const ViewPointingEvent&);
+    void         runCursorUpdate  (const glm::ivec2&);
     void         runFromConfig    ();
 
     virtual const char* key                    () const = 0;

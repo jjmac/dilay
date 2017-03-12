@@ -13,14 +13,14 @@ struct ToolNewSketch::Impl {
 
   Impl (ToolNewSketch* s) : self (s) {}
 
-  ToolResponse runInitialize () const {
+  void runInitialize () const {
     this->self->snapshotSketchMeshes ();
 
     SketchTree tree;
     tree.emplaceRoot (glm::vec3 (0.0f), 0.1f);
 
     this->self->state ().scene ().newSketchMesh (this->self->state ().config (), tree);
-    return ToolResponse::Terminate;
+    this->self->state().setStatus(EngineStatus::Terminate);
   }
 };
 

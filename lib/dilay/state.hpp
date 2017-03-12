@@ -19,6 +19,10 @@ enum class ToolResponse;
 class Controller;
 class WingedMesh;
 
+enum class EngineStatus {
+  None, Terminate, Redraw
+};
+
 class State {
   public:                                   
     DECLARE_BIG2 (State, Controller*, Config&, Cache&)
@@ -37,8 +41,10 @@ class State {
     void            fromConfig         ();
     void            undo               ();
     void            redo               ();
+    EngineStatus    popStatus          ();
+    EngineStatus    status             () const;
+    void            setStatus          (EngineStatus);
 
-    void            handleToolResponse (ToolResponse);
 
   private:
     IMPLEMENTATION

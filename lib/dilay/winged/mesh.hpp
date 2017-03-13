@@ -8,14 +8,17 @@
 #include <functional>
 #include <glm/fwd.hpp>
 #include <vector>
+#include "../mesh.hpp"
 #include "intrusive-list.hpp"
+#include "winged/edge.hpp"
+#include "winged/face.hpp"
+#include "winged/vertex.hpp"
+#include "index-octree.hpp"
 #include "macro.hpp"
 
 class AffectedFaces;
 class Camera;
 class Color;
-class IndexOctree;
-class Mesh;
 class PrimPlane;
 class PrimRay;
 class PrimSphere;
@@ -24,11 +27,10 @@ class RenderMode;
 class WingedEdge;
 class WingedFace;
 class WingedFaceIntersection;
-class WingedVertex;
 
 class WingedMesh : public IntrusiveList <WingedMesh>::Item {
   public: 
-    DECLARE_BIG3 (WingedMesh, unsigned int);
+    WingedMesh(unsigned int);
 
     bool               operator==          (const WingedMesh&) const;
     bool               operator!=          (const WingedMesh&) const;
@@ -109,8 +111,17 @@ class WingedMesh : public IntrusiveList <WingedMesh>::Item {
     SAFE_REF1 (WingedVertex, vertex, unsigned int)
     SAFE_REF1 (WingedEdge  , edge  , unsigned int)
     SAFE_REF1 (WingedFace  , face  , unsigned int)
-  private:
-    IMPLEMENTATION
+
+private:
+    void addFaceToOctree (const WingedFace&, const PrimTriangle&);
+
+private:
+    const unsigned int                  _index;
+    Mesh                                _mesh;
+    IntrusiveIndexedList <WingedVertex> _vertices;
+    IntrusiveIndexedList <WingedEdge>   _edges;
+    IntrusiveIndexedList <WingedFace>   _faces;
+    IndexOctree                         _octree;
 };
 
 #endif

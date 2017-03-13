@@ -6,14 +6,13 @@
 #define DILAY_WINGED_FACE_INTERSECTION
 
 #include "intersection.hpp"
-#include "macro.hpp"
 
 class WingedFace;
 class WingedMesh;
 
 class WingedFaceIntersection : public Intersection {
   public:
-    DECLARE_BIG6 (WingedFaceIntersection)
+    WingedFaceIntersection();
 
     WingedMesh& mesh   () const;
     WingedFace& face   () const;
@@ -21,7 +20,8 @@ class WingedFaceIntersection : public Intersection {
                        , WingedMesh&, WingedFace& );
 
   private:
-    IMPLEMENTATION
+    WingedMesh*            _mesh;
+    WingedFace*            _face;
 };
 
 #endif

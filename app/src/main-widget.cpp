@@ -37,12 +37,13 @@ ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config, Cache& cache
     controlsLayout->setColumnStretch(0, 0);
     controlsLayout->setColumnStretch(1, 1);
     controlsLayout->setColumnStretch(2, 0);
-	controlsLayout->setRowStretch(0, 1);
-	controlsLayout->setRowStretch(0, 0);
+    controlsLayout->setRowStretch(0, 0);
+    controlsLayout->setRowStretch(1, 1);
+    controlsLayout->setRowStretch(2, 0);
 	controlsLayout->addWidget(initalizeToolPane (), 0, 0, Qt::AlignLeft);
-	controlsLayout->addWidget(initializeSettingsPane(), 0, 1, 2, 1, Qt::AlignLeft);
-	controlsLayout->addWidget(m_properties, 0, 2, 2, 1, Qt::AlignLeft);
-	controlsLayout->addWidget(m_tipMessage , 1, 0, Qt::AlignLeft);
+    controlsLayout->addWidget(initializeSettingsPane(), 0, 1, 3, 1, Qt::AlignLeft);
+    controlsLayout->addWidget(m_properties, 0, 2, 3, 1, Qt::AlignLeft);
+    controlsLayout->addWidget(m_tipMessage , 2, 0, Qt::AlignLeft);
 }
 
 QWidget* ViewMainWidget::initalizeToolPane ()
@@ -89,20 +90,6 @@ QWidget* ViewMainWidget::initalizeToolPane ()
 
     return newToolPane;
 
-
-//    QTabWidget* toolPane = new QTabWidget;
-//    toolPane->setAttribute(Qt::WA_TranslucentBackground);
-//    toolPane->addTab (this->initalizeSculptToolPane (), QObject::tr ("Sculpt"));
-//    toolPane->widget(0)->setAttribute(Qt::WA_TranslucentBackground);
-////    toolPane->tabBar()->tabButton(0, QTabBar::LeftSide)->setObjectName("tool_sculpt_selector");
-//    toolPane->addTab (this->initalizeSketchToolPane (), QObject::tr ("Sketch"));
-//    toolPane->widget(1)->setAttribute(Qt::WA_TranslucentBackground);
-////    toolPane->tabBar()->tabButton(1, QTabBar::LeftSide)->setObjectName("tool_sketch_selector");
-
-//    QObject::connect (toolPane, &QTabWidget::currentChanged, [this] (int) {
-//      m_glWidget->state ().resetTool ();
-//    });
-//    return toolPane;
 }
 
 QWidget* ViewMainWidget::initalizeSculptToolPane ()

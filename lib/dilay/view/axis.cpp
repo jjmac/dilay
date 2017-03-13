@@ -15,7 +15,6 @@
 #include "view/axis.hpp"
 
 struct ViewAxis::Impl {
-  Mesh         coneMesh;
   Mesh         cylinderMesh;
   Mesh         gridMesh;
   glm::uvec2   axisResolution;
@@ -32,16 +31,12 @@ struct ViewAxis::Impl {
     this->axisResolution = glm::uvec2 (200,200);
     this->gridResolution = 6;
 
-    this->coneMesh       = MeshUtil::cone     (10);
-    this->cylinderMesh   = MeshUtil::cylinder (10);
+
+    this->cylinderMesh   = MeshUtil::cylinder(6);
 
     this->cylinderMesh.renderMode ().constantShading (true);
     this->cylinderMesh.renderMode ().cameraRotationOnly (true);
     this->cylinderMesh.bufferData ();
-
-    this->coneMesh.renderMode     ().constantShading (true);
-    this->coneMesh.renderMode     ().cameraRotationOnly (true);
-    this->coneMesh.bufferData     ();
 
     this->initializeGrid          ();
   }
@@ -79,31 +74,19 @@ struct ViewAxis::Impl {
 
     this->cylinderMesh.position       (glm::vec3 (0.0f, this->axisScaling.y * 0.5f, 0.0f));
     this->cylinderMesh.rotationMatrix (glm::mat4x4 (1.0f));
-    this->cylinderMesh.color          (this->axisColor);
+    this->cylinderMesh.color          (Color(.5f, .2f, .2f));
     this->cylinderMesh.render         (camera);
 
     this->cylinderMesh.position       (glm::vec3 (this->axisScaling.y * 0.5f, 0.0f, 0.0f));
     this->cylinderMesh.rotationZ      (0.5f * glm::pi<float> ());
+    this->cylinderMesh.color          (Color(.2f, .5f, .2f));
     this->cylinderMesh.render         (camera);
 
     this->cylinderMesh.position       (glm::vec3 (0.0f, 0.0f, this->axisScaling.y * 0.5f));
     this->cylinderMesh.rotationX      (0.5f * glm::pi<float> ());
+    this->cylinderMesh.color          (Color(.2f, .5f, .2f));
     this->cylinderMesh.render         (camera);
 
-    this->coneMesh.scaling            (this->axisArrowScaling);
-
-    this->coneMesh.position           (glm::vec3 (0.0f, this->axisScaling.y, 0.0f));
-    this->coneMesh.rotationMatrix     (glm::mat4x4 (1.0f));
-    this->coneMesh.color              (this->axisColor);
-    this->coneMesh.render             (camera);
-
-    this->coneMesh.position           (glm::vec3 (this->axisScaling.y, 0.0f, 0.0f));
-    this->coneMesh.rotationZ          (- 0.5f * glm::pi<float> ());
-    this->coneMesh.render             (camera);
-
-    this->coneMesh.position           (glm::vec3 (0.0f, 0.0f, this->axisScaling.y));
-    this->coneMesh.rotationX          (0.5f * glm::pi<float> ());
-    this->coneMesh.render             (camera);
 
     this->renderGrid                  (camera);
 
@@ -126,44 +109,6 @@ struct ViewAxis::Impl {
     this->gridMesh.color       (this->axisColor);
     this->gridMesh.renderLines (camera);
   }
-
-//  void render (Camera& camera, QPainter& painter) {
-//    this->coneMesh.rotationMatrix (glm::mat4x4 (1.0f));
-
-//    QFont font;
-//    font.setWeight (QFont::Bold);
-
-//    QFontMetrics metrics (font);
-//    int          w          = glm::max (metrics.maxWidth (), metrics.height ());
-//    glm::uvec2   resolution = camera.resolution ();
-//    camera.updateResolution (this->axisResolution);
-
-//    auto renderLabel = [this, &resolution, &painter, w, &camera]
-//                       (const glm::vec3& p, const QString& l)
-//    {
-//      this->coneMesh.position (p);
-
-//      glm::ivec2 pos = camera.fromWorld ( glm::vec3 (0.0f)
-//                                        , this->coneMesh.modelMatrix ()
-//                                        , true);
-//      QRect rect ( pos.x - (w / 2)
-//                 , resolution.y - this->axisResolution.y + pos.y - (w / 2)
-//                 , w, w );
-
-//      painter.drawText (rect, Qt::AlignCenter, l);
-//    };
-
-//    painter.setPen  (this->axisLabelColor.qColor ());
-//    painter.setFont (font);
-
-//    const float labelPosition = this->axisScaling.y + (this->axisArrowScaling.y * 0.5f);
-
-//    renderLabel (glm::vec3 (labelPosition, 0.0f , 0.0f ), "X");
-//    renderLabel (glm::vec3 (0.0f , labelPosition, 0.0f ), "Y");
-//    renderLabel (glm::vec3 (0.0f , 0.0f , labelPosition), "Z");
-
-//    camera.updateResolution (resolution);
-//  }
 
   void runFromConfig (const Config& config) {
     this->axisLabelColor   = config.get <Color>     ("editor/axis/color/label");

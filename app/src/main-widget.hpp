@@ -21,7 +21,7 @@ class ViewMainWidget : public QWidget
     Q_OBJECT
 
 public:
-    ViewMainWidget(ViewMainWindow&, Config&, Cache&);
+    ViewMainWidget(ViewMainWindow&, Config&);
 
     ViewGlWidget&   glWidget     ();
     ViewProperties& properties   ();

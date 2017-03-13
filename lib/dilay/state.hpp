@@ -5,6 +5,8 @@
 #ifndef DILAY_STATE
 #define DILAY_STATE
 
+#include "globals.hpp"
+
 #include "macro.hpp"
 
 class Cache;
@@ -22,9 +24,9 @@ enum class EngineStatus {
   None, Terminate, Redraw
 };
 
-class State {
+class DILAY_LIB_EXPORT State {
   public:                                   
-    DECLARE_BIG2 (State, Config&, Cache&)
+    DECLARE_BIG2 (State, Config&)
 
     Config&         config             ();
     Cache&          cache              ();

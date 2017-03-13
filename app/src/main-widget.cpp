@@ -25,8 +25,8 @@
 #include "tooltip-widget.hpp"
 #include <QFrame>
 
-ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config, Cache& cache)
-    : m_glWidget   (new ViewGlWidget (mW, config, cache))
+ViewMainWidget::ViewMainWidget (ViewMainWindow& mW, Config& config)
+    : m_glWidget   (new ViewGlWidget (mW, config))
     , m_properties (new PropertiesWidget)
 	, m_tipMessage (new TooltipWidget)
 {

@@ -16,17 +16,16 @@
 struct State::Impl {
   State*                 self;
   Config&                config;
-  Cache&                 cache;
+  Cache                  cache;
   Camera                 camera;
   History                history;
   Scene                  scene;
   std::unique_ptr <Tool> toolPtr;
   EngineStatus           _status;
 
-  Impl (State* s, Config& cfg, Cache& cch)
+  Impl (State* s, Config& cfg)
     : self       (s)
     , config     (cfg)
-    , cache      (cch)
     , camera     (this->config)
     , history    (this->config)
     , scene      (this->config)
@@ -102,7 +101,7 @@ struct State::Impl {
   }
 };
 
-DELEGATE2_BIG2_SELF (State, Config&, Cache&)
+DELEGATE1_BIG2_SELF (State, Config&)
 
 GETTER    (Config&           , State, config)
 GETTER    (Cache&            , State, cache)

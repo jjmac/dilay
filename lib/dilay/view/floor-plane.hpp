@@ -5,13 +5,15 @@
 #ifndef DILAY_VIEW_FLOORPLANE
 #define DILAY_VIEW_FLOORPLANE
 
+#include "../globals.hpp"
+
 #include "../configurable.hpp"
 #include "../macro.hpp"
 
 class Camera;
 class Config;
 
-class ViewFloorPlane : public Configurable {
+class DILAY_LIB_EXPORT ViewFloorPlane : public Configurable {
   public:
     DECLARE_BIG3 (ViewFloorPlane, const Config&, const Camera&)
 

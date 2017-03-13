@@ -5,6 +5,7 @@
 #ifndef DILAY_TOOL_SCULPT
 #define DILAY_TOOL_SCULPT
 
+#include "../globals.hpp"
 #include "../tool.hpp"
 
 class QString;
@@ -12,7 +13,7 @@ class SculptBrush;
 class ToolUtilMovement;
 class ViewCursor;
 
-class ToolSculpt : public Tool {
+class DILAY_LIB_EXPORT ToolSculpt : public Tool {
   public:
     DECLARE_BIG2 (ToolSculpt, State&, const char*)
 
@@ -52,7 +53,7 @@ class ToolSculpt : public Tool {
 };
 
 #define DECLARE_TOOL_SCULPT(name,theKey,accessors)                                 \
-  class name : public ToolSculpt { public:                                         \
+  class DILAY_LIB_EXPORT name : public ToolSculpt { public:                                         \
     DECLARE_BIG2 (name, State&)                                                    \
     private:                                                                       \
       IMPLEMENTATION                                                               \

@@ -5,10 +5,13 @@
 #ifndef DILAY_CONFIGURABLE
 #define DILAY_CONFIGURABLE
 
+#include "globals.hpp"
+
+
 class Config;
 class ConfigProxy;
 
-class Configurable {
+class DILAY_LIB_EXPORT Configurable {
   public:
     void fromConfig (const Config&);
 
@@ -16,7 +19,7 @@ class Configurable {
     virtual void runFromConfig (const Config&) = 0;
 };
 
-class ProxyConfigurable {
+class DILAY_LIB_EXPORT ProxyConfigurable {
   public:
     void fromConfig (const ConfigProxy&);
 

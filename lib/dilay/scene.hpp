@@ -5,6 +5,8 @@
 #ifndef DILAY_SCENE
 #define DILAY_SCENE
 
+#include "globals.hpp"
+
 #include <string>
 #include "configurable.hpp"
 #include "macro.hpp"
@@ -18,7 +20,7 @@ class RenderMode;
 class WingedFaceIntersection;
 class WingedMesh;
 
-class Scene : public Configurable {
+class DILAY_LIB_EXPORT Scene : public Configurable {
   public: 
     DECLARE_BIG3 (Scene, const Config&)
 

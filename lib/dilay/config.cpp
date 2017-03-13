@@ -6,18 +6,54 @@
 #include "color.hpp"
 #include "config.hpp"
 
+#include "json-kvstore.hpp"
+
 namespace {
   static constexpr int latestVersion = 5;
 }
 
 Config :: Config () 
-  : store ("config") 
+  : store (new JsonKVStore("config"))
 {
   this->restoreDefaults ();
 }
 
+#define THE_STORE static_cast<JsonKVStore*>(store)
+
+
+Config :: ~Config ()
+{
+    delete THE_STORE;
+}
+
+#define CONFIG_ACCESSOR_IMPL(T)                                     \
+void Config::get_impl (const std::string& path, T& v) const {       \
+    v = THE_STORE->get <T> (path);                                  \
+}                                                                   \
+void Config::set_impl (const std::string& path, const T& value) {   \
+    THE_STORE->set <T> (path, value);                               \
+}
+
+CONFIG_ACCESSOR_IMPL(float)
+CONFIG_ACCESSOR_IMPL(int)
+CONFIG_ACCESSOR_IMPL(Color)
+CONFIG_ACCESSOR_IMPL(glm::vec3)
+
+void Config::fromFile (const std::string& fileName) {
+  THE_STORE->fromFile (fileName);
+  this->update ();
+}
+
+void Config::toFile (const std::string& fileName) const {
+  THE_STORE->toFile (fileName);
+}
+
+void Config::remove (const std::string& path) {
+  THE_STORE->remove (path);
+}
+
 void Config :: restoreDefaults () {
-  this->store.reset ();
+  THE_STORE->reset ();
 
   this->set ("version", latestVersion);
 

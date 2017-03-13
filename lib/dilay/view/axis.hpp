@@ -5,13 +5,14 @@
 #ifndef DILAY_VIEW_AXIS
 #define DILAY_VIEW_AXIS
 
+#include "../globals.hpp"
 #include "../configurable.hpp"
 #include "../macro.hpp"
 
 class Camera;
 class Config;
 
-class ViewAxis : public Configurable {
+class DILAY_LIB_EXPORT ViewAxis : public Configurable {
   public:
     DECLARE_BIG3 (ViewAxis, const Config&)
 

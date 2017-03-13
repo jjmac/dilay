@@ -5,12 +5,12 @@
 #ifndef DILAY_COLOR
 #define DILAY_COLOR
 
+#include "globals.hpp"
+
 #include <glm/fwd.hpp>
 #include <iosfwd>
 
-//class QColor;
-
-class Color {
+class DILAY_LIB_EXPORT Color {
   public: 
              Color ();
              Color (float);

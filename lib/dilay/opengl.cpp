@@ -1,4 +1,19 @@
 #include "opengl.hpp"
 
-std::unique_ptr<OpenGLApi> OpenGL::impl;
+#include <assert.h>
+
+namespace {
+static OpenGLApi* self = nullptr;
+}
+
+OpenGLApi& OpenGL::instance()
+{
+    assert(self);
+    return *self;
+}
+
+
+void OpenGL::install(OpenGLApi* oga) {
+    self = oga;
+}
 

@@ -17,9 +17,9 @@
 #include "properties.hpp"
 #include "tooltip-widget.hpp"
 
-ViewMainWindow::ViewMainWindow (Config& config, Cache& cache)
+ViewMainWindow::ViewMainWindow (Config& config)
 {
-    m_mainWidget = new ViewMainWidget (*this, config, cache);
+    m_mainWidget = new ViewMainWidget (*this, config);
     m_numFacesLabel = new QLabel();
 
     setCentralWidget(m_mainWidget);

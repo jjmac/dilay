@@ -16,13 +16,14 @@ class State;
 class ToolMoveCamera;
 class ViewFloorPlane;
 class ViewMainWindow;
+class OpenGLApi;
 
 class ViewGlWidget : public QOpenGLWidget
 {
     Q_OBJECT
 
   public:
-    ViewGlWidget(ViewMainWindow&, Config&, Cache&);
+    ViewGlWidget(ViewMainWindow&, Config&);
     ~ViewGlWidget ();
 
     ToolMoveCamera& toolMoveCamera ();
@@ -54,12 +55,13 @@ private:
 
     ViewMainWindow& m_mainWindow;
     Config&         m_config;
-    Cache&          m_cache;
     ToolMoveCamera  m_toolMoveCamera;
     StatePtr        m_state;
     AxisPtr         m_axis;
     FloorPlanePtr   m_floorPlane;
     bool            m_tabletPressed;
+
+    std::unique_ptr<OpenGLApi> m_openglApi;
 
 };
 

@@ -6,6 +6,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 add_definitions(-DDILAY_VERSION="1")
 add_definitions(-DGLM_ENABLE_EXPERIMENTAL)
+add_definitions(-DDILAY_LIBRARY)
+
 include_directories(${PROJECT_SOURCE_DIR}/dilay
     ${glm_INCLUDE_DIRS}
     ${json_INCLUDE_DIRS}
@@ -28,7 +30,7 @@ endfunction(assign_source_group)
 file(GLOB_RECURSE SOURCE_LIST  ${PROJECT_SOURCE_DIR}/dilay "*.cpp" "*.hpp" "*.h")
 assign_source_group(${SOURCE_LIST} )
 
-add_library(lib ${SOURCE_LIST})
+add_library(lib SHARED ${SOURCE_LIST})
 target_link_libraries (lib glm)
 
 set(lib_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}

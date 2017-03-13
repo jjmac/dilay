@@ -5,6 +5,8 @@
 #ifndef DILAY_CAMERA
 #define DILAY_CAMERA
 
+#include "globals.hpp"
+
 #include <glm/fwd.hpp>
 #include "configurable.hpp"
 #include "macro.hpp"
@@ -13,7 +15,7 @@ enum class Dimension;
 class PrimRay;
 class Renderer;
 
-class Camera : public Configurable {
+class DILAY_LIB_EXPORT Camera : public Configurable {
   public:
     DECLARE_BIG3 (Camera, const Config&)
 

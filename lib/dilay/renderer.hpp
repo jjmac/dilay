@@ -5,6 +5,8 @@
 #ifndef DILAY_RENDERER
 #define DILAY_RENDERER
 
+#include "globals.hpp"
+
 #include <glm/fwd.hpp>
 #include "configurable.hpp"
 #include "macro.hpp"
@@ -13,7 +15,7 @@ class Color;
 class Config;
 class RenderMode;
 
-class Renderer : public Configurable {
+class DILAY_LIB_EXPORT Renderer : public Configurable {
   public:
     DECLARE_BIG3 (Renderer, const Config&)
 

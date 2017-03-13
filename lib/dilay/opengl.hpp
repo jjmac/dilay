@@ -1,17 +1,16 @@
 #ifndef DILAY_OPENGL
 #define DILAY_OPENGL
 
+#include "globals.hpp"
+
 #include "opengl-Api.hpp"
 #include <memory>
 
-class OpenGL
+class DILAY_LIB_EXPORT OpenGL
 {
 public:
-    inline static OpenGLApi& instance() { return *impl; }
-    static void install(OpenGLApi* oga) { return impl.reset(oga); }
-
-private:
-    static std::unique_ptr<OpenGLApi> impl;
+    static OpenGLApi& instance();
+    static void install(OpenGLApi* oga);
 };
 
 #endif

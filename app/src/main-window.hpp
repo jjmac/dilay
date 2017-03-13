@@ -7,7 +7,6 @@
 
 #include <QMainWindow>
 
-class Cache;
 class Config;
 class QCloseEvent;
 class ViewMainWidget;
@@ -20,7 +19,7 @@ class ViewMainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    ViewMainWindow(Config&, Cache&);
+    ViewMainWindow(Config&);
 
     ViewMainWidget& mainWidget         ();
     void            showMessage        (const QString&);

@@ -5,6 +5,8 @@
 #ifndef DILAY_TOOL
 #define DILAY_TOOL
 
+#include "globals.hpp"
+
 #include <glm/fwd.hpp>
 #include "macro.hpp"
 #include "sketch/fwd.hpp"
@@ -19,7 +21,7 @@ class State;
 class ViewPointingEvent;
 class WingedFaceIntersection;
 
-class Tool {
+class DILAY_LIB_EXPORT Tool {
   public:
     DECLARE_BIG3_VIRTUAL (Tool, State&, const char*)
 
@@ -71,7 +73,7 @@ class Tool {
 };
 
 #define DECLARE_TOOL2(name,theKey,otherMethods, publicMethods)       \
-  class name : public Tool { public:                                 \
+  class DILAY_LIB_EXPORT name : public Tool { public:                \
     DECLARE_BIG2 (name, State&)                                      \
     private:                                                         \
       IMPLEMENTATION                                                 \

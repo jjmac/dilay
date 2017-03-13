@@ -14,7 +14,7 @@ class State;
 class ViewWheelEvent;
 class ViewPointingEvent;
 
-class ToolMoveCamera : public Configurable {
+class DILAY_LIB_EXPORT ToolMoveCamera : public Configurable {
   public:
     DECLARE_BIG3 (ToolMoveCamera, const Config&)
 

@@ -53,11 +53,10 @@ ViewPointingEvent toPointingEvent (const QTabletEvent& event)
     );
     return vpe;
 }
-ViewGlWidget::ViewGlWidget (ViewMainWindow& mW, Config& cfg, Cache& cch)
+ViewGlWidget::ViewGlWidget (ViewMainWindow& mW, Config& cfg)
     : QOpenGLWidget(&mW)
     , m_mainWindow     (mW)
     , m_config         (cfg)
-    , m_cache          (cch)
     , m_toolMoveCamera (cfg)
     , m_state          (nullptr)
     , m_axis           (nullptr)
@@ -76,6 +75,8 @@ ViewGlWidget::~ViewGlWidget ()
     m_floorPlane.reset (nullptr);
 
     doneCurrent ();
+
+    OpenGL::install(nullptr);
 }
 
 ToolMoveCamera& ViewGlWidget::toolMoveCamera ()
@@ -115,10 +116,10 @@ void ViewGlWidget::fromConfig ()
 
 void ViewGlWidget::initializeGL ()
 {
+    m_openglApi.reset(new OpenGLImpl());
+    OpenGL::install(m_openglApi.get());
 
-    OpenGL::install(new  OpenGLImpl());
-
-    m_state     .reset (new State (m_config, m_cache));
+    m_state     .reset (new State (m_config));
     m_axis      .reset (new ViewAxis (m_config));
     m_floorPlane.reset (new ViewFloorPlane (m_config, state ().camera ()));
 

@@ -5,7 +5,6 @@
 #include <QApplication>
 #include <QDir>
 #include <QStandardPaths>
-#include "dilay/cache.hpp"
 #include "dilay/config.hpp"
 #include "dilay/opengl.hpp"
 #include "main-window.hpp"
@@ -19,13 +18,12 @@ int main (int argv, char **args) {
   const std::string configFileName = QStandardPaths::locate ( QStandardPaths::ConfigLocation
                                                             , "dilay.config" ).toStdString ();
   Config config;
-  Cache  cache;
 
   if (configFileName.empty () == false) {
     config.fromFile (configFileName);
   }
 
-  ViewMainWindow mainWindow (config, cache);
+  ViewMainWindow mainWindow (config);
   mainWindow.resize ( config.get <int> ("window/initialWidth")
 					, config.get <int> ("window/initialHeight") );
   mainWindow.show   ();

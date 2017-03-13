@@ -5,6 +5,8 @@
 #ifndef DILAY_HISTORY
 #define DILAY_HISTORY
 
+#include "globals.hpp"
+
 #include <functional>
 #include "configurable.hpp"
 #include "macro.hpp"
@@ -14,7 +16,7 @@ class Mesh;
 class Scene;
 class State;
 
-class History : public Configurable {
+class DILAY_LIB_EXPORT History : public Configurable {
   public: 
     DECLARE_BIG3 (History, const Config&)
 

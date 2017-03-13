@@ -5,47 +5,58 @@
 #ifndef DILAY_CONFIG
 #define DILAY_CONFIG
 
-#include "json-kvstore.hpp"
+#include "globals.hpp"
 
-class Config {
+#include <memory>
+#include <string>
+#include "color.hpp"
+#include <glm/fwd.hpp>
+
+#define CONFIG_ACCESSOR(T) \
+void get_impl (const std::string& path, T& v) const ;          \
+void set_impl (const std::string& path, const T& value);
+
+
+class DILAY_LIB_EXPORT Config {
   public:   
     Config ();
+    ~Config ();
 
     template <class T>
     const T& get (const std::string& path) const {
-      return this->store.get <T> (path);
+        T v;
+        get_impl(path, v);
+        return v;
     }
 
     template <class T>
     T getFrom (const std::string& path) const {
-      return this->store.getFrom <T> (path);
+        return get(path);
     }
 
     template <class T>
     void set (const std::string& path, const T& value) {
-      this->store.set <T> (path, value);
+        set_impl(path, value);
     }
 
-    void fromFile (const std::string& fileName) {
-      this->store.fromFile (fileName);
-      this->update ();
-    }
+    CONFIG_ACCESSOR(float)
+    CONFIG_ACCESSOR(int)
+    CONFIG_ACCESSOR(Color)
+    CONFIG_ACCESSOR(glm::vec3)
 
-    void toFile (const std::string& fileName) const {
-      this->store.toFile (fileName);
-    }
+    void fromFile (const std::string& fileName);
+    void toFile (const std::string& fileName) const;
 
-    void remove (const std::string& path) {
-      this->store.remove (path);
-    }
+    void remove (const std::string& path);
 
     void restoreDefaults ();
 
   private:
     void update ();
 
-    JsonKVStore store;
+    void* store;
 };
+
 
 class ConfigProxy {
   public:

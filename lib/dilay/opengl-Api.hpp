@@ -10,7 +10,6 @@
 
 class OpenGLApi {
 public:
-    virtual ~OpenGLApi() {}
 
   // wrappers
   virtual unsigned int Always             () = 0;

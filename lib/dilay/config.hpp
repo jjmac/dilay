@@ -12,10 +12,11 @@
 #include "color.hpp"
 #include <glm/fwd.hpp>
 
+class JsonKVStore;
+
 #define CONFIG_ACCESSOR(T) \
 void get_impl (const std::string& path, T& v) const ;          \
 void set_impl (const std::string& path, const T& value);
-
 
 class DILAY_LIB_EXPORT Config {
   public:   
@@ -54,7 +55,7 @@ class DILAY_LIB_EXPORT Config {
   private:
     void update ();
 
-    void* store;
+    std::unique_ptr<JsonKVStore> store;
 };
 
 
